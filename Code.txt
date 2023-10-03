@@ -1,0 +1,106 @@
+LONG l1 = 2147483647_l;
+LONG l2 = -2147483648_l;
+DOUBLE d1 = 123;
+DOUBLE d2 = 123.12;
+DOUBLE d3 = .12;
+DOUBLE d4 = 123D+25;
+DOUBLE d5 = 123.12D+29;
+DOUBLE d6 = .12D+10;
+DOUBLE d7 = 123D-25;
+DOUBLE d8 = 123.12D-29;
+DOUBLE d9 = .12D-10;
+LONG peroniunonidosnitrenicuatro = 40668809_l
+UINT _pepe911 = 123_ui
+_cancion =  %
+Ni una 
+ni dos 
+ni tres ni cuartro%
+*{
+Hace un par de fechas, no se donde estas
+Te llamo por telefono, no me contestas
+Me dejaste tirado y no hablamos nunca mas
+Es obvio, todavia no te dejo de amar
+
+Pero ya te voy a superar
+Te juro que, por vos, yo no vuelvo a llorar
+Me voy a tomar
+Con alguna te voy a reemplazar
+
+Pero ni una ni dos ni tres ni cuatro
+Va a comparar lo que hicimos en el cuarto
+Si te cruzo de nuevo, te parto
+Pero, mi cora, no te lo comparto
+
+Ni una ni dos ni tres ni cuatro
+Va a comparar lo que hicimos en el cuarto
+Si te cruzo de nuevo, te parto
+Pero, mi cora, no te lo comparto
+
+Y te olvidaste de las veces
+De todas las risas y de todas las estupideces
+Luego del sexo, me pedias que te bese
+Para mi, no fueron unos simples meses
+
+Me comi la mocha yo
+Rubia y morocha
+El viernes, pa' la cheta, el sabado, pa' la rocha
+Nada me llena como vos, mas vale
+Me siento vacio aunque tengo a unas pares
+
+Pero mejor vete
+Que ya no quiero creerte
+Sera mejor perderte
+Baby, te deseo suerte
+Aunque como vos no haya
+
+Ni una ni dos ni tres ni cuatro
+Va a comparar lo que hicimos en el cuarto
+Si te cruzo de nuevo, te parto
+Pero, mi cora, no te lo comparto
+
+Ni una ni dos ni tres ni cuatro
+Va a comparar lo que hicimos en el cuarto
+Si te cruzo de nuevo, te parto
+Pero, mi cora, no te lo comparto
+
+BM
+Panchito Records, pa
+Dice
+
+Hace un par de fechas, no se donde estas
+Te llamo por telefono, no me contestas
+Me dejaste tirado y no hablamos nunca mas
+Es obvio, todavia no te dejo de amar
+
+Pero ya te voy a superar
+Te juro que, por vos, yo no vuelvo a llorar
+Me voy a tomar
+Con alguna te voy a reemplazar
+
+Pero ni una ni dos ni tre ni cuatro
+Va a comparar lo que hicimos en el cuarto
+Si te cruzo de nuevo, te parto
+Pero, mi cora, no te lo comparto
+}*
+
+*{
+A partir de aca anda todo mal
+}*
+LONG _å??Ã³ = 420_l;
+IF
+if
+*{
+    ppepe
+}
+% asdas
+LONG _l3 = 2147483648_l; *{
+
+
+    Esto no anda
+
+
+}*
+LONG _l4 = -2147483649_l; *{
+
+  Agus puto  
+}*
