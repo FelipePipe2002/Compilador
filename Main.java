@@ -21,16 +21,18 @@ public class Main {
     }
 
     public static Token analizadorLexico(FileReader reader) throws IOException{
-        int character, linea = 1;
+        MatrizDeTransicionEstados matrizTransicion = new MatrizDeTransicionEstados();
+        MatrizDeAS matrizAcciones = new MatrizDeAS();
+        int character, linea = 1; //porque int caracter?
         String pide = "";
         int estado = 0;
         Token token = new Token();
         while ((character = reader.read()) != -1) {
                 if((char)character != ' ' || (char)character != '\t'){
                     pide += (char)character;
-                    if ((char) character == '\n')
+                    if ((char) character == '\n') //le podemos dar la responsabilidad a la accion semantica 8?
                         linea++;
-                    MatrizDeTransicion.MatrizdeTransicion(estado,(char)character);
+                    matrizTransicion.getEstado(estado,(char)character);
                 } else {
                     pide = "";
                 }
