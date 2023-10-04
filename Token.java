@@ -15,10 +15,7 @@ class Token {
 
     @Override
     public String toString() {
-        return "Token{" +
-                "tipo=" + tipo +
-                ", lexema='" + "none" + '\'' +
-                '}';
+        return tipo.toString();
     }
 }
 
@@ -33,10 +30,7 @@ class LexemToken extends Token{
 
     @Override
     public String toString() {
-        return "Token{" +
-                "tipo=" + tipo +
-                ", lexema='" + lexema + '\'' +
-                '}';
+        return tipo.toString() + " " + lexema.toString();
     }
 }
 
@@ -73,8 +67,16 @@ enum TokenType {
     Interface(30),
     Implement(31),
     Cadena(32),
+    ParentesisIzquierdo(33),
+    ParentesisDerecho(34),
+    PalabraReservada(35),
+    Float(36),
     Fin(-1),
-    Error(0);
+    Error(50),
+    ErrorConstante(51),
+    ErrorPuntoFlotante(52),
+    ErrorUInt(53),
+    ErrorDistinto(54);
 
     private final int numero;
 

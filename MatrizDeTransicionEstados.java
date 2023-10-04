@@ -1,10 +1,10 @@
-public class MatrizDeTransicionEstados extends matriz {
+public class MatrizDeTransicionEstados extends Matriz {
     private int[][] matrizTransicion;
 
     public MatrizDeTransicionEstados(){
         this.matrizTransicion = new int[][] {
     //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  |
-    /* 0 */   {  1  ,  2  ,  3  ,  1  ,  6  , -1  , -1  , -2  , 15  , -1  , -1  , -1  , -2  , -2  , -2  , -2  , -2  , -2  , 11  , 12  , 13  , 14  , 16  , 17  ,  0  ,  0  ,  0  },
+    /* 0 */   {  1  ,  2  ,  3  ,  1  ,  6  ,  1  ,  2  , -2  , 15  ,  1  ,  1  ,  1  , -2  , -2  , -2  , -2  , -2  , -2  , 11  , 12  , 13  , 14  , 16  , 17  ,  0  ,  0  ,  0  },
     /* 1 */   {  1  , -2  ,  1  ,  1  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  },
     /* 2 */   { -2  ,  2  , -2  ,  2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  , -2  },
     /* 3 */   { -1  , -1  ,  3  ,  4  ,  7  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  , -1  },
@@ -25,11 +25,12 @@ public class MatrizDeTransicionEstados extends matriz {
     /* 18 */  { 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 19  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  },
     /* 19 */  { 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 19  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  , 18  ,  0  , 18  , 18  , 18  }
         };
+        //-1 Error
+        //-2 Final
     }
 
-    public int getEstado(int estado, char nuevoCaracter) {
+    public int getProximoEstado(int estado, char nuevoCaracter) {
         int pos = this.reconocedor(nuevoCaracter);
-        // ejecutar accion semantica??
         return this.matrizTransicion[estado][pos];
     }
 }
