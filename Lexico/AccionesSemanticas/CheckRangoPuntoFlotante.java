@@ -1,4 +1,7 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
+
+import Lexico.AnalizadorLexico;
+
 public class CheckRangoPuntoFlotante extends CheckRango implements AccionSemantica {
     double rango;
 
@@ -6,9 +9,9 @@ public class CheckRangoPuntoFlotante extends CheckRango implements AccionSemanti
         this.rango = rango;
     }
 
-    public void ejecutar(String buffer){
-        buffer = buffer.replaceAll("[dD]", "E");
-        Double bufferValue = Double.parseDouble(buffer);
+    public void ejecutar(){
+        AnalizadorLexico.buffer = AnalizadorLexico.buffer.replaceAll("[dD]", "E");
+        Double bufferValue = Double.parseDouble(AnalizadorLexico.buffer);
         
         if(bufferValue>rango){
             rangoError("Contante fuera de los rangos del punto flotante");

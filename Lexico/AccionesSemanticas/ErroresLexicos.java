@@ -1,4 +1,4 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
 import java.util.Vector;
 
 public class ErroresLexicos {

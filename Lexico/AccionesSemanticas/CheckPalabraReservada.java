@@ -1,11 +1,11 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
 public class CheckPalabraReservada implements AccionSemantica {
     
     public CheckPalabraReservada(){
 
     }
 
-    public void ejecutar(String buffer){
+    public void ejecutar(){
 
     }
 }

@@ -1,4 +1,7 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
+
+import Lexico.AnalizadorLexico;
+
 public class CheckRangoLong extends CheckRango implements AccionSemantica {
     long rango;
     
@@ -6,9 +9,9 @@ public class CheckRangoLong extends CheckRango implements AccionSemantica {
         this.rango = rango;
     }
 
-    public void ejecutar(String buffer){
-        buffer = buffer.replaceAll("[^\\d]", "");
-        Long bufferValue = Long.parseLong(buffer);
+    public void ejecutar(){
+        AnalizadorLexico.buffer = AnalizadorLexico.buffer.replaceAll("[^\\d]", "");
+        Long bufferValue = Long.parseLong(AnalizadorLexico.buffer);
             
         if(bufferValue>rango){
             rangoError("Constante fuera del rango de los enteros largos");

@@ -1,4 +1,7 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
+
+import Lexico.AnalizadorLexico;
+
 public class CheckRangoUI extends CheckRango implements AccionSemantica {
     Integer rango;
     
@@ -6,9 +9,9 @@ public class CheckRangoUI extends CheckRango implements AccionSemantica {
         this.rango = rango;
     }
 
-    public void ejecutar(String buffer){
-        buffer = buffer.replaceAll("[^\\d]", "");
-        Integer bufferValue = Integer.parseInt(buffer);
+    public void ejecutar(){
+        AnalizadorLexico.buffer = AnalizadorLexico.buffer.replaceAll("[^\\d]", "");
+        Integer bufferValue = Integer.parseInt(AnalizadorLexico.buffer);
         
         if(bufferValue>rango){
             rangoError("Constante fuera del rango de los enteros sin signo");

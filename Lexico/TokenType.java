@@ -1,3 +1,4 @@
+package Lexico;
 public enum TokenType {
     Identificador(1),
     OperadorMas(2),

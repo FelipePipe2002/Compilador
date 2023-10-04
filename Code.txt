@@ -1,6 +1,6 @@
 LONG l1 = 2147483647_l;
 LONG l2 = -2147483648_l;
-DOUBLE d1 = 123;
+DOUBLE d1 = 123.;
 DOUBLE d2 = 123.12;
 DOUBLE d3 = .12;
 DOUBLE d4 = 123D+25;
@@ -81,26 +81,4 @@ Pero ni una ni dos ni tre ni cuatro
 Va a comparar lo que hicimos en el cuarto
 Si te cruzo de nuevo, te parto
 Pero, mi cora, no te lo comparto
-}*
-
-*{
-A partir de aca anda todo mal
-}*
-LONG _å??Ã³ = 420_l;
-IF
-if
-*{
-    ppepe
-}
-% asdas
-LONG _l3 = 2147483648_l; *{
-
-
-    Esto no anda
-
-
-}*
-LONG _l4 = -2147483649_l; *{
-
-  Agus puto  
 }*

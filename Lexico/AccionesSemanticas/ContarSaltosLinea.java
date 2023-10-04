@@ -1,4 +1,4 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
 public class ContarSaltosLinea implements AccionSemantica {
     public static int cantSaltos;
 
@@ -6,7 +6,7 @@ public class ContarSaltosLinea implements AccionSemantica {
         ContarSaltosLinea.cantSaltos = 0;
     }
 
-    public void ejecutar(String buffer){
+    public void ejecutar(){
         ContarSaltosLinea.cantSaltos++;
     }
 }

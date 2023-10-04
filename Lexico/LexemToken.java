@@ -1,3 +1,4 @@
+package Lexico;
 public class LexemToken extends Token{
     
     String lexema;

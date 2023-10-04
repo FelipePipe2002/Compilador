@@ -1,4 +1,4 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
 public class CheckRangoCaracteres extends CheckRango implements AccionSemantica {
     int rango;
     
@@ -6,7 +6,7 @@ public class CheckRangoCaracteres extends CheckRango implements AccionSemantica 
         this.rango = rango;
     }
 
-    public void ejecutar(String buffer){
+    public void ejecutar(){
 
     }
 }

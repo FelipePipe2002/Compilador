@@ -1,4 +1,4 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
 public class AccionSemanticaCompuesta implements AccionSemantica {
     AccionSemantica accionSemantica1;
     AccionSemantica accionSemantica2;
@@ -8,8 +8,8 @@ public class AccionSemanticaCompuesta implements AccionSemantica {
         this.accionSemantica2 = as2;
     }
 
-    public void ejecutar(String buffer) {
-        this.accionSemantica1.ejecutar(buffer);
-        this.accionSemantica2.ejecutar(buffer);
+    public void ejecutar() {
+        this.accionSemantica1.ejecutar();
+        this.accionSemantica2.ejecutar();
     }
 }

@@ -1,3 +1,4 @@
+package Lexico;
 public abstract class Matriz {
     
     public int reconocedor(char c) { //reconoce que caracter es y retorna la posicion de la matriz para ese caracter
@@ -51,10 +52,10 @@ public abstract class Matriz {
                 return 25;
             case '\n':
                 return 26;
+            case '\r':
+                return 26;
             default:
-                if((int)c == 13 || (int)c == 10){
-                    return 26;
-                } else if(caracter.matches("[a-z]")){
+                if(caracter.matches("[a-z]")){
                     return 0;
                 } else if(caracter.matches("[A-Z]")){
                     return 1;

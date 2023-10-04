@@ -1,3 +1,6 @@
+package Lexico;
+
+
 public class Token {
     private TokenType tipo;
     

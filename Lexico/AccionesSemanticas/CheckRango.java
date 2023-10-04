@@ -1,4 +1,4 @@
-package AccionesSemanticas;
+package Lexico.AccionesSemanticas;
 
 
 public class CheckRango{

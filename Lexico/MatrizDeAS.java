@@ -1,4 +1,7 @@
-import AccionesSemanticas.*;
+package Lexico;
+
+import java.io.RandomAccessFile;
+import Lexico.AccionesSemanticas.*;
 
 public class MatrizDeAS extends Matriz {
     private AccionSemantica[][] matrizAS;
@@ -17,7 +20,7 @@ public class MatrizDeAS extends Matriz {
         AccionSemantica as1y3 = new AccionSemanticaCompuesta(as1,new CheckPalabraReservada());
         AccionSemantica as4 = new CheckRangoUI(65535);
         AccionSemantica as5 = new CheckRangoLong(2147483648l);
-        AccionSemantica as1y6 = new AccionSemanticaCompuesta(new CheckRangoPuntoFlotante(1.7976931348623157E308), as1);
+        AccionSemantica as1y6 = new AccionSemanticaCompuesta(as1,new CheckRangoPuntoFlotante(1.7976931348623157E308));
         AccionSemantica as7 = new ContarSaltosLinea();
         this.matrizAS = new AccionSemantica[][] {
             
@@ -46,10 +49,10 @@ public class MatrizDeAS extends Matriz {
         };
     }
     
-    public void ejecutarAccionSemantica(int estado, char nuevoCaracter, String buffer) throws Exception{
+    public void ejecutarAccionSemantica(int estado, char nuevoCaracter) throws Exception{
         int pos = this.reconocedor(nuevoCaracter);
         if (this.matrizAS[estado][pos] != null) {
-            this.matrizAS[estado][pos].ejecutar(buffer);
+            this.matrizAS[estado][pos].ejecutar();
         }
     }
 }

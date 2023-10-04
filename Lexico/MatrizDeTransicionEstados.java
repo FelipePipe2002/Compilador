@@ -1,3 +1,4 @@
+package Lexico;
 public class MatrizDeTransicionEstados extends Matriz {
     private int[][] matrizTransicion;
 
@@ -31,7 +32,7 @@ public class MatrizDeTransicionEstados extends Matriz {
 
     public int getProximoEstado(int estado, char nuevoCaracter) {
         int pos = this.reconocedor(nuevoCaracter);
-        System.out.println(estado + " | " + pos + " |" + nuevoCaracter + "|" + (int) nuevoCaracter);
+        //System.out.println(estado + " | " + pos + " |" + nuevoCaracter + "|" + (int) nuevoCaracter);
         return this.matrizTransicion[estado][pos];
     }
 }
