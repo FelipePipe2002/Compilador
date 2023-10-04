@@ -1,5 +1,4 @@
 import java.io.RandomAccessFile;
-
 import AccionesSemanticas.ApilarCaracter;
 import AccionesSemanticas.ErroresLexicos;
 
@@ -15,7 +14,7 @@ public class Main {
         } 
         RandomAccessFile reader = new RandomAccessFile(args[0], "r");
         Token token = analizadorLexico(reader);
-        while (token.tipo != TokenType.Fin){
+        while (token.getTipo().getNumero() != TokenType.Fin.getNumero()){
             System.out.println(token);         
             token = analizadorLexico(reader);
         }
@@ -24,10 +23,6 @@ public class Main {
 
     public static Token analizadorLexico(RandomAccessFile reader) throws Exception {
 
-        if(ApilarCaracter.apilar){
-            reader.seek(reader.getFilePointer() -1);
-            ApilarCaracter.apilar = false;
-        }
         MatrizDeTransicionEstados matrizTransicion = new MatrizDeTransicionEstados();
         MatrizDeAS matrizAcciones = new MatrizDeAS();
         int caracter;
@@ -35,7 +30,7 @@ public class Main {
         String buffer= "";
         Token token = new Token();
         caracter = reader.read();
-        while (caracter != -1 /*|| caracterapilado != null */) {
+        while (caracter != -1) {
                 char carac = (char) caracter;
                 viejoEstado = nuevoEstado;
                 nuevoEstado = matrizTransicion.getProximoEstado(viejoEstado, carac);
@@ -52,6 +47,12 @@ public class Main {
                 matrizAcciones.ejecutarAccionSemantica(viejoEstado,carac, buffer);
                 
                 if (nuevoEstado == -2){
+                    if(ApilarCaracter.apilar){
+                        reader.seek(reader.getFilePointer() -1);
+                        ApilarCaracter.apilar = false;
+                        buffer = buffer.substring(0, buffer.length()-1);
+                    }
+                    System.out.println(buffer + "|");
                     return retornarCamino(viejoEstado, carac);
                 }
 

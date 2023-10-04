@@ -52,7 +52,9 @@ public abstract class Matriz {
             case '\n':
                 return 26;
             default:
-                if(caracter.matches("[a-z]")){
+                if((int)c == 13 || (int)c == 10){
+                    return 26;
+                } else if(caracter.matches("[a-z]")){
                     return 0;
                 } else if(caracter.matches("[A-Z]")){
                     return 1;
