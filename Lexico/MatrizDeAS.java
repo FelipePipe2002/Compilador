@@ -1,6 +1,5 @@
 package Lexico;
 
-import java.io.RandomAccessFile;
 import Lexico.AccionesSemanticas.*;
 
 public class MatrizDeAS extends Matriz {
@@ -24,27 +23,27 @@ public class MatrizDeAS extends Matriz {
         AccionSemantica as7 = new ContarSaltosLinea();
         this.matrizAS = new AccionSemantica[][] {
             
-        //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  |
-        /* 0 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  as7},
-        /* 1 */   { null,as1y2, null, null,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2},
-        /* 2 */   {as1y3, null,as1y3, null,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3},
-        /* 3 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        /* 4 */   { null, null, null, null, null, null, null, null, null, null, null,  as5, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        /* 5 */   { null, null, null, null, null, null, null, null, null, null,  as4, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        /* 6 */   {as1  ,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1},
-        /* 7 */   {as1y6,as1y6, null,as1y6,as1y6, null, null,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6},
-        /* 8 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        /* 9 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        /* 10 */  {as1y6,as1y6, null,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6},
-        /* 11 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1},
-        /* 12 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1},
-        /* 13 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1},
-        /* 14 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        /* 15 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1},
-        /* 16 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  as7},
-        /* 17 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1},
-        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+        //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  | otro
+        /* 0 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  as7, null},
+        /* 1 */   { null,as1y2, null, null,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, as1y2},
+        /* 2 */   {as1y3, null,as1y3, null,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3, as1y2},
+        /* 3 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        /* 4 */   { null, null, null, null, null, null, null, null, null, null, null,  as5, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        /* 5 */   { null, null, null, null, null, null, null, null, null, null,  as4, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        /* 6 */   {as1  ,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1},
+        /* 7 */   {as1y6,as1y6, null,as1y6,as1y6, null, null,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, as1y6},
+        /* 8 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        /* 9 */   { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        /* 10 */  {as1y6,as1y6, null,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, as1y6},
+        /* 11 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1},
+        /* 12 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1},
+        /* 13 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1},
+        /* 14 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        /* 15 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1},
+        /* 16 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  as7, null},
+        /* 17 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1},
+        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
         
         };
     }

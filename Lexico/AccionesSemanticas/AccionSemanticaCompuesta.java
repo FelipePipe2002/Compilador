@@ -8,7 +8,7 @@ public class AccionSemanticaCompuesta implements AccionSemantica {
         this.accionSemantica2 = as2;
     }
 
-    public void ejecutar() {
+    public void ejecutar() throws Exception {
         this.accionSemantica1.ejecutar();
         this.accionSemantica2.ejecutar();
     }

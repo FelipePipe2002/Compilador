@@ -61,9 +61,9 @@ public abstract class Matriz {
                     return 1;
                 } else if(caracter.matches("[0-9]")){
                     return 2;
+                } else { //otro
+                    return 27;
                 }
-                break;
         }
-        return -1;
     }
 }

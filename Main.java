@@ -5,7 +5,7 @@ public class Main {
         AnalizadorLexico analizador = new AnalizadorLexico(args);
         Token token = analizador.getToken();
         while (token.getTipo().getNumero() != TokenType.Fin.getNumero()){
-            System.out.println(token);         
+            System.out.println(token);       
             token = analizador.getToken();
         }
     }

@@ -1,5 +1,5 @@
 package Lexico.AccionesSemanticas;
-public class CheckRangoCaracteres extends CheckRango implements AccionSemantica {
+public class CheckRangoCaracteres implements AccionSemantica {
     int rango;
     
     public CheckRangoCaracteres(int rango){

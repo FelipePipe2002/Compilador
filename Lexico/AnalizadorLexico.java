@@ -1,6 +1,8 @@
 package Lexico;
 import java.io.RandomAccessFile;
 
+import Lexico.AccionesSemanticas.ContarSaltosLinea;
+
 public class AnalizadorLexico{
 
     private static RandomAccessFile reader;
@@ -20,7 +22,7 @@ public class AnalizadorLexico{
     public Token getToken() throws Exception {
 
         int caracter;
-        int viejoEstado,nuevoEstado = 0;
+        int viejoEstado=0,nuevoEstado = 0;
         AnalizadorLexico.buffer= "";
         MatrizDeTransicionEstados matrizTransicion = new MatrizDeTransicionEstados();
         MatrizDeAS matrizAcciones = new MatrizDeAS();
@@ -31,29 +33,39 @@ public class AnalizadorLexico{
                 viejoEstado = nuevoEstado;
                 nuevoEstado = matrizTransicion.getProximoEstado(viejoEstado, carac);
                 if (nuevoEstado == -1){
-                    //ErroresLexicos.MostrarErrores();
-                    throw new Exception("Error a la hora de crear " + retornarCamino(viejoEstado,carac));
+                    throw new Exception("Error a la hora de crear " + retornarCamino(viejoEstado,carac) + " en la linea " + ContarSaltosLinea.cantSaltos);
                 }
 
                 //si se ejecuta la AS1 poner el carac vacio
-                if((viejoEstado == 0 && nuevoEstado != 0) || viejoEstado !=0){
+                if(((viejoEstado == 0 && nuevoEstado != 0) || viejoEstado !=0 ) && !(viejoEstado == 18 || viejoEstado == 19 || nuevoEstado == 18) ){
                     AnalizadorLexico.buffer += carac;
+                }
+
+                if(viejoEstado == 17 && nuevoEstado ==18){
+                    AnalizadorLexico.buffer = AnalizadorLexico.buffer.substring(0, buffer.length() - 1);
                 }
 
                 matrizAcciones.ejecutarAccionSemantica(viejoEstado,carac);
                 
                 if (nuevoEstado == -2){
-                    System.out.println(AnalizadorLexico.buffer);
                     return retornarCamino(viejoEstado, carac);
                 }
 
                 caracter = reader.read();
         }
+        nuevoEstado = matrizTransicion.getProximoEstado(viejoEstado, (char) caracter);
+        if (AnalizadorLexico.buffer.length()>0){
+            if (nuevoEstado == -2){
+                return retornarCamino(viejoEstado, (char) caracter);
+            } else{
+                throw new Exception("Error a la hora de crear " + retornarCamino(viejoEstado,(char) caracter) + " en la linea " + ContarSaltosLinea.cantSaltos);
+            }
+        } else{
+            return new Token(TokenType.Fin);
+        }
 
-
-        //retornar el token pertinente
-        token = new Token(TokenType.Fin);
-        return token;
+        //me fijo si el ultimo buffer puede ser un token ejemplo Buffer contiene LONG pero el proximo caracter es -1, tendria que reconocerlo pero como
+        //la condicion de corte del while es -1 no lo hace, entonces hago esto
     }
 
     public static void devolverCaracter() throws Exception{
@@ -90,6 +102,8 @@ public class AnalizadorLexico{
                     case ';':
                         token.setTipo(TokenType.PuntoComa);
                         break;
+                    default:
+                        throw new Exception("Caracter mal colocado: " + caracter);
                 }
                 break;
             case 1:
