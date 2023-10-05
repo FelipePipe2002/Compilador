@@ -53,7 +53,7 @@ public abstract class Matriz {
             case '\n':
                 return 26;
             case '\r':
-                return 26;
+                return 27;
             default:
                 if(caracter.matches("[a-z]")){
                     return 0;
@@ -62,7 +62,7 @@ public abstract class Matriz {
                 } else if(caracter.matches("[0-9]")){
                     return 2;
                 } else { //otro
-                    return 27;
+                    return 28;
                 }
         }
     }

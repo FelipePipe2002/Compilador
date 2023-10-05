@@ -7,7 +7,6 @@ public class ContarSaltosLinea implements AccionSemantica {
     }
 
     public void ejecutar(){
-        System.out.println(ContarSaltosLinea.cantSaltos);
         ContarSaltosLinea.cantSaltos++;
         System.out.println(ContarSaltosLinea.cantSaltos);
     }

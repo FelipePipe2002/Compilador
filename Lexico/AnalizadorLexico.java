@@ -6,6 +6,8 @@ import Lexico.AccionesSemanticas.ContarSaltosLinea;
 public class AnalizadorLexico{
 
     private static RandomAccessFile reader;
+    private MatrizDeTransicionEstados matrizTransicion;
+    private MatrizDeAS matrizAcciones;
     public static String buffer;
 
     public AnalizadorLexico(String[] args) throws Exception {
@@ -17,45 +19,33 @@ public class AnalizadorLexico{
 	        System.exit(3);
         } 
         AnalizadorLexico.reader = new RandomAccessFile(args[0], "r");
+        matrizTransicion = new MatrizDeTransicionEstados();
+        matrizAcciones = new MatrizDeAS();
     }
 
     public Token getToken() throws Exception {
-
-        int caracter;
-        int viejoEstado=0,nuevoEstado = 0;
+        int caracter,viejoEstado=0,nuevoEstado = 0;
         AnalizadorLexico.buffer= "";
-        MatrizDeTransicionEstados matrizTransicion = new MatrizDeTransicionEstados();
-        MatrizDeAS matrizAcciones = new MatrizDeAS();
-        Token token = new Token();
         caracter = reader.read();
         while (caracter != -1) {
                 char carac = (char) caracter;
                 viejoEstado = nuevoEstado;
+                matrizAcciones.ejecutarAccionSemantica(viejoEstado,carac);
                 nuevoEstado = matrizTransicion.getProximoEstado(viejoEstado, carac);
+
                 if (nuevoEstado == -1){
                     throw new Exception("Error a la hora de crear " + retornarCamino(viejoEstado,carac) + " en la linea " + ContarSaltosLinea.cantSaltos);
-                }
-
-                //si se ejecuta la AS1 poner el carac vacio
-                if(((viejoEstado == 0 && nuevoEstado != 0) || viejoEstado !=0 ) && !(viejoEstado == 18 || viejoEstado == 19 || nuevoEstado == 18) ){
-                    AnalizadorLexico.buffer += carac;
-                }
-
-                if(viejoEstado == 17 && nuevoEstado ==18){
-                    AnalizadorLexico.buffer = AnalizadorLexico.buffer.substring(0, buffer.length() - 1);
-                }
-
-                matrizAcciones.ejecutarAccionSemantica(viejoEstado,carac);
-                
-                if (nuevoEstado == -2){
+                } else if (nuevoEstado == -2){
+                    System.out.println(AnalizadorLexico.buffer);
                     return retornarCamino(viejoEstado, carac);
                 }
-
+                
                 caracter = reader.read();
         }
         nuevoEstado = matrizTransicion.getProximoEstado(viejoEstado, (char) caracter);
         if (AnalizadorLexico.buffer.length()>0){
             if (nuevoEstado == -2){
+                System.out.println(AnalizadorLexico.buffer);
                 return retornarCamino(viejoEstado, (char) caracter);
             } else{
                 throw new Exception("Error a la hora de crear " + retornarCamino(viejoEstado,(char) caracter) + " en la linea " + ContarSaltosLinea.cantSaltos);
@@ -70,7 +60,6 @@ public class AnalizadorLexico{
 
     public static void devolverCaracter() throws Exception{
         AnalizadorLexico.reader.seek(AnalizadorLexico.reader.getFilePointer() - 1);
-        AnalizadorLexico.buffer = AnalizadorLexico.buffer.substring(0, buffer.length() - 1);
     }
 
     public Token retornarCamino(int estado, char caracter) throws Exception{
