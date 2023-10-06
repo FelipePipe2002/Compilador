@@ -1,20 +1,25 @@
 package Lexico.AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
+import Lexico.ErrorLexico;
 
-public class CheckRangoLong implements AccionSemantica {
+public class CheckRangoLong extends AccionSemantica {
     long rango;
     
-    public CheckRangoLong(Long rango){
+    public CheckRangoLong(AnalizadorLexico analizador, Long rango){
+        super(analizador);
         this.rango = rango;
     }
 
-    public void ejecutar() throws Exception{
-        AnalizadorLexico.buffer = AnalizadorLexico.buffer.replaceAll("[^\\d]", "");
-        Long bufferValue = Long.parseLong(AnalizadorLexico.buffer);
-            
-        if(bufferValue>rango){
-            throw new Exception("Constante fuera del rango de los enteros largos");
+    public boolean ejecutar(String buffer){
+        Long bufferValue = Long.parseLong(buffer);
+        
+        if(bufferValue>this.rango){
+            ErrorLexico error = new ErrorLexico("Constante fuera del rango de los enteros largos", this.getAnalizadorLexico().getLineaArchivo());
+            this.getAnalizadorLexico().addErroresLexicos(error);
+            return false;
+            // throw new Exception("Constante fuera del rango de los enteros largos");
         }
+        return true;
     }
 }

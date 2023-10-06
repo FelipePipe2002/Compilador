@@ -1,10 +1,16 @@
 package Lexico.AccionesSemanticas;
 
-public class ApilarCaracter implements AccionSemantica {
+import Lexico.AnalizadorLexico;
 
-    @Override
-    public void ejecutar(){
-       
+public class ApilarCaracter extends AccionSemantica {
+
+    public ApilarCaracter(AnalizadorLexico analizador){
+        super(analizador);
+    }
+
+    public boolean ejecutar(String buffer){
+        this.getAnalizadorLexico().sumarCaracter();
+        return true;
     }
     
 }

@@ -1,13 +1,15 @@
 package Lexico.AccionesSemanticas;
-public class ContarSaltosLinea implements AccionSemantica {
-    public static int cantSaltos;
 
-    public ContarSaltosLinea(){
-        ContarSaltosLinea.cantSaltos = 1;
+import Lexico.AnalizadorLexico;
+
+public class ContarSaltosLinea extends AccionSemantica {
+
+    public ContarSaltosLinea(AnalizadorLexico analizador){
+        super(analizador);
     }
 
-    public void ejecutar(){
-        ContarSaltosLinea.cantSaltos++;
-        System.out.println(ContarSaltosLinea.cantSaltos);
+    public boolean ejecutar(String buffer){
+        this.getAnalizadorLexico().sumarSaltoLinea();
+        return true;
     }
 }

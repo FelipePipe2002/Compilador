@@ -8,6 +8,7 @@ public class Main {
             System.out.println(token);       
             token = analizador.getToken();
         }
+        analizador.MostrarErrores();
+        analizador.MostrarTablaSimbolos();
     }
 }
-

@@ -2,13 +2,13 @@ package Lexico.AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
 
-public class DevolverCaracter implements AccionSemantica {   
-    public DevolverCaracter(){
+public class DevolverCaracter extends AccionSemantica {   
+    public DevolverCaracter(AnalizadorLexico analizador){
+        super(analizador);
     }
 
-    public void ejecutar() throws Exception{
-        AnalizadorLexico.devolverCaracter();
+    public boolean ejecutar(String buffer){
+        return this.getAnalizadorLexico().devolverCaracter();
     }
-
     
 }

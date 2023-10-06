@@ -2,11 +2,17 @@ package Lexico.AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
 
-public class Comentario implements AccionSemantica {
+public class Comentario extends AccionSemantica {
+
+    public Comentario(AnalizadorLexico analizador){
+        super(analizador);
+    }
 
     @Override
-    public void ejecutar() {
-        AnalizadorLexico.buffer = AnalizadorLexico.buffer.substring(0, AnalizadorLexico.buffer.length() - 1);
+    public boolean ejecutar(String buffer) {
+        buffer = buffer.substring(0, buffer.length() - 1);
+        this.getAnalizadorLexico().setBuffer(buffer);
+        return true;
     }
     
 }

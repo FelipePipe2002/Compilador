@@ -4,56 +4,65 @@ import Lexico.AccionesSemanticas.*;
 
 public class MatrizDeAS extends Matriz {
     private AccionSemantica[][] matrizAS;
+    private final int MAXCARACTERES = 20;
+    private final int MAXRANGOINT = 65535;
+    private final long MAXRANGOLONG = 2147483648l;
+    private final double MAXRANGOPUNTOFLOTANTE = 1.7976931348623157E308;
 
     // as1: devuelve el ultimo caracter al archivo              | char
-    // as2: limita el tamño del identificador a 20              | buffer
+    // as2: limita el tamaño del identificador a 20             | buffer
     // as3: chequea que exista la palabra clave                 | buffer
     // as4: chequea el rango de los enteros sin signo           | buffer
     // as5: cheque el rango de los enteros largos               | buffer
     // as6: Normaliza y chequea rango de punto flotante         | buffer
     // as7: Cuenta saltos de linea                              | buffer
-
-    public MatrizDeAS(){
-        AccionSemantica as0 = new ApilarCaracter();
-        AccionSemantica as1 = new DevolverCaracter();
-        AccionSemantica as1y2 = new AccionSemanticaCompuesta(as1,new CheckRangoCaracteres(20));
-        AccionSemantica as1y3 = new AccionSemanticaCompuesta(as1,new CheckPalabraReservada());
-        AccionSemantica as4 = new CheckRangoUI(65535);
-        AccionSemantica as5 = new CheckRangoLong(2147483648l);
-        AccionSemantica as1y6 = new AccionSemanticaCompuesta(as1,new CheckRangoPuntoFlotante(1.7976931348623157E308));
-        AccionSemantica as7 = new ContarSaltosLinea();
-        AccionSemantica as8 = new Comentario();
+    
+    public MatrizDeAS(AnalizadorLexico analizadorLexico){
+        AccionSemantica as0 = new ApilarCaracter(analizadorLexico);
+        AccionSemantica as1 = new DevolverCaracter(analizadorLexico);
+        AccionSemantica as1y2 = new AccionSemanticaCompuesta(as1,new CheckRangoCaracteres(analizadorLexico, MAXCARACTERES));
+        AccionSemantica as4 = new CheckRangoUI(analizadorLexico, MAXRANGOINT);
+        AccionSemantica as5 = new CheckRangoLong(analizadorLexico, MAXRANGOLONG);
+        AccionSemantica as6 = new CheckRangoPuntoFlotante(analizadorLexico, MAXRANGOPUNTOFLOTANTE);
+        AccionSemantica as1y6 = new AccionSemanticaCompuesta(as1,as6);
+        AccionSemantica as7 = new ContarSaltosLinea(analizadorLexico);
+        AccionSemantica as8 = new Comentario(analizadorLexico);
         this.matrizAS = new AccionSemantica[][] {
             
-        //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  | \r | otro
-        /* 0 */   { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , null, null,  as7, null,null},
-        /* 1 */   { as0 ,as1y2, as0 , as0 ,as1y2, null,as1y2,as1y2,as1y2, null, null, null,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, null,as1y2},
-        /* 2 */   {as1y3, as0 ,as1y3, null,as1y3,as1y3, null,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3,as1y3, null,as1y2},
-        /* 3 */   { null, null, as0 , null, as0 , null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null},
-        /* 4 */   { null, null, null, null, null, null, null, null, null, null, null,  as5, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null},
-        /* 5 */   { null, null, null, null, null, null, null, null, null, null,  as4, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null},
-        /* 6 */   {as1  ,  as1, as0 ,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,as1},
-        /* 7 */   {as1y6,as1y6, as0 ,as1y6,as1y6,  as0,  as0,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6},
-        /* 8 */   { null, null, null, null, null, null, null,  as0,  as0, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null},
-        /* 9 */   { null, null, as0 , null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null},
-        /* 10 */  {as1y6,as1y6, as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6},
-        /* 11 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as0 ,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,as1},
-        /* 12 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as0 ,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,as1},
-        /* 13 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as1,   as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, as0 ,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,as1},
-        /* 14 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,  as0, null, null, null, null, null, null,null},
-        /* 15 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as0,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,as1},
-        /* 16 */  {  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0,  as0, null,  as0,  as0,  as0,  as7, null,as0},
-        /* 17 */  {  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as8,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1,  as1, null,as1},
-        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null},
-        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null}
+        //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  | \r | otro | fin
+        /* 0 */   { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , null, null,  as7, null, null, null},
+        /* 1 */   { as0 ,as1y2, as0 , as0 ,as1y2, as0 ,as1y2,as1y2,as1y2, as0 , as0 , as0 ,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, null,as1y2, null},
+        /* 2 */   { as1 , as0 , as1 , null, as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null },
+        /* 3 */   { as1 , as1 , as0 , null, as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 4 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null , as1 , as5 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 5 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as4 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 6 */   { as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1,  as1 , null, as1 , null},
+        /* 7 */   {as1y6,as1y6, as0 ,as1y6,as1y6, as0 , as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6, as6 },
+        /* 8 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 9 */   { as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 10 */  {as1y6,as1y6, as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6, as6 },
+        /* 11 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 12 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 13 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 14 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 15 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 16 */  { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , as0 , as0 , as7 , null, as0 , as1 },
+        /* 17 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as8 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as1 },
+        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as1 }
         
         };
     }
     
-    public void ejecutarAccionSemantica(int estado, char nuevoCaracter) throws Exception{
-        int pos = this.reconocedor(nuevoCaracter);
+    public void ejecutarAccionSemantica(int estado, int nuevoCaracter, String buffer){
+        int pos;
+        if (nuevoCaracter == -1){
+            pos = 29;
+        } else
+            pos = this.reconocedor((char)nuevoCaracter);
+
         if (this.matrizAS[estado][pos] != null) {
-            this.matrizAS[estado][pos].ejecutar();
+            boolean correcto = this.matrizAS[estado][pos].ejecutar(buffer);
         }
     }
 }

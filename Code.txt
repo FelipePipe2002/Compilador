@@ -1,20 +1,22 @@
-LONG l1 = 2147483647_l;
-LONG l2 = -2147483648_l;
-DOUBLE d1 = 123.;
-DOUBLE d2 = 123.12;
-DOUBLE d3 = .12;
-DOUBLE d4 = 123.D+25;
-DOUBLE d5 = 123.12D+29;
-DOUBLE d6 = .12D+10;
-DOUBLE d7 = 123.D-25;
-DOUBLE d8 = 123.12D-29;
-DOUBLE d9 = .12D-10;
-LONG peroniunonidosnitrenicuatro = 40668809_l
-UINT _pepe911 = 123_ui
+{
+LONG l1 = 2147483647_l,
+LONG l2 = -2147483648_l,
+DOUBLE d1 = 123.,
+DOUBLE d2 = 123.12,
+DOUBLE d3 = .12,
+DOUBLE d4 = 123.D+25,
+DOUBLE d5 = 123.12D+29,
+DOUBLE d6 = .12D+10,
+DOUBLE d7 = 123.D-25,
+DOUBLE d8 = 123.12D-29,
+DOUBLE d9;d10; d11 = .12D-10,
+cuando_no_tengas_donde_ir_y_te_sangre_la_nariz_cuando_te_duela_la_cabeza,
+LONG peroniunonidosnitrenicuatro = 40668809_l,
+UINT _pepe911 = 123_ui,
 _cancion =  %
 Ni una 
 ni dos 
-ni tres ni cuartro%
+ni tres ni cuartro%,
 *{
 Hace un par de fechas, no se donde estas
 Te llamo por telefono, no me contestas
@@ -22,4 +24,6 @@ Me dejaste tirado y no hablamos nunca mas
 Es obvio, todavia no te dejo de amar
 
 }*
-LONG
+LONGcl
+VOID prueba(bool juega)
+}
