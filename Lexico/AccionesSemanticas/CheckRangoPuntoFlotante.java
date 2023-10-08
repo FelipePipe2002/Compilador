@@ -1,5 +1,7 @@
 package Lexico.AccionesSemanticas;
 
+import java.math.BigDecimal;
+
 import Lexico.AnalizadorLexico;
 import Lexico.ErrorLexico;
 
@@ -13,13 +15,15 @@ public class CheckRangoPuntoFlotante extends AccionSemantica {
 
     public boolean ejecutar(String buffer){
         buffer = buffer.replaceAll("[dD]", "E");
-        Double bufferValue = Double.parseDouble(buffer);
+        BigDecimal bufferValue = new BigDecimal(buffer);
         
-        if(bufferValue>this.rango){
+        BigDecimal doublemax = new BigDecimal("1.7976931348623157E+308");
+        BigDecimal doublemin= new BigDecimal("2.2250738585072014E-308");
+        BigDecimal doublezero= new BigDecimal("0.0");
+
+        if (bufferValue.compareTo(doublemax) == 1 || (bufferValue.compareTo(doublemin) == -1 && !bufferValue.equals(doublezero))){
             ErrorLexico error = new ErrorLexico("Constante fuera del rango de los punto flotante", this.getAnalizadorLexico().getLineaArchivo());
             this.getAnalizadorLexico().addErroresLexicos(error);
-            return false;
-            // throw new Exception("Contante fuera de los rangos del punto flotante");
         }
         return true;
     }

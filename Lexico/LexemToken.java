@@ -10,6 +10,6 @@ public class LexemToken extends Token{
 
     @Override
     public String toString() {
-        return getTipo().toString() + " " + lexema.toString();
+        return getTipo().getRepresentacion() + " " + lexema.toString();
     }
 }

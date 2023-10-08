@@ -52,7 +52,9 @@ public class AnalizadorLexico{
         }
         //chequeo si es una palabra reservada, un identificador o una constante, si no es ninguna buscar el token en retornarToken
         if (token.getTipo() == TokenType.PalabraReservada){
-            if(!this.tablaPalabrasReservadas.existeSimbolo(this.buffer)){
+            if(this.tablaPalabrasReservadas.existeSimbolo(this.buffer)){
+                return this.tablaPalabrasReservadas.obtenerSimbolo(this.buffer);
+            } else{
                 this.erroresLexicos.add(new ErrorLexico("No existe la palabra reservada: " + this.buffer,this.lineaArchivo));
             }
         } else if (token.getTipo() == TokenType.Identificador || token.getTipo() == TokenType.UInt || 
