@@ -1,116 +1,132 @@
-program : '{' declaration_list '}'
+%{
+    import package
+}%
 
-declaration_list : declaration
-              | declaration_list declaration
+%token IF ELSE END_IF PRINT CLASS VOID LONG UINT DOUBLE WHILE DO INTERFACE IMPLEMENT TOD
 
-declaration : statement
-          | class_declaration
-          | fun_declaration
+%%
 
-class_declaration : CLASS ID '{' class_body '}'
+programa    :   '{' lista_declaraciones '}'
+            ;
 
-class_body : class_member
-           | class_body class_member
+lista_declaraciones :   declaracion
+                    |   lista_declaraciones declaracion
+                    ;
 
-class_member : attribute_declaration
-             | method_declaration
+declaracion :   sentencia
+            |   declaracion_clase
+            |   declaracion_funcion
+            ;
 
-attribute_declaration : TYPE ID ','
+declaracion_clase   :   CLASS ID '{' cuerpo_clase '}'
+                    |   INTERFACE ID '{' cuerpo_interfaz '}' 
+                    |   CLASS ID IMPLEMENT ID '{' cuerpo_clase '}'
+                    ;
 
-method_declaration : TYPE ID '(' param_list ')' '{' method_body '}'
+cuerpo_clase    : miembro_clase
+                | cuerpo_clase miembro_clase
+                ;
 
-param_list : param
-           | param_list ',' param
+miembro_clase   :   declaracion_variable
+                |   declaracion_funcion
+                ;
+                               
+cuerpo_interfaz : cuerpo_interfaz declaracion_funcion
+                | declaracion_funcion
+                ;
 
-param : TYPE ID
+declaracion_variable:   TIPO lista_de_id ','
+                    ;
 
-method_body : method_member
-            | method_body method_member
+declaracion_funcion :   VOID ID '(' parametro_formal ')' '{' lista_sentencias '}' ','
+                    ;
 
-method_member : attribute_declaration
-              | function_declaration
+parametro_formal    :   TIPO ID 
+                    |   ''
+                    ;
 
-function_declaration : TYPE ID '(' param_list ')' compound_stmt
+lista_sentencias    :   sentencia
+                    |   lista_sentencias sentencia
+                    ;
 
-compound_stmt : '{' stmt_list '}'
+sentencia   :   sentencia_expresion
+            |   sentencia_seleccion
+            |   sentencia_iteracion
+            |   sentencia_retorno
+            |   sentencia_imprimir
+            |   ''
+            ;
 
-stmt_list : stmt
-        | stmt_list stmt
+sentencia_imprimir  :    PRINT cadena ','
+                    ;
 
-stmt : expr_stmt
-    | compound_stmt
-    | selection_stmt
-    | iteration_stmt
-    | return_stmt
-    | print_stmt
+sentencia_expresion :   expresion ','
+                    ;
 
-print_stmt : PRINT string
+sentencia_seleccion :   IF '(' comparacion ')' cuerpo_if END_IF ','
+                    |   IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF ','
+                    ;
 
-expr_stmt : expr ';'
+cuerpo_if   :   sentencia 
+            |   '{' lista_sentencias '}' 
+            ;
 
-selection_stmt : IF '(' expr ')' stmt
-            | IF '(' expr ')' stmt ELSE stmt
+comparacion : operacion comparador operacion;
 
-iteration_stmt : DO stmt WHILE '(' expr ')' ';'
+comparador  :   '<'
+            |   '>'
+            |   '<='
+            |   '>='
+            |   '=='
+            |   '!!'
+            ;
+           
+sentencia_iteracion :   DO lista_sentencias WHILE '(' comparacion ')' ','
+                    ;
 
-return_stmt : RETURN expr ';'
+sentencia_retorno   :   RETURN ','
+                    ;
 
-expr : ID '=' expr
-    | ID '(' args ')'
-    | expr '+' expr
-    | expr '-' expr
-    | expr '*' expr
-    | expr '/' expr
-    | expr '--'
-    | ID
-    | NUM
+expresion   :   declaracion_variable
+            |   asignacion
+            |   llamado_clase '(' operacion ')'
+            ;
 
-args : expr
-    | args ',' expr
+llamado_clase   :   llamado_clase '.' ID;
+                |   ID
+                ;
 
+asignacion  :   lista_de_id '=' operacion 
+            ;
 
+lista_de_id :   lista_de_id ';' llamado_clase
+            |   llamado_clase
+            ;
 
-statement : var_declaration , 
+operacion   :   operacion '+' termino
+            |   operacion '-' termino
+            |   termino
+            ;
 
-var_declaration :  TYPE ID ','
-                | TYPE ID ';' var_declaration
+          
+termino :   termino '*' termino_inmediato
+        |   termino '/' termino_inmediato
+        |   termino_inmediato
+        ;
 
-fun_declaration : TYPE ID '(' param ')' compound_stmt
+termino_inmediato   :   factor '-''-' 
+                    |   factor
+                    ;
 
-param : TYPE ID
+factor  :    llamado_clase
+        |    CTE
+        ;
 
-compound_stmt : '{' stmt_list '}'
+TIPO    :   DOUBLE 
+        |   UINT 
+        |   LONG 
+        |   ID
+        ;
 
-stmt_list : stmt
-        | stmt_list stmt
+%%
 
-stmt : expr_stmt
-    | compound_stmt
-    | selection_stmt
-    | iteration_stmt
-    | return_stmt
-    | print_stmt
-
-print_stmt : PRINT string
-
-expr_stmt : expr ','
-
-selection_stmt : IF '(' expr ')' stmt
-            | IF '(' expr ')' stmt ELSE stmt
-
-iteration_stmt : DO stmt WHILE '(' expr ')' ','
-
-return_stmt : RETURN expr ';'
-
-expr : ID '=' expr
-    | ID '(' args ')'
-    | expr '+' expr
-    | expr '-' expr
-    | expr '*' expr
-    | expr '/' expr
-    | expr '--'
-    | ID
-    | NUM
-
-args : expr
-    | args ',' expr
