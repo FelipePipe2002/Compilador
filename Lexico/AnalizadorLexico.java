@@ -53,16 +53,23 @@ public class AnalizadorLexico{
         //chequeo si es una palabra reservada, un identificador o una constante, si no es ninguna buscar el token en retornarToken
         if (token.getTipo() == TokenType.PalabraReservada){
             if(this.tablaPalabrasReservadas.existeSimbolo(this.buffer)){
+                System.out.println(this.buffer);
                 return this.tablaPalabrasReservadas.obtenerSimbolo(this.buffer);
             } else{
                 this.erroresLexicos.add(new ErrorLexico("No existe la palabra reservada: " + this.buffer,this.lineaArchivo));
             }
-        } else if (token.getTipo() == TokenType.Identificador || token.getTipo() == TokenType.UInt || 
-                    token.getTipo() == TokenType.Long || token.getTipo() == TokenType.Double || token.getTipo() == TokenType.Cadena) {
+        } else if (token.getTipo() == TokenType.Identificador || token.getTipo() == TokenType.UInt || token.getTipo() == TokenType.Long || token.getTipo() == TokenType.Double || token.getTipo() == TokenType.Cadena) {  
+            System.out.println(this.buffer);
+            if(token.getTipo() == TokenType.Long){
+                this.buffer += "_l";
+            } else if (token.getTipo() == TokenType.UInt){
+                this.buffer += "_ui";
+            }
+            System.out.println(this.buffer);
             if(!this.tablaSimbolos.existeSimbolo(this.buffer)){
                 this.tablaSimbolos.agregarSimbolo(this.buffer,token);
-                token = new LexemToken(token.getTipo(),buffer);
             }
+            token = new LexemToken(token.getTipo(),buffer);
         }
         return token;
     }
@@ -120,6 +127,10 @@ public class AnalizadorLexico{
 
     public void MostrarTablaSimbolos(){
         this.tablaSimbolos.imprimirTabla();
+    }
+
+    public void convertirNegativo(String numero){
+        this.tablaSimbolos.convertirNegativo(numero);
     }
 
     private Token retornarToken(int estado, int c) throws Exception{

@@ -1,43 +1,28 @@
 {
-LONG l1,
-l1 = 2147483647_l,
-LONG l2,
-l2 = -2147483648_l,
-DOUBLE d1,
-d1 = 123.,
-DOUBLE d2,
-d2 = 123.12,
-DOUBLE d3,
-d3 = .12,
-DOUBLE d4,
-d4 = 1.7976931348623157D+308,
-DOUBLE d5,
-d5 = 123.12D+29,
-DOUBLE d6,
-d6 = .12D+10,
-DOUBLE d7,
-d7 = 123.D-25,
-DOUBLE d8,
-d8 = 123.12D-29,
-DOUBLE d9;d10;d11,
-d9;d10;d11 = .12D-10,
-d9;d10;d11 = -.12D-10,
-UINT cuando_no_tengas_donde_ir_y_te_sangre_la_nariz_cuando_te_duela_la_cabeza,
-LONG peroniunonidosnitrenicuatro,
-peroniunonidosnitrenicuatro = 40668809_l,
-UINT _pepe911,
-_pepe911 = 123_ui,
-PRINT %
-Ni una 
-ni dos 
-ni tres ni cuartro%,
-*{
-Hace un par de fechas, no se donde estas
-Te llamo por telefono, no me contestas
-Me dejaste tirado y no hablamos nunca mas
-Es obvio, todavia no te dejo de amar
-
-}*
-LONG cl,
-VOID prueba(UINT juega),
+    CLASS ca {
+        UINT a;c,
+        VOID m() {
+            a=c-- -3_l,
+        },
+    }
+    CLASS cb{
+        DOUBLE b,
+        DOUBLE a,
+        VOID n() {
+            a=2_l*b+3_l-a--,
+            prueba = f---3_ui,
+            ca(),
+            DO {
+                IF (c-- < 5_l) {
+                    a1.a = 3_ui,
+                    b1.a = 3_l,
+                    b1.ca.a = 612.D-12,
+                    b1.b = 1.2,
+                    b1.a(),
+                }
+                END_IF,
+            } WHILE (45_ui <= 2_ui),
+            RETURN
+        },
+    }
 }

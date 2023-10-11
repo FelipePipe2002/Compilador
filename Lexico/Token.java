@@ -1,7 +1,6 @@
 package Lexico;
 
-
-public class Token {
+public class Token{
     private TokenType tipo;
     
     public Token(TokenType tipo) {

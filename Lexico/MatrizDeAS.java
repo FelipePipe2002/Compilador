@@ -9,13 +9,13 @@ public class MatrizDeAS extends Matriz {
     private final long MAXRANGOLONG = 2147483648l;
     private final double MAXRANGOPUNTOFLOTANTE = 1.7976931348623157E308;
 
-    // as1: devuelve el ultimo caracter al archivo              | char
-    // as2: limita el tamaño del identificador a 20             | buffer
-    // as3: chequea que exista la palabra clave                 | buffer
-    // as4: chequea el rango de los enteros sin signo           | buffer
-    // as5: cheque el rango de los enteros largos               | buffer
-    // as6: Normaliza y chequea rango de punto flotante         | buffer
-    // as7: Cuenta saltos de linea                              | buffer
+    // as1: devuelve el ultimo caracter al archivo
+    // as2: limita el tamaño del identificador a 20
+    // as3: chequea que exista la palabra clave
+    // as4: chequea el rango de los enteros sin signo
+    // as5: cheque el rango de los enteros largos
+    // as6: Normaliza y chequea rango de punto flotante
+    // as7: Cuenta saltos de linea
     
     public MatrizDeAS(AnalizadorLexico analizadorLexico){
         AccionSemantica as0 = new ApilarCaracter(analizadorLexico);
@@ -32,9 +32,9 @@ public class MatrizDeAS extends Matriz {
         //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  | \r | otro | fin
         /* 0 */   { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , null, null,  as7, null, null, null},
         /* 1 */   { as0 ,as1y2, as0 , as0 ,as1y2, as0 ,as1y2,as1y2,as1y2, as0 , as0 , as0 ,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, null,as1y2, null},
-        /* 2 */   { as1 , as0 , as1 , null, as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null },
+        /* 2 */   { as1 , as0 , as1 , as0 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
         /* 3 */   { as1 , as1 , as0 , null, as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
-        /* 4 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null , as1 , as5 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 4 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , as5 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
         /* 5 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as4 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
         /* 6 */   { as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1,  as1 , null, as1 , null},
         /* 7 */   {as1y6,as1y6, as0 ,as1y6,as1y6, as0 , as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6, as6 },

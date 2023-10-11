@@ -8,7 +8,7 @@ public class TablaPalabrasReservadas extends Tabla{
         this.agregarSimbolo("END_IF", new Token(TokenType.ENDIF));
         this.agregarSimbolo("PRINT", new Token(TokenType.PRINT));
         this.agregarSimbolo("CLASS", new Token(TokenType.CLASS));
-        this.agregarSimbolo("VOID", new Token(TokenType.LONG));
+        this.agregarSimbolo("VOID", new Token(TokenType.VOID));
         this.agregarSimbolo("LONG", new Token(TokenType.LONG));
         this.agregarSimbolo("UINT", new Token(TokenType.UINT));
         this.agregarSimbolo("DOUBLE", new Token(TokenType.DOUBLE));

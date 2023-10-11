@@ -25,6 +25,12 @@ public class Tabla {
         tabla.remove(nombre);
     }
 
+    public void convertirNegativo(String nombre){
+        Token aux = obtenerSimbolo(nombre);
+        eliminarSimbolo(nombre);
+        agregarSimbolo("-"+nombre,aux);
+    }
+
     public void limpiarTabla() {
         tabla.clear();
     }
