@@ -1,15 +1,17 @@
 %{
 
-package Lexico;
+package Sintaxico;
 
-import Lexico.AcionesSemanticas;
+import Lexico.AnalizadorLexico;
 import Lexico.Token;
-import java.util.Hashtable;
-import java.util.Vector;
 
 %}
 
 %token IF ELSE END_IF PRINT CLASS VOID LONG UINT DOUBLE WHILE DO INTERFACE IMPLEMENT TOD ID CTE_LONG CTE_UINT CTE_DOUBLE CTE_UINT CADENA
+
+// Precedencia 
+%left '+' '-'
+%left '*' '/'
 
 %%
 
@@ -122,7 +124,7 @@ termino :   termino '*' termino_inmediato
         |   termino_inmediato
         ;
 
-termino_inmediato   :   factor '-''-' 
+termino_inmediato   :   factor '--' 
                     |   factor
                     ;
 
