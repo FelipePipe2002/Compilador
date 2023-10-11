@@ -16,5 +16,7 @@ public class TablaPalabrasReservadas extends Tabla{
         this.agregarSimbolo("DO", new Token(TokenType.DO));
         this.agregarSimbolo("INTERFACE", new Token(TokenType.INTERFACE));
         this.agregarSimbolo("IMPLEMENT", new Token(TokenType.IMPLEMENT));
+        this.agregarSimbolo("RETURN", new Token(TokenType.RETURN));
+        this.agregarSimbolo("TOD", new Token(TokenType.TOD));
     }
 }

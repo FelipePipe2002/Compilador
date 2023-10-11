@@ -1,6 +1,7 @@
 package Lexico;
 public enum TokenType {
     PalabraReservada(35,"PALABRA RESERVADA"),
+
     ParentesisIzquierdo(40,"("),
     ParentesisDerecho(41,")"),
     OperadorPor(42,"*"),
@@ -15,6 +16,7 @@ public enum TokenType {
     Mayor(62,">"),
     LlaveIzquierda(123,"{"),
     LlaveDerecha(125,"}"),
+
     IF(257,"IF"),
     ELSE(258,"ELSE"),
     ENDIF(259,"END_IF"),
@@ -28,16 +30,17 @@ public enum TokenType {
     DO(267,"DO"),
     INTERFACE(268,"INTERFACE"),
     IMPLEMENT(269,"IMPLEMENT"),
-    Identificador(271,"identificador"),
-    Long(272,"Long"),
-    UInt(273,"Uint"),
-    Double(274,"Double"),
-    Cadena(275,"Cadena"),
-    MenorIgual(276,"<="),
-    MayorIgual(277,">="),
-    Igual(278,"=="),
-    Distinto(279,"!!"),
-    RETURN(280,"RETURN"),
+    RETURN(270,"RETURN"),
+    TOD(271,"TOD"),
+    Identificador(272,"identificador"),
+    Long(273,"Long"),
+    UInt(274,"Uint"),
+    Double(275,"Double"),
+    Cadena(276,"Cadena"),
+    MenorIgual(277,"<="),
+    MayorIgual(278,">="),
+    Igual(279,"=="),
+    Distinto(280,"!!"),
     OperadorMenosInmediato(281,"--"),
     
     Error(256,"Error"),

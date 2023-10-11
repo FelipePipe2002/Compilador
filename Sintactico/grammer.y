@@ -1,13 +1,12 @@
 %{
 
-package Sintaxico;
+package Sintacico;
 
-import Lexico.AnalizadorLexico;
-import Lexico.Token;
+import Lexico.*;
 
 %}
 
-%token IF ELSE END_IF PRINT CLASS VOID LONG UINT DOUBLE WHILE DO INTERFACE IMPLEMENT TOD ID CTE_LONG CTE_UINT CTE_DOUBLE CTE_UINT CADENA
+%token IF ELSE END_IF PRINT CLASS VOID LONG UINT DOUBLE WHILE DO INTERFACE IMPLEMENT RETURN TOD ID CTE_LONG CTE_UINT CTE_DOUBLE CADENA
 
 // Precedencia 
 %left '+' '-'
@@ -28,8 +27,8 @@ declaracion :   sentencia
             ;
 
 declaracion_clase   :   CLASS ID '{' cuerpo_clase '}'
-                    |   INTERFACE ID '{' cuerpo_interfaz '}' 
                     |   CLASS ID IMPLEMENT ID '{' cuerpo_clase '}'
+                    |   INTERFACE ID '{' cuerpo_interfaz '}' 
                     ;
 
 cuerpo_clase    : miembro_clase
@@ -47,8 +46,8 @@ cuerpo_interfaz : cuerpo_interfaz declaracion_funcion
 declaracion_variable:   tipo lista_de_id ','
                     ;
 
-declaracion_funcion :   VOID ID '(' parametro_formal ')' '{' lista_sentencias '}'
-                    |   VOID ID '(' ')' '{' lista_sentencias '}'
+declaracion_funcion :   VOID ID '(' parametro_formal ')' '{' lista_sentencias '}' ','
+                    |   VOID ID '(' ')' '{' lista_sentencias '}' ','
                     ;
 
 parametro_formal    :   tipo ID 
@@ -61,18 +60,15 @@ lista_sentencias    :   sentencia
 sentencia   :   sentencia_expresion
             |   sentencia_seleccion
             |   sentencia_iteracion
-            |   sentencia_retorno
             |   sentencia_imprimir
+            |   sentencia_retorno
             ;
 
 sentencia_imprimir  :    PRINT CADENA ','
                     ;
 
-sentencia_expresion :   expresion
-                    ;
-
-sentencia_seleccion :   IF '(' comparacion ')' cuerpo_if END_IF
-                    |   IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF
+sentencia_seleccion :   IF '(' comparacion ')' cuerpo_if END_IF ','
+                    |   IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF ','
                     ;
 
 cuerpo_if   :   sentencia 
@@ -95,18 +91,17 @@ sentencia_iteracion :   DO '{' lista_sentencias '}' WHILE '(' comparacion ')'
 sentencia_retorno   :   RETURN ','
                     ;
 
-expresion   :   declaracion_variable
-            |   declaracion_funcion
-            |   asignacion  ","
-            |   llamado_clase '(' operacion ')'  ","
-            |   TOD "(" operacion ")" ","
+sentencia_expresion   :   declaracion_variable
+            |   asignacion
+            |   llamado_clase '(' operacion ')' ','
+            |   TOD '(' operacion ')' ','
             ;
 
-llamado_clase   :   llamado_clase '.' ID;
+llamado_clase   :   llamado_clase '.' ID
                 |   ID
                 ;
 
-asignacion  :   lista_de_id '=' operacion
+asignacion  :   lista_de_id '=' operacion ','
             ;
 
 lista_de_id :   lista_de_id ';' llamado_clase
@@ -130,10 +125,10 @@ termino_inmediato   :   factor '--'
 
 factor  :    llamado_clase
         |    CTE_DOUBLE
-        |    "-" CTE_DOUBLE
+        |    '-' CTE_DOUBLE
         |    CTE_UINT
         |    CTE_LONG
-        |    "-" CTE_LONG
+        |    '-' CTE_LONG
         ;
 
 tipo    :   DOUBLE 
