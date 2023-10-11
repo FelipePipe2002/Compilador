@@ -1,19 +1,33 @@
 {
-LONG l1 = 2147483647_l,
-LONG l2 = -2147483648_l,
-DOUBLE d1 = 123.,
-DOUBLE d2 = 123.12,
-DOUBLE d3 = .12,
-DOUBLE d4 = 123.D+25,
-DOUBLE d5 = 123.12D+29,
-DOUBLE d6 = .12D+10,
-DOUBLE d7 = 123.D-25,
-DOUBLE d8 = 123.12D-29,
-DOUBLE d9;d10; d11 = .12D-10,
-cuando_no_tengas_donde_ir_y_te_sangre_la_nariz_cuando_te_duela_la_cabeza,
-LONG peroniunonidosnitrenicuatro = 40668809_l,
-UINT _pepe911 = 123_ui,
-_cancion =  %
+LONG l1,
+l1 = 2147483647_l,
+LONG l2,
+l2 = -2147483648_l,
+DOUBLE d1,
+d1 = 123.,
+DOUBLE d2,
+d2 = 123.12,
+DOUBLE d3,
+d3 = .12,
+DOUBLE d4,
+d4 = 1.7976931348623157D+308,
+DOUBLE d5,
+d5 = 123.12D+29,
+DOUBLE d6,
+d6 = .12D+10,
+DOUBLE d7,
+d7 = 123.D-25,
+DOUBLE d8,
+d8 = 123.12D-29,
+DOUBLE d9;d10;d11,
+d9;d10;d11 = .12D-10,
+d9;d10;d11 = -.12D-10,
+UINT cuando_no_tengas_donde_ir_y_te_sangre_la_nariz_cuando_te_duela_la_cabeza,
+LONG peroniunonidosnitrenicuatro,
+peroniunonidosnitrenicuatro = 40668809_l,
+UINT _pepe911,
+_pepe911 = 123_ui,
+PRINT %
 Ni una 
 ni dos 
 ni tres ni cuartro%,
@@ -24,6 +38,6 @@ Me dejaste tirado y no hablamos nunca mas
 Es obvio, todavia no te dejo de amar
 
 }*
-LONGcl
-VOID prueba(bool juega)
+LONG cl,
+VOID prueba(UINT juega),
 }
