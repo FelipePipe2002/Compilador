@@ -1,4 +1,4 @@
-{
+{    
     CLASS ca {
         UINT a;c,
         VOID m() {
@@ -22,7 +22,7 @@
                 }
                 END_IF,
             } WHILE (45_ui <= 2_ui),
-            RETURN
+            RETURN,
         },
     }
 }

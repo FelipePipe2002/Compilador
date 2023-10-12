@@ -10,6 +10,9 @@ import Lexico.*;
 
 %%
 programa : '{' lista_declaraciones '}'
+         | '{' lista_declaraciones {analizadorLex.addErroresLexicos(new ErrorLexico("El programa tiene que terminar con \'}\'", analizadorLex.getLineaArchivo()));}
+         | lista_declaraciones '}' {analizadorLex.addErroresLexicos(new ErrorLexico("El programa tiene que arrancar con \'{\'", analizadorLex.getLineaArchivo()));}
+         | lista_declaraciones {analizadorLex.addErroresLexicos(new ErrorLexico("El programa tiene que estar contenido en \'{\' \'}\'", analizadorLex.getLineaArchivo()));}
          ;
 
 lista_declaraciones : declaracion
@@ -39,11 +42,13 @@ cuerpo_interfaz : declaracion_funcion
                 ;
 
 declaracion_variable : tipo lista_de_id ','  {System.out.println("DECLARACION DE VARIABLE");}
-
+                     | tipo lista_de_id {analizadorLex.addErroresLexicos(new ErrorLexico("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                      ;
 
 declaracion_funcion : VOID ID '(' ')' bloque_sentencias ','   {System.out.println("DECLARACION DE FUNCION SIN PARAMETROS");}
                     | VOID ID '(' parametro_formal ')' bloque_sentencias ','  {System.out.println("DECLARACION DE FUNCION");}
+                    | VOID ID '(' ')' bloque_sentencias   {analizadorLex.addErroresLexicos(new ErrorLexico("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
+                    | VOID ID '(' parametro_formal ')' bloque_sentencias  {analizadorLex.addErroresLexicos(new ErrorLexico("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     ;
 
 parametro_formal : tipo ID 
@@ -101,8 +106,11 @@ sentencia_iteracion : DO bloque_sentencias WHILE '(' comparacion ')' ','  {Syste
 sentencia_expresion : declaracion_variable
                     | asignacion
                     | llamado_clase '(' ')' ','
+                    | llamado_clase '(' ')' {analizadorLex.addErroresLexicos(new ErrorLexico("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | llamado_clase '(' operacion ')' ','
+                    | llamado_clase '(' operacion ')' {analizadorLex.addErroresLexicos(new ErrorLexico("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | TOD '(' operacion ')' ','
+                    | TOD '(' operacion ')' {analizadorLex.addErroresLexicos(new ErrorLexico("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     ;
 
 llamado_clase : ID
@@ -110,6 +118,7 @@ llamado_clase : ID
               ;
 
 asignacion : lista_de_id '=' operacion ','  {System.out.println("ASIGNACION");}
+           | lista_de_id '=' operacion {analizadorLex.addErroresLexicos(new ErrorLexico("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
            | tipo lista_de_id '=' operacion ','         {ErrorLexico error = new ErrorLexico("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo());
                                                         analizadorLex.addErroresLexicos(error);}
            ;
@@ -164,8 +173,8 @@ public static void main(String[] args) throws Exception{
         par = new Parser(false);
         par.run();
 
-        analizadorLex.MostrarErrores();
         analizadorLex.MostrarTablaSimbolos();
+        analizadorLex.MostrarErrores();
 
         System.out.println("Fin de la compilacion");
 }
