@@ -3,17 +3,18 @@
         UINT a;c,
         VOID m() {
             a=c-- -3_l,
+            PRINT %asdasd%,
         },
     }
     CLASS cb{
         DOUBLE b,
         DOUBLE a,
         VOID n() {
-            a=2_l*b+3_l-a--,
+            a=(2_l*b+3_l)*a--,
             prueba = f---3_ui,
             ca(),
             DO {
-                IF (c-- < 5_l) {
+                IF (c-- == 5_l) {
                     a1.a = 3_ui,
                     b1.a = 3_l,
                     b1.ca.a = 612.D-12,

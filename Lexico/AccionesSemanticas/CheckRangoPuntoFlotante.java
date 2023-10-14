@@ -3,7 +3,7 @@ package Lexico.AccionesSemanticas;
 import java.math.BigDecimal;
 
 import Lexico.AnalizadorLexico;
-import Lexico.ErrorLexico;
+import Lexico.Error;
 
 public class CheckRangoPuntoFlotante extends AccionSemantica {
     double rango;
@@ -22,7 +22,7 @@ public class CheckRangoPuntoFlotante extends AccionSemantica {
         BigDecimal doublezero= new BigDecimal("0.0");
 
         if (bufferValue.compareTo(doublemax) == 1 || (bufferValue.compareTo(doublemin) == -1 && !bufferValue.equals(doublezero))){
-            ErrorLexico error = new ErrorLexico("Constante fuera del rango de los punto flotante", this.getAnalizadorLexico().getLineaArchivo());
+            Error error = new Error("Constante fuera del rango de los punto flotante", this.getAnalizadorLexico().getLineaArchivo());
             this.getAnalizadorLexico().addErroresLexicos(error);
         }
         return true;

@@ -1,10 +1,10 @@
 package Lexico;
 
-public class ErrorLexico extends Exception {
+public class Error extends Exception {
     String mensaje;
     int linea;
 
-    public ErrorLexico(String mensaje, int linea){
+    public Error(String mensaje, int linea){
         this.mensaje = mensaje;
         this.linea = linea;
     }

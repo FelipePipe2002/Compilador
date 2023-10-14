@@ -1,7 +1,7 @@
 package Lexico.AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
-import Lexico.ErrorLexico;
+import Lexico.Error;
 
 public class CheckRangoUI extends AccionSemantica {
     Integer rango;
@@ -15,7 +15,7 @@ public class CheckRangoUI extends AccionSemantica {
         Integer bufferValue = Integer.parseInt(buffer);
         
         if(bufferValue>this.rango){
-            ErrorLexico error = new ErrorLexico("Constante fuera del rango de los enteros sin signo", this.getAnalizadorLexico().getLineaArchivo());
+            Error error = new Error("Constante fuera del rango de los enteros sin signo", this.getAnalizadorLexico().getLineaArchivo());
             this.getAnalizadorLexico().addErroresLexicos(error);
             return false;
             // throw new Exception("Constante fuera del rango de los enteros sin signo");

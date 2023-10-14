@@ -8,7 +8,7 @@ public class AnalizadorLexico{
     private RandomAccessFile reader;
     private MatrizDeTransicionEstados matrizTransicion;
     private MatrizDeAS matrizAcciones;
-    private ArrayList<ErrorLexico> erroresLexicos;
+    private ArrayList<Error> erroresLexicos;
     private String buffer;
     private int lineaArchivo;
     private char ultimoCararterLeido;
@@ -26,7 +26,7 @@ public class AnalizadorLexico{
         this.reader = new RandomAccessFile(args[0], "r");
         this.matrizTransicion = new MatrizDeTransicionEstados();
         this.matrizAcciones = new MatrizDeAS(this);
-        this.erroresLexicos = new ArrayList<ErrorLexico>();
+        this.erroresLexicos = new ArrayList<Error>();
         this.buffer = "";
         this.lineaArchivo = 1;
         this.ultimoCararterLeido = ' ';
@@ -47,25 +47,22 @@ public class AnalizadorLexico{
         }
         Token token = retornarToken(viejoEstado,caracter);
         if (nuevoEstado == -1){
-            this.addErroresLexicos(new ErrorLexico("Error a la hora de crear " + token,this.lineaArchivo));
-
+            this.addErroresLexicos(new Error("Error a la hora de crear " + token,this.lineaArchivo));
         }
         //chequeo si es una palabra reservada, un identificador o una constante, si no es ninguna buscar el token en retornarToken
         if (token.getTipo() == TokenType.PalabraReservada){
             if(this.tablaPalabrasReservadas.existeSimbolo(this.buffer)){
-                System.out.println(this.buffer);
                 return this.tablaPalabrasReservadas.obtenerSimbolo(this.buffer);
             } else{
-                this.erroresLexicos.add(new ErrorLexico("No existe la palabra reservada: " + this.buffer,this.lineaArchivo));
+                this.erroresLexicos.add(new Error("No existe la palabra reservada: " + this.buffer,this.lineaArchivo));
+                return new Token(TokenType.Error);
             }
         } else if (token.getTipo() == TokenType.Identificador || token.getTipo() == TokenType.UInt || token.getTipo() == TokenType.Long || token.getTipo() == TokenType.Double || token.getTipo() == TokenType.Cadena) {  
-            System.out.println(this.buffer);
             if(token.getTipo() == TokenType.Long){
                 this.buffer += "_l";
             } else if (token.getTipo() == TokenType.UInt){
                 this.buffer += "_ui";
             }
-            System.out.println(this.buffer);
             if(!this.tablaSimbolos.existeSimbolo(this.buffer)){
                 this.tablaSimbolos.agregarSimbolo(this.buffer,token);
             }
@@ -76,7 +73,7 @@ public class AnalizadorLexico{
 
     public void MostrarErrores() throws Exception{
         if (this.erroresLexicos.size()>0){
-            for (ErrorLexico error : this.erroresLexicos) {
+            for (Error error : this.erroresLexicos) {
                 System.out.println(error.getMensaje() + " en la linea: " + error.getLinea());
             }
             //throw new Exception("Se han encontrado los errores anteriores");
@@ -92,7 +89,7 @@ public class AnalizadorLexico{
         try{
             this.reader.seek(this.reader.getFilePointer() - 1);
         } catch(IOException e) {
-            ErrorLexico error = new ErrorLexico("Error al retroceder en el archivo", this.lineaArchivo);
+            Error error = new Error("Error al retroceder en el archivo", this.lineaArchivo);
             this.erroresLexicos.add(error);
             devolver = false;
         }
@@ -115,12 +112,12 @@ public class AnalizadorLexico{
         return this.lineaArchivo;
     }
 
-    public void addErroresLexicos(ErrorLexico error){
+    public void addErroresLexicos(Error error){
         this.erroresLexicos.add(error);
     }
 
-    public ArrayList<ErrorLexico> getErroresLexicos(){
-        ArrayList<ErrorLexico> aux = new ArrayList<ErrorLexico>();
+    public ArrayList<Error> getErroresLexicos(){
+        ArrayList<Error> aux = new ArrayList<Error>();
         aux.addAll(this.erroresLexicos);
         return aux;
     }

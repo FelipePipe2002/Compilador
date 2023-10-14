@@ -1,7 +1,7 @@
 package Lexico.AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
-import Lexico.ErrorLexico;
+import Lexico.Error;
 
 public class CheckRangoCaracteres extends AccionSemantica {
     int rango;
@@ -15,7 +15,7 @@ public class CheckRangoCaracteres extends AccionSemantica {
         if (buffer.length() > this.rango){
             buffer = buffer.substring(0,20);
             this.getAnalizadorLexico().setBuffer(buffer);
-            ErrorLexico error = new ErrorLexico("Exceso del rango de caracteres aceptable", this.getAnalizadorLexico().getLineaArchivo());
+            Error error = new Error("Exceso del rango de caracteres aceptable", this.getAnalizadorLexico().getLineaArchivo());
             this.getAnalizadorLexico().addErroresLexicos(error);
         }
         return false;
