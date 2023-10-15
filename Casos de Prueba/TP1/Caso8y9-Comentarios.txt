@@ -1,0 +1,18 @@
+*{Este es un
+ejemplo de un comentario
+multilinea
+bien
+hecho
+con las respectivas caracteristicas
+necesarias
+para ser uno
+}* 
+
+*{Lo que hacemos en este caso es que cuendo entra en la rama de comentario vaciar el buffer, ya que este se cargo con un * antes de
+distinguir que era un comentario, y no cargar el buffer hasta que este termine
+
+Ahora vamos a probar un comentario mal definido, la unica forma es que no termine con lo que termina este comentario: }*
+
+*{
+asdas
+}

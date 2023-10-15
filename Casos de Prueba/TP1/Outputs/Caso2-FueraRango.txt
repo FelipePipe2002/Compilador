@@ -1,0 +1,29 @@
+Long 2147483649_l
+,
+-
+Long 2147483649_l
+,
+Uint 65536_ui
+,
+-
+Uint 1_ui *{Como explique en el input lo separo y no salto error despues}*
+,
+Double 1.7976931348623158D+308
+,
+-
+Double 1.7976931348623158D+308
+,
+Constante fuera del rango de los enteros largos en la linea: 1
+Constante fuera del rango de los enteros largos en la linea: 2
+Constante fuera del rango de los enteros sin signo en la linea: 3
+Constante fuera del rango de los punto flotante en la linea: 5
+Constante fuera del rango de los punto flotante en la linea: 6
+Tabla de simbolos:
++----------------------+----------------------+
+| Nombre               | Valor                |
++----------------------+----------------------+
+| 2147483649_l         | Long                 |
+| 1_ui                 | Uint                 |
+| 65536_ui             | Uint                 |
+| 1.7976931348623158D+308 | Double               |
++----------------------+----------------------+

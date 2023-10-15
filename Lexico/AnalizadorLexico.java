@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import Lexico.AccionesSemanticas.Comentario;
+
 public class AnalizadorLexico{
 
     private RandomAccessFile reader;
@@ -38,6 +40,8 @@ public class AnalizadorLexico{
         int caracter = -1,viejoEstado=0, nuevoEstado=0;
         this.lineaArchivo = this.getLineaArchivo();
         this.buffer = "";
+
+
         while (nuevoEstado != -1 && nuevoEstado != -2) {
             caracter = reader.read();
             this.ultimoCararterLeido = (char) caracter;
@@ -49,25 +53,35 @@ public class AnalizadorLexico{
         if (nuevoEstado == -1){
             this.addErroresLexicos(new Error("Error a la hora de crear " + token,this.lineaArchivo));
         }
+
+
+
         //chequeo si es una palabra reservada, un identificador o una constante, si no es ninguna buscar el token en retornarToken
         if (token.getTipo() == TokenType.PalabraReservada){
+
             if(this.tablaPalabrasReservadas.existeSimbolo(this.buffer)){
                 return this.tablaPalabrasReservadas.obtenerSimbolo(this.buffer);
             } else{
                 this.erroresLexicos.add(new Error("No existe la palabra reservada: " + this.buffer,this.lineaArchivo));
-                return new Token(TokenType.Error);
+                return new Token(TokenType.ErrorPalabraReservada);
             }
-        } else if (token.getTipo() == TokenType.Identificador || token.getTipo() == TokenType.UInt || token.getTipo() == TokenType.Long || token.getTipo() == TokenType.Double || token.getTipo() == TokenType.Cadena) {  
+
+        } else if (token.getTipo() == TokenType.Identificador || token.getTipo() == TokenType.UInt || token.getTipo() == TokenType.Long 
+        || token.getTipo() == TokenType.Double || token.getTipo() == TokenType.Cadena) {  
+
             if(token.getTipo() == TokenType.Long){
                 this.buffer += "_l";
             } else if (token.getTipo() == TokenType.UInt){
                 this.buffer += "_ui";
             }
+
             if(!this.tablaSimbolos.existeSimbolo(this.buffer)){
                 this.tablaSimbolos.agregarSimbolo(this.buffer,token);
             }
             token = new LexemToken(token.getTipo(),buffer);
         }
+
+        
         return token;
     }
 
@@ -133,7 +147,11 @@ public class AnalizadorLexico{
     private Token retornarToken(int estado, int c) throws Exception{
         Token token = new Token();
         if (c == -1 && this.buffer.length() == 0){
-            token.setTipo(TokenType.Fin);
+            if (Comentario.creandoComentario){
+                token.setTipo(TokenType.ErrorComentario);
+                Comentario.creandoComentario = false;
+            } else 
+                token.setTipo(TokenType.Fin);
         }else{
             char caracter = (char) c;
             switch(estado){

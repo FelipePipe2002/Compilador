@@ -37,13 +37,6 @@ public class MatrizDeTransicionEstados extends Matriz {
             pos = MAX;
         } else
             pos = this.reconocedor((char)nuevoCaracter);
-        /*if (nuevoCaracter == 13){
-           System.out.println(estado + " | " + this.matrizTransicion[estado][pos] + "|/r|" + (int) nuevoCaracter); 
-        } else if (nuevoCaracter == 10){
-           System.out.println(estado + " | " + this.matrizTransicion[estado][pos] + "|/n|" + (int) nuevoCaracter); 
-        } else{
-            System.out.println(estado + " | " + this.matrizTransicion[estado][pos] + "|" + (char)nuevoCaracter+ "|"+ nuevoCaracter);
-        }*/
         return this.matrizTransicion[estado][pos];
     }
 }

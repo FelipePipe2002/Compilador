@@ -25,9 +25,12 @@ declaracion : declaracion_variable
             | declaracion_funcion
             ;
 
-declaracion_clase   : CLASS ID '{' cuerpo_clase '}'  {System.out.println("CREACION DE CLASE");}
-                    | CLASS ID IMPLEMENT ID '{' cuerpo_clase '}'  {System.out.println("CREACION DE CLASE CON HERENCIA");}
-                    | INTERFACE ID '{' cuerpo_interfaz '}'  {System.out.println("CREACION DE INTERFAZ");}
+declaracion_clase   : CLASS ID '{' cuerpo_clase '}'  {System.out.println("CREACION DE CLASE" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | CLASS ID '{' '}'  {analizadorLex.addErroresLexicos(new Error("Error clase vacia", analizadorLex.getLineaArchivo()));}
+                    | CLASS ID IMPLEMENT ID '{' cuerpo_clase '}'  {System.out.println("CREACION DE CLASE CON HERENCIA" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | CLASS ID IMPLEMENT ID '{' '}'  {analizadorLex.addErroresLexicos(new Error("Error clase vacia", analizadorLex.getLineaArchivo()));}
+                    | INTERFACE ID '{' cuerpo_interfaz '}'  {System.out.println("CREACION DE INTERFAZ" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | INTERFACE ID '{' '}'  {analizadorLex.addErroresLexicos(new Error("Error interfaz vacia", analizadorLex.getLineaArchivo()));}
                     ;
 
 cuerpo_clase : miembro_clase
@@ -38,16 +41,28 @@ miembro_clase : declaracion_variable
               | declaracion_funcion
               ;
                                
-cuerpo_interfaz : declaracion_funcion
-                | cuerpo_interfaz declaracion_funcion
+cuerpo_interfaz : declaracion_funcion_vacia
+                | cuerpo_interfaz declaracion_funcion_vacia
+                | declaracion_funcion  {analizadorLex.addErroresLexicos(new Error("Solo se permiten metodos abstractos", analizadorLex.getLineaArchivo()));}
+                | cuerpo_interfaz declaracion_funcion {analizadorLex.addErroresLexicos(new Error("Solo se permiten metodos abstractos", analizadorLex.getLineaArchivo()));}
                 ;
 
-declaracion_variable : tipo lista_de_id ','  {System.out.println("DECLARACION DE VARIABLE");}
+declaracion_funcion_vacia : VOID ID '(' ')' ','   {System.out.println("DECLARACION DE FUNCION VACIA SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | VOID ID '(' parametro_formal ')'','  {System.out.println("DECLARACION DE FUNCION VACIA" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | VOID ID '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
+                    | VOID ID '(' parametro_formal ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
+                    | VOID ID ','    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
+                    | VOID ID parametro_formal ','  {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
+                    | VOID ID    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
+                    | VOID ID parametro_formal {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
+                    ;
+
+declaracion_variable : tipo lista_de_id ','  {System.out.println("DECLARACION DE VARIABLE" + ", linea: " + analizadorLex.getLineaArchivo());}
                      | tipo lista_de_id {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                      ;
 
-declaracion_funcion : VOID ID '(' ')' bloque_sentencias ','   {System.out.println("DECLARACION DE FUNCION SIN PARAMETROS");}
-                    | VOID ID '(' parametro_formal ')' bloque_sentencias ','  {System.out.println("DECLARACION DE FUNCION");}
+declaracion_funcion : VOID ID '(' ')' bloque_sentencias ','   {System.out.println("DECLARACION DE FUNCION SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | VOID ID '(' parametro_formal ')' bloque_sentencias ','  {System.out.println("DECLARACION DE FUNCION" + ", linea: " + analizadorLex.getLineaArchivo());}
                     | VOID ID '(' ')' bloque_sentencias   {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | VOID ID '(' parametro_formal ')' bloque_sentencias  {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     ;
@@ -66,25 +81,25 @@ bloque_sentencias : '{' lista_sentencias '}'
                   ;
 
 sentencia : sentencia_expresion
-          | sentencia_seleccion
-          | sentencia_iteracion
-          | sentencia_imprimir
-          | sentencia_retorno
+          | sentencia_seleccion {System.out.println("SENTENCIA IF" + ", linea: " + analizadorLex.getLineaArchivo());}
+          | sentencia_iteracion {System.out.println("SENTENCIA ITERACION" + ", linea: " + analizadorLex.getLineaArchivo());}
+          | sentencia_imprimir {System.out.println("SENTENCIA IMPRESION DE CADENA" + ", linea: " + analizadorLex.getLineaArchivo());}
+          | sentencia_retorno {System.out.println("SENTENCIA RETURN" + ", linea: " + analizadorLex.getLineaArchivo());}
           ;
 
-sentencia_retorno : RETURN ','  {System.out.println("SENTENCIA RETURN");}
+sentencia_retorno : RETURN ','  
                   | RETURN      {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                   ;
 
-sentencia_imprimir : PRINT CADENA ','  {System.out.println("SENTENCIA IMPRESION DE CADENA");}
+sentencia_imprimir : PRINT CADENA ','  
                    | PRINT CADENA      {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                    | PRINT error ','      {analizadorLex.addErroresLexicos(new Error("Cadena mal definida", analizadorLex.getLineaArchivo()));}
                    | PRINT error      {analizadorLex.addErroresLexicos(new Error("Cadena mal definida", analizadorLex.getLineaArchivo()));}
                    | error CADENA ','      {analizadorLex.addErroresLexicos(new Error("No existe esa expresion para imprimir la cadena", analizadorLex.getLineaArchivo()));}
                    ;
 
-sentencia_seleccion : IF '(' comparacion ')' cuerpo_if END_IF ','  {System.out.println("SENTENCIA IF");}
-                    | IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF ','  {System.out.println("SENTENCIA IF ELSE");}
+sentencia_seleccion : IF '(' comparacion ')' cuerpo_if END_IF ','  
+                    | IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF ','
                     | IF '(' comparacion ')' cuerpo_if END_IF      {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF      {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | IF '(' ')' cuerpo_if END_IF ','  {analizadorLex.addErroresLexicos(new Error("No se declaro una condicion en el IF", analizadorLex.getLineaArchivo()));}
@@ -112,17 +127,17 @@ comparador : '<'
            | error {analizadorLex.addErroresLexicos(new Error("Comparacion mal definida", analizadorLex.getLineaArchivo()));}
            ;
            
-sentencia_iteracion : DO bloque_sentencias WHILE '(' comparacion ')' ','  {System.out.println("SENTENCIA ITERACION");}
+sentencia_iteracion : DO bloque_sentencias WHILE '(' comparacion ')' ','
                     | DO bloque_sentencias WHILE '(' comparacion ')'    {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | DO bloque_sentencias WHILE '(' ')' "," {analizadorLex.addErroresLexicos(new Error("No se declaro una condicion de corte", analizadorLex.getLineaArchivo()));}
                     | DO bloque_sentencias WHILE '(' ')'{analizadorLex.addErroresLexicos(new Error("No se declaro una condicion de corte y falta una \',\'", analizadorLex.getLineaArchivo()));}
                     ;
 
 sentencia_expresion : declaracion_variable
-                    | asignacion
-                    | llamado_clase '(' ')' ','
+                    | asignacion {System.out.println("ASIGNACION" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | llamado_clase '(' ')' ',' {System.out.println("LLAMADO A METODO" + ", linea: " + analizadorLex.getLineaArchivo());}
                     | llamado_clase '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
-                    | llamado_clase '(' operacion ')' ','
+                    | llamado_clase '(' operacion ')' ',' {System.out.println("LLAMADO A METODO" + ", linea: " + analizadorLex.getLineaArchivo());}
                     | llamado_clase '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | TOD '(' operacion ')' ','
                     | TOD '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
@@ -132,7 +147,7 @@ llamado_clase : ID
               | llamado_clase '.' ID
               ;
 
-asignacion : lista_de_id '=' operacion ','  {System.out.println("ASIGNACION");}
+asignacion : lista_de_id '=' operacion ','  
            | lista_de_id '=' operacion {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
            | tipo lista_de_id '=' operacion ',' {analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));}
                                                         
@@ -199,8 +214,7 @@ private int yylex(){
         try {
           token = analizadorLex.getToken();
           int intToken = token.getTipo().getNumero();
-          System.out.println("El token obtenido es: " + token);
-          System.out.println("El valor del token obtenido es: " + intToken);
+          System.out.println(token);
           yylval = new ParserVal(token);
           return intToken;
         } catch (Exception e) {

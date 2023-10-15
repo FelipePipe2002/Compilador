@@ -17,10 +17,11 @@ public class MatrizDeAS extends Matriz {
     // as6: Normaliza y chequea rango de punto flotante
     // as7: Cuenta saltos de linea
     
-    public MatrizDeAS(AnalizadorLexico analizadorLexico){
+    public MatrizDeAS(AnalizadorLexico analizadorLexico){   
         AccionSemantica as0 = new ApilarCaracter(analizadorLexico);
         AccionSemantica as1 = new DevolverCaracter(analizadorLexico);
-        AccionSemantica as1y2 = new AccionSemanticaCompuesta(as1,new CheckRangoCaracteres(analizadorLexico, MAXCARACTERES));
+        AccionSemantica as2 = new CheckRangoCaracteres(analizadorLexico, MAXCARACTERES);
+        AccionSemantica as1y2 = new AccionSemanticaCompuesta(as1,as2);
         AccionSemantica as4 = new CheckRangoUI(analizadorLexico, MAXRANGOINT);
         AccionSemantica as5 = new CheckRangoLong(analizadorLexico, MAXRANGOLONG);
         AccionSemantica as6 = new CheckRangoPuntoFlotante(analizadorLexico, MAXRANGOPUNTOFLOTANTE);
@@ -31,7 +32,7 @@ public class MatrizDeAS extends Matriz {
             
         //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  | \r | otro | fin
         /* 0 */   { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , null, null,  as7, null, null, null},
-        /* 1 */   { as0 ,as1y2, as0 , as0 ,as1y2, as0 ,as1y2,as1y2,as1y2, as0 , as0 , as0 ,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, null,as1y2, null},
+        /* 1 */   { as0 ,as1y2, as0 , as0 ,as1y2, as0 ,as1y2,as1y2,as1y2, as0 , as0 , as0 ,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, as2 ,as1y2, as2 },
         /* 2 */   { as1 , as0 , as1 , as0 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
         /* 3 */   { as1 , as1 , as0 , null, as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
         /* 4 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , as5 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
@@ -46,23 +47,23 @@ public class MatrizDeAS extends Matriz {
         /* 13 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
         /* 14 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
         /* 15 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 16 */  { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , as0 , as0 , as7 , null, as0 , as1 },
+        /* 16 */  { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , as0 , as0 , as7 , null, as0 , as0 },
         /* 17 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as8 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as1 },
-        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as1 }
+        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as7, null, null, as1 },
+        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as8, null, null, as7, null, null, as1 }
         
         };
     }
     
     public void ejecutarAccionSemantica(int estado, int nuevoCaracter, String buffer){
         int pos;
-        if (nuevoCaracter == -1){
+        if (nuevoCaracter == -1){ // fin de archivo
             pos = 29;
         } else
             pos = this.reconocedor((char)nuevoCaracter);
 
         if (this.matrizAS[estado][pos] != null) {
-            boolean correcto = this.matrizAS[estado][pos].ejecutar(buffer);
+            this.matrizAS[estado][pos].ejecutar(buffer);
         }
     }
 }

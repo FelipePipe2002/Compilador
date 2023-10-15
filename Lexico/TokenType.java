@@ -49,6 +49,8 @@ public enum TokenType {
     ErrorUInt(256, "Error Uint"),
     ErrorDistinto(256, "Error Distinto"),
     ErrorCadena(256, "Error Cadena"),
+    ErrorPalabraReservada(256, "Error Palabra Reservada"),
+    ErrorComentario(256, "Error Comentario"),
     Fin(0,"Fin");
 
     private final int numero;

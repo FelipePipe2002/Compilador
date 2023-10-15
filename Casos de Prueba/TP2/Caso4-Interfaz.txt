@@ -1,0 +1,19 @@
+{
+    INTERFACE z{
+        VOID a(),
+        VOID b(),
+        VOID c()
+        VOID d(){
+            RETURN,
+        },
+    }
+
+    CLASS e IMPLEMENT z {
+        VOID a(){
+            RETURN,
+        }
+        VOID c(){
+            RETURN,
+        }
+    }
+}

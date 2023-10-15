@@ -1,0 +1,7 @@
+Error Comentario
+Error a la hora de crear Error Comentario en la linea: 18
+Tabla de simbolos:
++----------------------+----------------------+
+| Nombre               | Valor                |
++----------------------+----------------------+
++----------------------+----------------------+

@@ -1,0 +1,21 @@
+identificador chequeoderangodeiden
+identificador identificador
+identificador pepe123_
+identificador hola
+Error Palabra Reservada
+identificador omo
+{
+identificador andas
+Exceso del rango de caracteres aceptable en la linea: 1
+No existe la palabra reservada: C en la linea: 4
+Tabla de simbolos:
++----------------------+----------------------+
+| Nombre               | Valor                |
++----------------------+----------------------+
+| omo                  | identificador        |
+| andas                | identificador        |
+| pepe123_             | identificador        |
+| chequeoderangodeiden | identificador        |
+| hola                 | identificador        |
+| identificador        | identificador        |
++----------------------+----------------------+

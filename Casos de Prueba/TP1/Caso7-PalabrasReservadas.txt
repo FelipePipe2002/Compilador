@@ -1,0 +1,10 @@
+LONG
+long
+UINT
+uint
+DOUBLE
+double
+WHILE
+while
+PEPE
+pepe

@@ -1,0 +1,9 @@
+10.12 *{Flotante con parte entera y decimal}*
+10. *{Flotante con parte entera y sin decimal}*
+.12 *{Flotante con parte decima}*
+13.15D+10 *{Primer ejemplo con exponente positivo}*
+13.D+10 *{Segundo ejemplo con exponente positivo}*
+.15D+10 *{Tercer ejemplo con exponente positivo}*
+13.15D-10 *{Primer ejemplo con exponente negativo}*
+13.D-10 *{Segundo ejemplo con exponente negativo}*
+.15D-10 *{Tercer ejemplo con exponente negativo}*
