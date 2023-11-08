@@ -3,6 +3,7 @@
 package Sintactico;
 import Lexico.*;
 import Lexico.Error;
+import java.util.ArrayList;
 
 %}
 
@@ -10,7 +11,7 @@ import Lexico.Error;
 %start programa
 
 %%
-programa : '{' lista_declaraciones '}'
+programa : '{' lista_declaraciones '}' 
          | '{' lista_declaraciones {analizadorLex.addErroresLexicos(new Error("El programa tiene que terminar con \'}\'", analizadorLex.getLineaArchivo()));}
          | lista_declaraciones '}' {analizadorLex.addErroresLexicos(new Error("El programa tiene que arrancar con \'{\'", analizadorLex.getLineaArchivo()));}
          | lista_declaraciones {analizadorLex.addErroresLexicos(new Error("El programa tiene que estar contenido en \'{\' \'}\'", analizadorLex.getLineaArchivo()));}
@@ -25,13 +26,17 @@ declaracion : declaracion_variable
             | declaracion_funcion
             ;
 
-declaracion_clase   : CLASS ID '{' cuerpo_clase '}'  {System.out.println("CREACION DE CLASE" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | CLASS ID '{' '}'  {analizadorLex.addErroresLexicos(new Error("Error clase vacia", analizadorLex.getLineaArchivo()));}
-                    | CLASS ID IMPLEMENT ID '{' cuerpo_clase '}'  {System.out.println("CREACION DE CLASE CON HERENCIA" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | CLASS ID IMPLEMENT ID '{' '}'  {analizadorLex.addErroresLexicos(new Error("Error clase vacia", analizadorLex.getLineaArchivo()));}
+declaracion_clase   : CLASS ID bloque_clase  {System.out.println("CREACION DE CLASE" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | CLASS ID IMPLEMENT ID bloque_clase  {System.out.println("CREACION DE CLASE CON HERENCIA" + ", linea: " + analizadorLex.getLineaArchivo());}
                     | INTERFACE ID '{' cuerpo_interfaz '}'  {System.out.println("CREACION DE INTERFAZ" + ", linea: " + analizadorLex.getLineaArchivo());}
                     | INTERFACE ID '{' '}'  {analizadorLex.addErroresLexicos(new Error("Error interfaz vacia", analizadorLex.getLineaArchivo()));}
                     ;
+
+bloque_clase :      '{' cuerpo_clase '}'  
+                  | '(' cuerpo_clase ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                  | '{' '}'  {analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));}
+                  | '(' ')'  {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                  ;
 
 cuerpo_clase : miembro_clase
              | cuerpo_clase miembro_clase
@@ -74,7 +79,7 @@ lista_sentencias : sentencia
                  | lista_sentencias sentencia
                  ;
 
-bloque_sentencias : '{' lista_sentencias '}'
+bloque_sentencias : '{' lista_sentencias '}'  
                   | '(' lista_sentencias ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
                   | '{' '}'  {analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));}
                   | '(' ')'  {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
@@ -143,28 +148,27 @@ sentencia_expresion : declaracion_variable
                     | TOD '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     ;
 
-llamado_clase : ID
-              | llamado_clase '.' ID
+llamado_clase : ID {identClase = $1.sval + identClase;}
+              | llamado_clase '.' ID {identClase += "." + $3.sval;}
               ;
-
-asignacion : lista_de_id '=' operacion ','  
-           | lista_de_id '=' operacion {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
-           | tipo lista_de_id '=' operacion ',' {analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));}
-                                                        
+asignacion : llamado_clase '=' operacion ','  {polaca.add(identClase); identClase = "";polaca.add("=");}
+           | llamado_clase '=' operacion {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
+           | tipo llamado_clase '=' operacion ',' {analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));}                                        
            ;
 
-lista_de_id : llamado_clase
-            | lista_de_id ';' llamado_clase
+
+lista_de_id : ID
+            | lista_de_id ';' ID
             ;
 
 operacion : termino
-          | operacion '+' termino
-          | operacion '-' termino
+          | operacion '+' termino {polaca.add("+");}
+          | operacion '-' termino {polaca.add("-");}
           ;
           
 termino : factor
-        | termino '*' factor
-        | termino '/' factor
+        | termino '*' factor {polaca.add("*");}
+        | termino '/' factor {polaca.add("/");}
         | '(' operacion ')'
         ;
 
@@ -172,14 +176,19 @@ factor : factor_comun
        | factor_inmediato
        ;
 
-factor_inmediato : factor_comun '--'
+factor_inmediato : factor_comun '--' {polaca.add("--");}
 
-factor_comun : ID
-             | '-' CTE_DOUBLE   {analizadorLex.convertirNegativo(((LexemToken)token).getLexema());}
-             | CTE_DOUBLE 
-             | '-' CTE_LONG     {analizadorLex.convertirNegativo(((LexemToken)token).getLexema());}
-             | CTE_LONG {if(CheckRangoLong(((LexemToken)token).getLexema())){analizadorLex.addErroresLexicos(new Error("Long fuera de rango", analizadorLex.getLineaArchivo()));}}
-             | CTE_UINT
+factor_comun : llamado_clase
+             | '-' CTE_DOUBLE   {analizadorLex.convertirNegativo($2.sval);
+polaca.add("-" + $2.sval);}
+             | CTE_DOUBLE {polaca.add($1.sval);}
+             | '-' CTE_LONG     {analizadorLex.convertirNegativo($2.sval);
+polaca.add("-" + $2.sval);}
+             | CTE_LONG {{if(CheckRangoLong($1.sval)){analizadorLex.addErroresLexicos(new Error("Long fuera de rango", analizadorLex.getLineaArchivo()));}
+  else {
+    polaca.add($1.sval);
+  }}}
+             | CTE_UINT {polaca.add($1.sval);}
              | '-' CTE_UINT {analizadorLex.addErroresLexicos(new Error("Las variables tipo UINT no pueden ser negativas", analizadorLex.getLineaArchivo()));}
              ;
 
@@ -196,16 +205,24 @@ tipo : DOUBLE
 static AnalizadorLexico analizadorLex = null;
 static Parser par = null;
 static Token token = null;
+static ArrayList<String>  polaca;
+private String identClase = "";
 
 public static void main(String[] args) throws Exception{
         System.out.println("Iniciando compilacion...");
         analizadorLex = new AnalizadorLexico(args);
-
+        
+        polaca = new ArrayList<String>();
+        
         par = new Parser(false);
         par.run();
 
         analizadorLex.MostrarTablaSimbolos();
         analizadorLex.MostrarErrores();
+        
+        for (int i = 0; i < polaca.size(); i++) {
+          System.out.println(i + " " + polaca.get(i));
+        }
 
         System.out.println("Fin de la compilacion");
 }
@@ -214,8 +231,8 @@ private int yylex(){
         try {
           token = analizadorLex.getToken();
           int intToken = token.getTipo().getNumero();
-          System.out.println(token);
-          yylval = new ParserVal(token);
+          System.out.println("yylex: " + token);
+          yylval = new ParserVal(token.toString());
           return intToken;
         } catch (Exception e) {
           System.out.println("Error a la hora encontrar un token");

@@ -14,7 +14,7 @@ public class LexemToken extends Token implements Comparable<LexemToken>{
 
     @Override
     public String toString() {
-        return getTipo().getRepresentacion() + " " + lexema.toString();
+        return lexema;
     }
 
     @Override
