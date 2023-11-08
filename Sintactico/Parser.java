@@ -1113,6 +1113,10 @@ case 108:
 //#line 179 ".\gramatica.y"
 {polaca.add("--");}
 break;
+case 109:
+//#line 181 ".\gramatica.y"
+{polaca.add(identClase); identClase = "";}
+break;
 case 110:
 //#line 182 ".\gramatica.y"
 {analizadorLex.convertirNegativo(val_peek(0).sval);
@@ -1146,7 +1150,7 @@ case 120:
 //#line 199 ".\gramatica.y"
 {analizadorLex.addErroresLexicos(new Error("Tipo no reconocido", analizadorLex.getLineaArchivo()));}
 break;
-//#line 1073 "Parser.java"
+//#line 1077 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

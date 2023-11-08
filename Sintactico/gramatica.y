@@ -148,9 +148,10 @@ sentencia_expresion : declaracion_variable
                     | TOD '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     ;
 
-llamado_clase : ID {identClase = $1.sval + identClase;}
+llamado_clase : ID {identClase = $1.sval + identClase; }
               | llamado_clase '.' ID {identClase += "." + $3.sval;}
               ;
+
 asignacion : llamado_clase '=' operacion ','  {polaca.add(identClase); identClase = "";polaca.add("=");}
            | llamado_clase '=' operacion {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
            | tipo llamado_clase '=' operacion ',' {analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));}                                        
@@ -178,7 +179,7 @@ factor : factor_comun
 
 factor_inmediato : factor_comun '--' {polaca.add("--");}
 
-factor_comun : llamado_clase
+factor_comun : llamado_clase {polaca.add(identClase); identClase = "";}
              | '-' CTE_DOUBLE   {analizadorLex.convertirNegativo($2.sval);
 polaca.add("-" + $2.sval);}
              | CTE_DOUBLE {polaca.add($1.sval);}

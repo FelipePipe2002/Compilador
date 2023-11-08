@@ -2,8 +2,10 @@
     CLASS ca {
         UINT a;c,
         VOID pepe() {
-            ca.a = - 1.1,
-            ca.c = 12.,
+            d = ca.a.b-- - 3_l,
+            a = c * 2_l,
         },
     }
 }
+
+cad.a.b
