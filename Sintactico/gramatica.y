@@ -148,11 +148,11 @@ sentencia_expresion : declaracion_variable
                     | TOD '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     ;
 
-llamado_clase : ID {identClase = $1.sval + identClase; }
-              | llamado_clase '.' ID {identClase += "." + $3.sval;}
+llamado_clase : ID {$$.sval = $1.sval; }
+              | llamado_clase '.' ID {$$.sval += "." + $3.sval;}
               ;
 
-asignacion : llamado_clase '=' operacion ','  {polaca.add(identClase); identClase = "";polaca.add("=");}
+asignacion : llamado_clase '=' operacion ','  {polaca.add($1.sval);polaca.add("=");}
            | llamado_clase '=' operacion {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
            | tipo llamado_clase '=' operacion ',' {analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));}                                        
            ;
@@ -179,7 +179,7 @@ factor : factor_comun
 
 factor_inmediato : factor_comun '--' {polaca.add("--");}
 
-factor_comun : llamado_clase {polaca.add(identClase); identClase = "";}
+factor_comun : llamado_clase {polaca.add($1.sval);}
              | '-' CTE_DOUBLE   {analizadorLex.convertirNegativo($2.sval);
 polaca.add("-" + $2.sval);}
              | CTE_DOUBLE {polaca.add($1.sval);}
@@ -207,7 +207,6 @@ static AnalizadorLexico analizadorLex = null;
 static Parser par = null;
 static Token token = null;
 static ArrayList<String>  polaca;
-private String identClase = "";
 
 public static void main(String[] args) throws Exception{
         System.out.println("Iniciando compilacion...");

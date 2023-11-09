@@ -637,14 +637,13 @@ final static String yyrule[] = {
 "tipo : error",
 };
 
-//#line 203 ".\gramatica.y"
+//#line 204 ".\gramatica.y"
 
 
 static AnalizadorLexico analizadorLex = null;
 static Parser par = null;
 static Token token = null;
 static ArrayList<String>  polaca;
-private String identClase = "";
 
 public static void main(String[] args) throws Exception{
         System.out.println("Iniciando compilacion...");
@@ -691,7 +690,7 @@ private boolean CheckRangoLong(String numero){
         else
             return false;
 }
-//#line 623 "Parser.java"
+//#line 622 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1075,82 +1074,82 @@ case 91:
 break;
 case 92:
 //#line 151 ".\gramatica.y"
-{identClase = val_peek(0).sval + identClase;}
+{yyval.sval = val_peek(0).sval; }
 break;
 case 93:
 //#line 152 ".\gramatica.y"
-{identClase += "." + val_peek(0).sval;}
+{yyval.sval += "." + val_peek(0).sval;}
 break;
 case 94:
-//#line 154 ".\gramatica.y"
-{polaca.add(identClase); identClase = "";polaca.add("=");}
+//#line 155 ".\gramatica.y"
+{polaca.add(val_peek(3).sval);polaca.add("=");}
 break;
 case 95:
-//#line 155 ".\gramatica.y"
+//#line 156 ".\gramatica.y"
 {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
 break;
 case 96:
-//#line 156 ".\gramatica.y"
+//#line 157 ".\gramatica.y"
 {analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));}
 break;
 case 100:
-//#line 165 ".\gramatica.y"
+//#line 166 ".\gramatica.y"
 {polaca.add("+");}
 break;
 case 101:
-//#line 166 ".\gramatica.y"
+//#line 167 ".\gramatica.y"
 {polaca.add("-");}
 break;
 case 103:
-//#line 170 ".\gramatica.y"
+//#line 171 ".\gramatica.y"
 {polaca.add("*");}
 break;
 case 104:
-//#line 171 ".\gramatica.y"
+//#line 172 ".\gramatica.y"
 {polaca.add("/");}
 break;
 case 108:
-//#line 179 ".\gramatica.y"
+//#line 180 ".\gramatica.y"
 {polaca.add("--");}
 break;
 case 109:
-//#line 181 ".\gramatica.y"
-{polaca.add(identClase); identClase = "";}
+//#line 182 ".\gramatica.y"
+{polaca.add(val_peek(0).sval);}
 break;
 case 110:
-//#line 182 ".\gramatica.y"
+//#line 183 ".\gramatica.y"
 {analizadorLex.convertirNegativo(val_peek(0).sval);
 polaca.add("-" + val_peek(0).sval);}
 break;
 case 111:
-//#line 184 ".\gramatica.y"
+//#line 185 ".\gramatica.y"
 {polaca.add(val_peek(0).sval);}
 break;
 case 112:
-//#line 185 ".\gramatica.y"
+//#line 186 ".\gramatica.y"
 {analizadorLex.convertirNegativo(val_peek(0).sval);
 polaca.add("-" + val_peek(0).sval);}
 break;
 case 113:
-//#line 187 ".\gramatica.y"
+//#line 188 ".\gramatica.y"
 {{if(CheckRangoLong(val_peek(0).sval)){analizadorLex.addErroresLexicos(new Error("Long fuera de rango", analizadorLex.getLineaArchivo()));}
   else {
     polaca.add(val_peek(0).sval);
   }}}
 break;
 case 114:
-//#line 191 ".\gramatica.y"
+//#line 192 ".\gramatica.y"
 {polaca.add(val_peek(0).sval);}
 break;
 case 115:
-//#line 192 ".\gramatica.y"
+//#line 193 ".\gramatica.y"
 {analizadorLex.addErroresLexicos(new Error("Las variables tipo UINT no pueden ser negativas", analizadorLex.getLineaArchivo()));}
 break;
 case 120:
-//#line 199 ".\gramatica.y"
+//#line 200 ".\gramatica.y"
 {analizadorLex.addErroresLexicos(new Error("Tipo no reconocido", analizadorLex.getLineaArchivo()));}
 break;
-//#line 1077 "Parser.java"
+//#line 1076 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
