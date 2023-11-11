@@ -14,10 +14,10 @@ public class AnalizadorLexico{
     private String buffer;
     private int lineaArchivo;
     private char ultimoCararterLeido;
-    private Tabla tablaSimbolos;
+    public Tabla tablaSimbolos;
     private TablaPalabrasReservadas tablaPalabrasReservadas;
 
-    public AnalizadorLexico(String[] args) throws Exception{
+    public AnalizadorLexico(String[] args,Tabla tablasimbolos) throws Exception{
         if(args.length < 1){
             System.out.println("No se agrego ningun argumento");
             System.exit(1);
@@ -32,7 +32,7 @@ public class AnalizadorLexico{
         this.buffer = "";
         this.lineaArchivo = 1;
         this.ultimoCararterLeido = ' ';
-        tablaSimbolos = new Tabla();
+        this.tablaSimbolos = tablasimbolos;
         tablaPalabrasReservadas = new TablaPalabrasReservadas();
     }
 

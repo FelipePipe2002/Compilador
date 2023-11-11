@@ -2,11 +2,13 @@ package Lexico;
 
 import java.util.HashMap;
 
+import javax.swing.DebugGraphics;
+
 public class Tabla {
     private HashMap<String, Token> tabla;
 
     public Tabla() {
-        tabla = new HashMap<String, Token>();
+        this.tabla = new HashMap<String, Token>();
     }
 
     public void agregarSimbolo(String nombre, Token valor) {
@@ -15,6 +17,16 @@ public class Tabla {
 
     public Token obtenerSimbolo(String nombre) {
         return tabla.get(nombre);
+    }
+
+    public boolean agregarAmbito(String nombre, String ambito) {
+        String nombreConAmbito = nombre + ambito;
+        if(!existeSimbolo(nombreConAmbito)){
+            Token aux = tabla.get(nombre);
+            tabla.put(nombreConAmbito, aux);
+            return true;
+        }
+        return false;
     }
 
     public boolean existeSimbolo(String nombre) {

@@ -1,11 +1,16 @@
-{    
-    CLASS ca {
-        UINT a;c,
-        VOID pepe() {
-            d = ca.a.b-- - 3_l,
-            a = c * 2_l,
+{
+    LONG a,
+    VOID aa(){
+        UINT a,
+        a = a+1_l,
+        VOID a(){
+            UINT a,
         },
-    }
+    },
+    VOID aaa(){
+        LONG x,
+    },
+    VOID bb(){
+    UINT a,
+    },
 }
-
-cad.a.b

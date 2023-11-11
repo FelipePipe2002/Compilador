@@ -26,17 +26,22 @@ declaracion : declaracion_variable
             | declaracion_funcion
             ;
 
-declaracion_clase   : CLASS ID bloque_clase  {System.out.println("CREACION DE CLASE" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | CLASS ID IMPLEMENT ID bloque_clase  {System.out.println("CREACION DE CLASE CON HERENCIA" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | INTERFACE ID '{' cuerpo_interfaz '}'  {System.out.println("CREACION DE INTERFAZ" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | INTERFACE ID '{' '}'  {analizadorLex.addErroresLexicos(new Error("Error interfaz vacia", analizadorLex.getLineaArchivo()));}
+declaracion_clase   : CLASS nombre_bloque bloque_clase  {System.out.println("CREACION DE CLASE" + ", linea: " + analizadorLex.getLineaArchivo()); ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | CLASS nombre_bloque IMPLEMENT ID bloque_clase  {System.out.println("CREACION DE CLASE CON HERENCIA" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | INTERFACE nombre_bloque bloque_interfaz  {System.out.println("CREACION DE INTERFAZ" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
                     ;
 
-bloque_clase :      '{' cuerpo_clase '}'  
-                  | '(' cuerpo_clase ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
-                  | '{' '}'  {analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));}
-                  | '(' ')'  {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
-                  ;
+bloque_clase :    '{' cuerpo_clase '}'
+                | '(' cuerpo_clase ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                | '{' '}'  {analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));}
+                | '(' ')'  {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                ;
+
+bloque_interfaz : '{' cuerpo_interfaz '}'  
+                | '(' cuerpo_interfaz ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                | '{' '}'  {analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));}
+                | '(' ')'  {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                ;
 
 cuerpo_clase : miembro_clase
              | cuerpo_clase miembro_clase
@@ -52,37 +57,45 @@ cuerpo_interfaz : declaracion_funcion_vacia
                 | cuerpo_interfaz declaracion_funcion {analizadorLex.addErroresLexicos(new Error("Solo se permiten metodos abstractos", analizadorLex.getLineaArchivo()));}
                 ;
 
-declaracion_funcion_vacia : VOID ID '(' ')' ','   {System.out.println("DECLARACION DE FUNCION VACIA SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | VOID ID '(' parametro_formal ')'','  {System.out.println("DECLARACION DE FUNCION VACIA" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | VOID ID '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
-                    | VOID ID '(' parametro_formal ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
-                    | VOID ID ','    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
-                    | VOID ID parametro_formal ','  {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
-                    | VOID ID    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
-                    | VOID ID parametro_formal {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));}
+declaracion_funcion_vacia : VOID nombre_bloque '(' ')' ','   {System.out.println("DECLARACION DE FUNCION VACIA SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque '(' parametro_formal ')'','  {System.out.println("DECLARACION DE FUNCION VACIA" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque '(' parametro_formal ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque ','    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque parametro_formal ','  {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque parametro_formal {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
                     ;
 
 declaracion_variable : tipo lista_de_id ','  {System.out.println("DECLARACION DE VARIABLE" + ", linea: " + analizadorLex.getLineaArchivo());}
                      | tipo lista_de_id {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                      ;
 
-declaracion_funcion : VOID ID '(' ')' bloque_sentencias ','   {System.out.println("DECLARACION DE FUNCION SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | VOID ID '(' parametro_formal ')' bloque_sentencias ','  {System.out.println("DECLARACION DE FUNCION" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | VOID ID '(' ')' bloque_sentencias   {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
-                    | VOID ID '(' parametro_formal ')' bloque_sentencias  {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
+declaracion_funcion : VOID nombre_bloque '(' ')' bloque_sentencias_funcion ','   {System.out.println("DECLARACION DE FUNCION SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque '(' parametro_formal ')' bloque_sentencias_funcion ','  {System.out.println("DECLARACION DE FUNCION" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque '(' ')' bloque_sentencias_funcion   {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | VOID nombre_bloque '(' parametro_formal ')' bloque_sentencias_funcion  {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
                     ;
+
+nombre_bloque: ID {ambito += ":" + $1.sval;}
+             ;
 
 parametro_formal : tipo ID 
                  ;
 
-lista_sentencias : sentencia
-                 | lista_sentencias sentencia
-                 ;
-
-bloque_sentencias : '{' lista_sentencias '}'  
-                  | '(' lista_sentencias ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+bloque_sentencias_funcion : '{' lista_sentencias_funcion '}'  
+                  | '(' lista_sentencias_funcion ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
                   | '{' '}'  {analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));}
                   | '(' ')'  {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                  ;
+
+lista_sentencias_funcion : sentencia_funcion
+                         | lista_sentencias_funcion sentencia_funcion
+                         ;
+
+
+sentencia_funcion : declaracion_funcion 
+                  | sentencia
                   ;
 
 sentencia : sentencia_expresion
@@ -113,9 +126,19 @@ sentencia_seleccion : IF '(' comparacion ')' cuerpo_if END_IF ','
                     | IF '(' ')' cuerpo_if ELSE cuerpo_if END_IF      {analizadorLex.addErroresLexicos(new Error("No se declaro una condicion en el IF ELSE", analizadorLex.getLineaArchivo()));}
                     ;
 
-cuerpo_if : sentencia 
+cuerpo_if : sentencia
           | bloque_sentencias
           ;
+
+bloque_sentencias : '{' lista_sentencias '}'  
+                  | '(' lista_sentencias ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                  | '{' '}'  {analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));}
+                  | '(' ')'  {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
+                  ;
+
+lista_sentencias : sentencia
+                 | lista_sentencias sentencia
+                 ;
 
 comparacion : operacion comparador operacion
             | operacion comparador {analizadorLex.addErroresLexicos(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", analizadorLex.getLineaArchivo()));}
@@ -158,8 +181,8 @@ asignacion : llamado_clase '=' operacion ','  {polaca.add($1.sval);polaca.add("=
            ;
 
 
-lista_de_id : ID
-            | lista_de_id ';' ID
+lista_de_id : ID {if(!tablaSimbolos.agregarAmbito($1.sval,ambito)){analizadorLex.addErroresLexicos(new Error("No se puede declarar dos variables con el mismo nombre dentro del mismo ambito", analizadorLex.getLineaArchivo()));}}
+            | lista_de_id ';' ID {if(!tablaSimbolos.agregarAmbito($3.sval,ambito)){analizadorLex.addErroresLexicos(new Error("No se puede declarar dos variables con el mismo dentro del mismo ambito", analizadorLex.getLineaArchivo()));}}
             ;
 
 operacion : termino
@@ -207,10 +230,13 @@ static AnalizadorLexico analizadorLex = null;
 static Parser par = null;
 static Token token = null;
 static ArrayList<String>  polaca;
+static String ambito = ":main";
+static Tabla tablaSimbolos;
 
 public static void main(String[] args) throws Exception{
         System.out.println("Iniciando compilacion...");
-        analizadorLex = new AnalizadorLexico(args);
+        tablaSimbolos = new Tabla();
+        analizadorLex = new AnalizadorLexico(args,tablaSimbolos);
         
         polaca = new ArrayList<String>();
         
@@ -231,7 +257,7 @@ private int yylex(){
         try {
           token = analizadorLex.getToken();
           int intToken = token.getTipo().getNumero();
-          System.out.println("yylex: " + token);
+          //System.out.println("yylex: " + token);
           yylval = new ParserVal(token.toString());
           return intToken;
         } catch (Exception e) {

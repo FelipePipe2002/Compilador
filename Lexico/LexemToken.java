@@ -12,6 +12,9 @@ public class LexemToken extends Token implements Comparable<LexemToken>{
         return lexema;
     }
 
+    public void setLexema(String lexema){
+        this.lexema = lexema;
+    }
     @Override
     public String toString() {
         return lexema;
