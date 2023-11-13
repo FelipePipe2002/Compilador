@@ -2,8 +2,6 @@ package Lexico;
 
 import java.util.HashMap;
 
-import javax.swing.DebugGraphics;
-
 public class Tabla {
     private HashMap<String, Token> tabla;
 
