@@ -3,24 +3,28 @@ package Lexico;
 import java.util.HashMap;
 
 public class Tabla {
-    private HashMap<String, Token> tabla;
+    private HashMap<String, Atributos> tabla;
 
     public Tabla() {
-        this.tabla = new HashMap<String, Token>();
+        this.tabla = new HashMap<String, Atributos>();
     }
 
     public void agregarSimbolo(String nombre, Token valor) {
-        tabla.put(nombre, valor);
+        Atributos aux = new Atributos(valor);
+        tabla.put(nombre, aux);
     }
 
     public Token obtenerSimbolo(String nombre) {
-        return tabla.get(nombre);
+        return tabla.get(nombre).getToken();
     }
 
-    public boolean agregarAmbito(String nombre, String ambito) {
+    public boolean agregarAmbito(String nombre, String ambito,String tipo) {
         String nombreConAmbito = nombre + ambito;
         if(!existeSimbolo(nombreConAmbito)){
-            Token aux = tabla.get(nombre);
+            Atributos aux = tabla.get(nombre);
+            aux.setTipo(tipo);
+            System.out.println("Tabla de Simbolos: " + nombreConAmbito);
+            eliminarSimbolo(nombre);
             tabla.put(nombreConAmbito, aux);
             return true;
         }
@@ -47,13 +51,13 @@ public class Tabla {
 
     public void imprimirTabla() {
         System.out.println("Tabla de simbolos:");
-        System.out.println("+----------------------+----------------------+");
-        System.out.println("| Nombre               | Valor                |");
-        System.out.println("+----------------------+----------------------+");
+        System.out.println("+----------------------+----------------------+-------+");
+        System.out.println("| Nombre               | Tipo                 | Uso   |");
+        System.out.println("+----------------------+----------------------+-------+");
         for (String key : tabla.keySet()) {
-            System.out.printf("| %-20s | %-20s |\n", key, tabla.get(key));
+            System.out.printf("| %-20s | %-20s | %-5s |\n", key,tabla.get(key).getTipo(),tabla.get(key).isUso());
         }
-        System.out.println("+----------------------+----------------------+");
+        System.out.println("+----------------------+----------------------+-------+");
     }
     
 }

@@ -1,17 +1,20 @@
 {
     LONG a,
-    VOID aa(){
+    CLASS aa{
         UINT a,
-        a = a+1_l,
-        VOID a(){
-            UINT a,
+        VOID b(){
+            UINT b,
+            a = a+1_l,
         },
     },
     VOID aaa(){
         LONG x,
+        VOID a(){
+            UINT a,
+        },
     },
-    VOID bb(){
-    UINT a,
-    },
+    INTERFACE bb{
+        VOID a(),
+    }
 
 }

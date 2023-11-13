@@ -26,10 +26,18 @@ declaracion : declaracion_variable
             | declaracion_funcion
             ;
 
-declaracion_clase   : CLASS nombre_bloque bloque_clase  {System.out.println("CREACION DE CLASE" + ", linea: " + analizadorLex.getLineaArchivo()); ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | CLASS nombre_bloque IMPLEMENT ID bloque_clase  {System.out.println("CREACION DE CLASE CON HERENCIA" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | INTERFACE nombre_bloque bloque_interfaz  {System.out.println("CREACION DE INTERFAZ" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+declaracion_clase   : encabezado_clase bloque_clase ',' {System.out.println("CREACION DE CLASE, linea: " + analizadorLex.getLineaArchivo()); ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_clase IMPLEMENT ID bloque_clase ',' {System.out.println("CREACION DE CLASE CON HERENCIA, linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_interface bloque_interfaz ',' {System.out.println("CREACION DE INTERFAZ, linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_clase bloque_clase {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_clase IMPLEMENT ID bloque_clase {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_interface bloque_interfaz {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
                     ;
+encabezado_clase : CLASS ID {if(!tablaSimbolos.agregarAmbito($2.sval,ambito,$1.sval)){analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));}ambito += ":" + $2.sval;}
+                 ;
+
+encabezado_interface : INTERFACE ID {if(!tablaSimbolos.agregarAmbito($2.sval,ambito,$1.sval)){analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));}ambito += ":" + $2.sval;}
+                     ;
 
 bloque_clase :    '{' cuerpo_clase '}'
                 | '(' cuerpo_clase ')' {analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));}
@@ -57,30 +65,30 @@ cuerpo_interfaz : declaracion_funcion_vacia
                 | cuerpo_interfaz declaracion_funcion {analizadorLex.addErroresLexicos(new Error("Solo se permiten metodos abstractos", analizadorLex.getLineaArchivo()));}
                 ;
 
-declaracion_funcion_vacia : VOID nombre_bloque '(' ')' ','   {System.out.println("DECLARACION DE FUNCION VACIA SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque '(' parametro_formal ')'','  {System.out.println("DECLARACION DE FUNCION VACIA" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque '(' parametro_formal ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque ','    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque parametro_formal ','  {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque parametro_formal {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+declaracion_funcion_vacia : encabezado_funcion '(' ')' ','   {System.out.println("DECLARACION DE FUNCION VACIA SIN PARAMETROS, linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion '(' parametro_formal ')'','  {System.out.println("DECLARACION DE FUNCION VACIA, linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion '(' parametro_formal ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion ','    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion parametro_formal ','  {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion    {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion parametro_formal {analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
                     ;
 
-declaracion_variable : tipo lista_de_id ','  {System.out.println("DECLARACION DE VARIABLE" + ", linea: " + analizadorLex.getLineaArchivo());}
+declaracion_variable : tipo lista_de_id ','  {System.out.println("DECLARACION DE VARIABLE, linea: " + analizadorLex.getLineaArchivo());}
                      | tipo lista_de_id {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                      ;
 
-declaracion_funcion : VOID nombre_bloque '(' ')' bloque_sentencias_funcion ','   {System.out.println("DECLARACION DE FUNCION SIN PARAMETROS" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque '(' parametro_formal ')' bloque_sentencias_funcion ','  {System.out.println("DECLARACION DE FUNCION" + ", linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque '(' ')' bloque_sentencias_funcion   {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
-                    | VOID nombre_bloque '(' parametro_formal ')' bloque_sentencias_funcion  {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+declaracion_funcion : encabezado_funcion '(' ')' bloque_sentencias_funcion ','   {System.out.println("DECLARACION DE FUNCION SIN PARAMETROS, linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion '(' parametro_formal ')' bloque_sentencias_funcion ','  {System.out.println("DECLARACION DE FUNCION, linea: " + analizadorLex.getLineaArchivo());ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion '(' ')' bloque_sentencias_funcion   {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
+                    | encabezado_funcion '(' parametro_formal ')' bloque_sentencias_funcion  {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));ambito = ambito.substring(0,ambito.lastIndexOf(":"));}
                     ;
 
-nombre_bloque: ID {ambito += ":" + $1.sval;}
-             ;
+encabezado_funcion : VOID ID {if(!tablaSimbolos.agregarAmbito($2.sval,ambito,$1.sval)){analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));}ambito += ":" + $2.sval;}
+                   ;
 
-parametro_formal : tipo ID 
+parametro_formal : tipo ID
                  ;
 
 bloque_sentencias_funcion : '{' lista_sentencias_funcion '}'  
@@ -99,10 +107,10 @@ sentencia_funcion : declaracion_funcion
                   ;
 
 sentencia : sentencia_expresion
-          | sentencia_seleccion {System.out.println("SENTENCIA IF" + ", linea: " + analizadorLex.getLineaArchivo());}
-          | sentencia_iteracion {System.out.println("SENTENCIA ITERACION" + ", linea: " + analizadorLex.getLineaArchivo());}
-          | sentencia_imprimir {System.out.println("SENTENCIA IMPRESION DE CADENA" + ", linea: " + analizadorLex.getLineaArchivo());}
-          | sentencia_retorno {System.out.println("SENTENCIA RETURN" + ", linea: " + analizadorLex.getLineaArchivo());}
+          | sentencia_seleccion {System.out.println("SENTENCIA IF, linea: " + analizadorLex.getLineaArchivo());}
+          | sentencia_iteracion {System.out.println("SENTENCIA ITERACION, linea: " + analizadorLex.getLineaArchivo());}
+          | sentencia_imprimir {System.out.println("SENTENCIA IMPRESION DE CADENA, linea: " + analizadorLex.getLineaArchivo());}
+          | sentencia_retorno {System.out.println("SENTENCIA RETURN, linea: " + analizadorLex.getLineaArchivo());}
           ;
 
 sentencia_retorno : RETURN ','  
@@ -162,10 +170,11 @@ sentencia_iteracion : DO bloque_sentencias WHILE '(' comparacion ')' ','
                     ;
 
 sentencia_expresion : declaracion_variable
-                    | asignacion {System.out.println("ASIGNACION" + ", linea: " + analizadorLex.getLineaArchivo());}
-                    | llamado_clase '(' ')' ',' {System.out.println("LLAMADO A METODO" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | factor_inmediato
+                    | asignacion {System.out.println("ASIGNACION, linea: " + analizadorLex.getLineaArchivo());}
+                    | llamado_clase '(' ')' ',' {System.out.println("LLAMADO A METODO, linea: " + analizadorLex.getLineaArchivo());}
                     | llamado_clase '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
-                    | llamado_clase '(' operacion ')' ',' {System.out.println("LLAMADO A METODO" + ", linea: " + analizadorLex.getLineaArchivo());}
+                    | llamado_clase '(' operacion ')' ',' {System.out.println("LLAMADO A METODO, linea: " + analizadorLex.getLineaArchivo());}
                     | llamado_clase '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | TOD '(' operacion ')' ','
                     | TOD '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
@@ -181,8 +190,8 @@ asignacion : llamado_clase '=' operacion ','  {polaca.add($1.sval);polaca.add("=
            ;
 
 
-lista_de_id : ID {if(!tablaSimbolos.agregarAmbito($1.sval,ambito)){analizadorLex.addErroresLexicos(new Error("No se puede declarar dos variables con el mismo nombre dentro del mismo ambito", analizadorLex.getLineaArchivo()));}}
-            | lista_de_id ';' ID {if(!tablaSimbolos.agregarAmbito($3.sval,ambito)){analizadorLex.addErroresLexicos(new Error("No se puede declarar dos variables con el mismo dentro del mismo ambito", analizadorLex.getLineaArchivo()));}}
+lista_de_id : ID {if(!tablaSimbolos.agregarAmbito($1.sval,ambito,tipo)){analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));}}
+            | lista_de_id ';' ID {if(!tablaSimbolos.agregarAmbito($3.sval,ambito,tipo)){analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));}}
             ;
 
 operacion : termino
@@ -200,7 +209,7 @@ factor : factor_comun
        | factor_inmediato
        ;
 
-factor_inmediato : factor_comun '--' {polaca.add("--");}
+factor_inmediato : llamado_clase '--' {polaca.add($1.sval);polaca.add("1");polaca.add("-");{polaca.add($1.sval);polaca.add("=");}}
 
 factor_comun : llamado_clase {polaca.add($1.sval);}
              | '-' CTE_DOUBLE   {analizadorLex.convertirNegativo($2.sval);
@@ -216,9 +225,9 @@ polaca.add("-" + $2.sval);}
              | '-' CTE_UINT {analizadorLex.addErroresLexicos(new Error("Las variables tipo UINT no pueden ser negativas", analizadorLex.getLineaArchivo()));}
              ;
 
-tipo : DOUBLE 
-     | UINT 
-     | LONG
+tipo : DOUBLE {tipo = "Double";}
+     | UINT {tipo = "Uint";}
+     | LONG {tipo = "Long";}
      | ID
      | error {analizadorLex.addErroresLexicos(new Error("Tipo no reconocido", analizadorLex.getLineaArchivo()));}
      ;
@@ -231,6 +240,7 @@ static Parser par = null;
 static Token token = null;
 static ArrayList<String>  polaca;
 static String ambito = ":main";
+static String tipo = "";
 static Tabla tablaSimbolos;
 
 public static void main(String[] args) throws Exception{
