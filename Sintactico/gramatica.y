@@ -88,7 +88,7 @@ declaracion_funcion : encabezado_funcion '(' ')' bloque_sentencias_funcion ','  
 encabezado_funcion : VOID ID {if(!tablaSimbolos.agregarAmbito($2.sval,ambito,$1.sval)){analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));}ambito += ":" + $2.sval;}
                    ;
 
-parametro_formal : tipo ID
+parametro_formal : tipo ID //agregar tipo en la tabla de simbolos
                  ;
 
 bloque_sentencias_funcion : '{' lista_sentencias_funcion '}'  
@@ -174,7 +174,7 @@ sentencia_expresion : declaracion_variable
                     | asignacion {System.out.println("ASIGNACION, linea: " + analizadorLex.getLineaArchivo());}
                     | llamado_clase '(' ')' ',' {System.out.println("LLAMADO A METODO, linea: " + analizadorLex.getLineaArchivo());}
                     | llamado_clase '(' ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
-                    | llamado_clase '(' operacion ')' ',' {System.out.println("LLAMADO A METODO, linea: " + analizadorLex.getLineaArchivo());}
+                    | llamado_clase '(' operacion ')' ',' {System.out.println("LLAMADO A METODO, linea: " + analizadorLex.getLineaArchivo());} // Chequear tipo operacion con parametro de funcion?
                     | llamado_clase '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
                     | TOD '(' operacion ')' ','
                     | TOD '(' operacion ')' {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
@@ -184,7 +184,7 @@ llamado_clase : ID {$$.sval = $1.sval; }
               | llamado_clase '.' ID {$$.sval += "." + $3.sval;}
               ;
 
-asignacion : llamado_clase '=' operacion ','  {polaca.add($1.sval);polaca.add("=");}
+asignacion : llamado_clase '=' operacion ','  {polaca.add($1.sval);polaca.add("=");} //chequear tipos entre llamado de clase y operacion
            | llamado_clase '=' operacion {analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));}
            | tipo llamado_clase '=' operacion ',' {analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));}                                        
            ;
@@ -195,13 +195,13 @@ lista_de_id : ID {if(!tablaSimbolos.agregarAmbito($1.sval,ambito,tipo)){analizad
             ;
 
 operacion : termino
-          | operacion '+' termino {polaca.add("+");}
-          | operacion '-' termino {polaca.add("-");}
+          | operacion '+' termino {polaca.add("+");} //chequear tipos entre el operando y el termino
+          | operacion '-' termino {polaca.add("-");} //chequear tipos entre el operando y el termino
           ;
           
 termino : factor
-        | termino '*' factor {polaca.add("*");}
-        | termino '/' factor {polaca.add("/");}
+        | termino '*' factor {polaca.add("*");} //chequear tipos entre el termino y el factor
+        | termino '/' factor {polaca.add("/");} //chequear tipos entre el termino y el factor
         | '(' operacion ')'
         ;
 
@@ -209,7 +209,7 @@ factor : factor_comun
        | factor_inmediato
        ;
 
-factor_inmediato : llamado_clase '--' {polaca.add($1.sval);polaca.add("1");polaca.add("-");{polaca.add($1.sval);polaca.add("=");}}
+factor_inmediato : llamado_clase '--' {polaca.add($1.sval);polaca.add("1");polaca.add("-");{polaca.add($1.sval);polaca.add("=");}} //el operador inmediato es para todos los tipos? chequear
 
 factor_comun : llamado_clase {polaca.add($1.sval);}
              | '-' CTE_DOUBLE   {analizadorLex.convertirNegativo($2.sval);
