@@ -23,12 +23,39 @@ public class Tabla {
         if(!existeSimbolo(nombreConAmbito)){
             Atributos aux = tabla.get(nombre);
             aux.setTipo(tipo);
-            System.out.println("Tabla de Simbolos: " + nombreConAmbito);
             eliminarSimbolo(nombre);
             tabla.put(nombreConAmbito, aux);
             return true;
         }
         return false;
+    }
+
+    public boolean agregarInterfaz(String nombre, String nombreInterfaz) {
+        if(existeSimbolo(nombreInterfaz) && tabla.get(nombreInterfaz).getTipo().equals("INTERFACE")){
+            tabla.get(nombre).addInterfaz(nombreInterfaz);
+            eliminarSimbolo(nombreInterfaz.substring(0,nombreInterfaz.indexOf(":")));
+            return true;
+        }
+        return false;
+    }
+
+    public String getInterfaz(String nombre) {
+        return tabla.get(nombre).getInterfaz();
+    }
+    
+    public boolean agregarHerencia(String nombre, String nombrePadre) {
+        int nivelHerenciaPadre = 0;
+        if(existeSimbolo(nombrePadre) && tabla.get(nombrePadre).getTipo().equals("CLASS")){
+            nivelHerenciaPadre = tabla.get(nombrePadre).getNivelHerencia();
+            tabla.get(nombre).addHerencia(nombrePadre, nivelHerenciaPadre);
+            eliminarSimbolo(nombrePadre.substring(0,nombrePadre.indexOf(":")));
+            return true;
+        }
+        return false;
+    }
+
+    public int getNivelHerencia(String nombre) {
+        return tabla.get(nombre).getNivelHerencia();
     }
 
     public boolean existeSimbolo(String nombre) {
@@ -49,15 +76,18 @@ public class Tabla {
         tabla.clear();
     }
 
+    public boolean existeVariable(String nombre, String ambito){
+        return true;
+    }
+
     public void imprimirTabla() {
         System.out.println("Tabla de simbolos:");
-        System.out.println("+----------------------+----------------------+-------+");
-        System.out.println("| Nombre               | Tipo                 | Uso   |");
-        System.out.println("+----------------------+----------------------+-------+");
+        System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
+        System.out.println("| Nombre               | Tipo                 | Uso   | Implement Interfaz   | Padre Herencia       | nivel |");
+        System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
         for (String key : tabla.keySet()) {
-            System.out.printf("| %-20s | %-20s | %-5s |\n", key,tabla.get(key).getTipo(),tabla.get(key).isUso());
+            System.out.printf("| %-20s | %-20s | %-5s | %-20s | %-20s | %-5s |\n", key,tabla.get(key).getTipo(),tabla.get(key).isUso(),tabla.get(key).getInterfaz(),tabla.get(key).getHerencia(),tabla.get(key).getNivelHerencia());
         }
-        System.out.println("+----------------------+----------------------+-------+");
+        System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
     }
-    
 }

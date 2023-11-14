@@ -7,21 +7,24 @@
             a = a+1_l,
         },
     },
-    VOID aaa(){
-        LONG x;y;z,
-        VOID a(){
-            UINT a,
-        },
-        x = 3_l,
-        y = 4_l,
-        z = 5_l,
-        IF (x < y) {
-            z = x + y
-        }
-        END IF,
+
+    INTERFACE b{
+        VOID pepe(),
     },
-    INTERFACE bb{
-        VOID a(),
+    
+    CLASS ab IMPLEMENT b{
+        UINT a,
+        aa,
+    },
+    
+    CLASS ac{
+        UINT c,
+        ab,
+    },
+    
+    CLASS ad{
+        UINT d,
+        ac,
     },
 
 }

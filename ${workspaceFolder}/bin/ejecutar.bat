@@ -11,7 +11,7 @@ set "file=.\Sintactico\ParserVal.java"
 ) > %file%.tmp
 
 move /y %file%.tmp %file%
-cls
+
 echo Compilando...
 javac .\Lexico\*.java
 javac .\Sintactico\*.java

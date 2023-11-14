@@ -1,0 +1,23 @@
+Long 2147483648_l //cuando encuentra una l en la rama de las constantes se da cuenta que es un LONG entonces chequea el rango de la constante, lo mismo para cada otro caso
+,
+-
+Long 2147483648_l
+,
+Uint 65535_ui
+,
+Uint 0_ui
+,
+Double 1.7976931348623157D+308
+,
+-
+Double 1.7976931348623157D+308
+,
+Tabla de simbolos:
++----------------------+----------------------+
+| Nombre               | Valor                |
++----------------------+----------------------+
+| 2147483648_l         | Long                 |
+| 0_ui                 | Uint                 |
+| 1.7976931348623157D+308 | Double               |
+| 65535_ui             | Uint                 |
++----------------------+----------------------+

@@ -1,0 +1,22 @@
+LONG
+identificador long
+UINT
+identificador uint
+DOUBLE
+identificador double
+WHILE
+identificador while
+Error Palabra Reservada
+identificador pepe
+No existe la palabra reservada: PEPE en la linea: 9
+Tabla de simbolos:
++----------------------+----------------------+
+| Nombre               | Valor                |
++----------------------+----------------------+
+| double               | identificador        |
+| uint                 | identificador        |
+| while                | identificador        |
+| long                 | identificador        |
+| pepe                 | identificador        |
++----------------------+----------------------+
+PS C:\Users\felip\OneDrive\Documentos\Uni\Compilador> 

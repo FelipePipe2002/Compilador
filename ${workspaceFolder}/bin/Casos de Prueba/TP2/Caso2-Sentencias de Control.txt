@@ -1,0 +1,14 @@
+{
+    VOID testeo(){
+        DO{
+            PRINT % hola %,
+        }WHILE(a-->0_l),
+        DO{
+        }WHILE(a-->0_l),
+        DO{
+            PRINT % hola %,
+        }WHILE(),
+        DO{
+        }WHILE(),
+    },
+}

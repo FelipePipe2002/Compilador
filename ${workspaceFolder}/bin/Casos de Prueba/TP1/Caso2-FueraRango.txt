@@ -1,0 +1,7 @@
+2147483649_l,
+-2147483649_l,
+65536_ui,
+-1_ui, *{En este caso no va a saltar el chequeo de rango por que el analizador lexico va a separar el - del 1_ui, entonces al solo chequear este ultimo
+no va a saltar un fuera de rango}*
+1.7976931348623158D+308,
+-1.7976931348623158D+308,
