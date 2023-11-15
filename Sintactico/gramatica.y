@@ -12,37 +12,39 @@ import java.util.LinkedList;
 %token IF ELSE END_IF PRINT CLASS VOID LONG UINT DOUBLE WHILE DO INTERFACE IMPLEMENT RETURN TOD ID CTE_LONG CTE_UINT CTE_DOUBLE CADENA 
 %start programa
 
+
 %%
-programa : '{' lista_declaraciones '}' 
-         | '{' lista_declaraciones {
+programa : '{' componentes_programa '}' 
+         | '{' componentes_programa {
                 errores.add(new Error("El programa tiene que terminar con \'}\'", anLex.getLinea()));
          }
-         | lista_declaraciones '}' {
+         | componentes_programa '}' {
                 errores.add(new Error("El programa tiene que arrancar con \'{\'", anLex.getLinea()));
          }
-         | lista_declaraciones {
+         | componentes_programa {
                 errores.add(new Error("El programa tiene que estar contenido en \'{\' \'}\'", anLex.getLinea()));
         }
          ;
 
-lista_declaraciones : declaracion
-                    | lista_declaraciones declaracion
-                    ;
+componentes_programa : declaracion
+                     | sentencia
+                     | componentes_programa sentencia
+                     | componentes_programa declaracion
+                     ;
 
-declaracion : declaracion_variable
-            | declaracion_clase
+declaracion : declaracion_clase
             | declaracion_funcion
             ;
 
-declaracion_clase   : encabezado_clase bloque_clase ',' {
+declaracion_clase : encabezado_clase bloque_clase ',' {
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                         if(($2.sval != null)){
                                 if(!tablaSimbolos.agregarHerencia($1.sval,$2.sval)){
                                         errores.add(new Error("No esta declarada la clase " + $2.sval.substring(0,$2.sval.lastIndexOf(":")), anLex.getLinea())); 
                                 }
                         }
-                    } //chequear que el padre sea una clase
-                    | encabezado_clase IMPLEMENT ID bloque_clase ',' {
+                  } //chequear que el padre sea una clase
+                  | encabezado_clase IMPLEMENT ID bloque_clase ',' {
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                         if (!tablaSimbolos.agregarInterfaz($1.sval,$3.sval + ":main")){
                                 errores.add(new Error("No se encuentra la interfaz " + $3.sval, anLex.getLinea())); 
@@ -52,23 +54,23 @@ declaracion_clase   : encabezado_clase bloque_clase ',' {
                                         errores.add(new Error("No esta declarada la clase " + $4.sval.substring(0,$4.sval.lastIndexOf(":")), anLex.getLinea())); 
                                 }
                         }
-                    } //chequear que el padre sea una clase y que el ID interfaz sea una interfaz
-                    | encabezado_interface bloque_interfaz ',' {
-                        ambito = ambito.substring(0,ambito.lastIndexOf(":"));
-                    }
-                    | encabezado_clase bloque_clase {
-                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
-                        ambito = ambito.substring(0,ambito.lastIndexOf(":"));
-                    }
-                    | encabezado_clase IMPLEMENT ID bloque_clase {
-                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
-                        ambito = ambito.substring(0,ambito.lastIndexOf(":"));
-                    }
-                    | encabezado_interface bloque_interfaz {
-                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
-                        ambito = ambito.substring(0,ambito.lastIndexOf(":"));
-                    }
-                    ;
+                  } //chequear que el padre sea una clase y que el ID interfaz sea una interfaz
+                  | encabezado_interface bloque_interfaz ',' {
+                      ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+                  }
+                  | encabezado_clase bloque_clase ';'{
+                      errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
+                      ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+                  }
+                  | encabezado_clase IMPLEMENT ID bloque_clase ';'{
+                      errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
+                      ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+                  }
+                  | encabezado_interface bloque_interfaz ';'{
+                      errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
+                      ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+                  }
+                  ;
 
 encabezado_clase : CLASS ID {
                         if(!tablaSimbolos.agregarAmbito($2.sval,ambito,$1.sval)){
@@ -87,22 +89,24 @@ encabezado_interface : INTERFACE ID {
                      }
                      ;
 
-bloque_clase :    '{' cuerpo_clase '}' {
-                        $$.sval = null;
-                }
-                | '{' cuerpo_clase ID ',' '}' {
-                        $$.sval = $3.sval + ":main";
-                }//chequeo de ID clase
-                | '(' cuerpo_clase ')' {
-                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
-                }
-                | '{' '}'  {
-                        errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
-                }
-                | '(' ')'  {
-                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
-                }
-                ;
+bloque_clase : '{' cuerpo_clase '}' {
+                $$.sval = null;
+             }
+             | '{' cuerpo_clase herencia_clase '}' {
+                $$.sval = $3.sval + ":main";
+             }//chequeo de ID clase
+             | '(' cuerpo_clase ')'{
+                errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
+             }
+             | '{' '}' {
+                errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
+             }
+             | '(' ')' {
+                errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
+             }
+             ;
+
+herencia_clase : ID ','
 
 bloque_interfaz : '{' cuerpo_interfaz '}'  
                 | '(' cuerpo_interfaz ')' {
@@ -116,7 +120,7 @@ bloque_interfaz : '{' cuerpo_interfaz '}'
                 }
                 ;
 
-cuerpo_clase : miembro_clase
+cuerpo_clase : miembro_clase 
              | cuerpo_clase miembro_clase
              ;
 
@@ -140,36 +144,29 @@ declaracion_funcion_interfaz : encabezado_funcion '(' ')' ','{
                              | encabezado_funcion '(' parametro_formal ')'',' {
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
-                             | encabezado_funcion '(' ')' {
+                             | encabezado_funcion '(' ')' ';'{
                                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
-                             | encabezado_funcion '(' parametro_formal ')' {
+                             | encabezado_funcion '(' parametro_formal ')' ';'{
                                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
-                                ambito = ambito.substring(0,ambito.lastIndexOf(":"));
-                             }
-                             | encabezado_funcion ','    {
-                                errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              | encabezado_funcion parametro_formal ','  {
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
-                             | encabezado_funcion    {
+                             | encabezado_funcion ';'{
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
-                             | encabezado_funcion parametro_formal {
+                             | encabezado_funcion parametro_formal ';'{
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              ;
 
 declaracion_variable : tipo lista_de_id ','
-                     | tipo lista_de_id {
-                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
-                     }
                      ;
 
 declaracion_funcion : encabezado_funcion '(' ')' bloque_sentencias_funcion ',' {
@@ -232,23 +229,14 @@ sentencia : sentencia_expresion
           ;
 
 sentencia_retorno : RETURN ','  
-                  | RETURN {
+                  | RETURN ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                   }
                   ;
 
 sentencia_imprimir : PRINT CADENA ','  
-                   | PRINT CADENA {
+                   | PRINT CADENA ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
-                   }
-                   | PRINT error ',' {
-                        errores.add(new Error("Cadena mal definida", anLex.getLinea()));
-                   }
-                   | PRINT error {
-                        errores.add(new Error("Cadena mal definida", anLex.getLinea()));
-                   }
-                   | error CADENA ',' {
-                        errores.add(new Error("No existe esa expresion para imprimir la cadena", anLex.getLinea()));
                    }
                    ;
 
@@ -258,10 +246,10 @@ sentencia_seleccion : condicion_if cuerpo_then END_IF ',' {
                     | condicion_if cuerpo_then cuerpo_else END_IF ',' {
                         polaca.add(pila.pop(),"[" + String.valueOf(polaca.size() + 1) + "]");
                     }
-                    | condicion_if cuerpo_then END_IF {
+                    | condicion_if cuerpo_then END_IF ';' {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
-                    | condicion_if cuerpo_then cuerpo_else END_IF {
+                    | condicion_if cuerpo_then cuerpo_else END_IF ';' {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
                     | condicion_if cuerpo_then ',' {
@@ -353,10 +341,10 @@ sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' ',' 
                         polaca.add("[" + String.valueOf(pila.pop()) + "]");
                         polaca.add("BF");
                     }
-                    | inicio_do bloque_sentencias WHILE '(' comparacion ')' {
+                    | inicio_do bloque_sentencias WHILE '(' comparacion ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
-                    | inicio_do bloque_sentencias WHILE '(' ')' {
+                    | inicio_do bloque_sentencias WHILE '(' ')' ','{
                         errores.add(new Error("No se declaro una condicion de corte en el WHILE que se ubica", anLex.getLinea()));
                     }
                     ;
@@ -370,15 +358,15 @@ sentencia_expresion : declaracion_variable
                     | factor_inmediato
                     | asignacion 
                     | llamado_clase '(' ')' ',' 
-                    | llamado_clase '(' ')' {
+                    | llamado_clase '(' ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
                     | llamado_clase '(' operacion ')' ','  // Chequear tipo operacion con parametro de funcion?
-                    | llamado_clase '(' operacion ')' {
+                    | llamado_clase '(' operacion ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
                     | TOD '(' operacion ')' ','
-                    | TOD '(' operacion ')' {
+                    | TOD '(' operacion ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
                     ;
@@ -397,11 +385,8 @@ asignacion : llamado_clase '=' operacion ','  {
                 }
                 polaca.add($1.sval);polaca.add("=");
            } //chequear tipos entre llamado de clase y operacion
-           | llamado_clase '=' operacion {
+           | llamado_clase '=' operacion ';'{
                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
-           }
-           | llamado_clase '=' operacion ';' {
-                errores.add(new Error("Se esperaba una \',\' y se encontro un \';\'", anLex.getLinea()));
            }
            | tipo llamado_clase '=' operacion ',' {
                 errores.add(new Error("No se puede declarar y asignar en la misma línea", anLex.getLinea()));
@@ -409,13 +394,13 @@ asignacion : llamado_clase '=' operacion ','  {
            ;
 
 
-lista_de_id : ID {
-                if(!tablaSimbolos.agregarAmbito($1.sval,ambito,tipo)){
+lista_de_id : lista_de_id ';' ID {
+                if(!tablaSimbolos.agregarAmbito($3.sval,ambito,tipo)){
                         errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                 }
             }
-            | lista_de_id ';' ID {
-                if(!tablaSimbolos.agregarAmbito($3.sval,ambito,tipo)){
+            | ID {
+                if(!tablaSimbolos.agregarAmbito($1.sval,ambito,tipo)){
                         errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                 }
             }
@@ -445,11 +430,17 @@ factor : factor_comun
        ;
 
 factor_inmediato : llamado_clase '--' {
+                        if(!tablaSimbolos.existeVariable($1.sval,ambito)){
+                                errores.add(new Error("No se declaro la variable " + $1.sval + "en el ambito reconocible", anLex.getLinea()));
+                        }
                         polaca.add($1.sval);polaca.add("1");polaca.add("-");{polaca.add($1.sval);polaca.add("=");}
                  } //el operador inmediato es para todos los tipos? chequear
                  ;
 
 factor_comun : llamado_clase {
+                if(!tablaSimbolos.existeVariable($1.sval,ambito)){
+                        errores.add(new Error("No se declaro la variable " + $1.sval + "en el ambito reconocible", anLex.getLinea()));
+                }
                 polaca.add($1.sval);
              }
              | '-' CTE_DOUBLE {
@@ -485,11 +476,12 @@ tipo : DOUBLE {
         tipo = "UINT";
      }
      | LONG {
-        tipo = "Long";
+        tipo = "LONG";
      }
-     | ID
-     | error {
-        errores.add(new Error("Tipo no reconocido", anLex.getLinea()));
+     | ID {
+        if(!tablaSimbolos.existeClase($1.sval,ambito)){
+                errores.add(new Error("No se declaro la variable " + $1.sval + "en el ambito reconocible", anLex.getLinea()));
+        }
      }
      ;
 

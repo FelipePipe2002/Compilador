@@ -77,7 +77,23 @@ public class Tabla {
     }
 
     public boolean existeVariable(String nombre, String ambito){
-        return true;
+        eliminarSimbolo(nombre);
+        while (ambito != ""){
+            String nombreambito = nombre + ambito;
+            if(existeSimbolo(nombreambito)){
+                String tipo = tabla.get(nombreambito).getTipo();
+                tipo = tipo.toUpperCase();
+                if (tipo == "UINT" || tipo == "LONG" || tipo == "DOUBLE")
+                    return true;
+            }
+            ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+        }
+        return false;
+    }
+
+    public boolean existeClase(String nombre, String ambito){
+        String nombreConAmbito = nombre + ambito;
+        return ((tabla.containsKey(nombreConAmbito)) && (tabla.get(nombreConAmbito).getTipo() == "CLASS"));
     }
 
     public void imprimirTabla() {
