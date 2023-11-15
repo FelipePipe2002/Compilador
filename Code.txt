@@ -1,19 +1,19 @@
 {
     LONG a,
     CLASS aa{
-        UINT a,
+        UINT d,
         VOID b(){
-            LONG b;c,
+            LONG b;d,
             UINT x;y,
-            b = 1_l,
-            c = 2_l,
+            d = 1_l,
+            d = 2_l,
             x = 10_ui,
             y = 2_ui,
-            IF (b < c) {
+            IF (b < d) {
                 a = a + 1_l,
             }
             ELSE {
-                a = b + c,
+                a = b + d,
             }
             END_IF,
             DO { 
@@ -26,12 +26,12 @@
         VOID pepe(),
     },
     CLASS ab IMPLEMENT b{
-        UINT a,
+        UINT d,
         aa,
     },
     
     CLASS ac{
-        UINT c,
+        UINT d,
         ab,
     },
     
@@ -39,5 +39,5 @@
         UINT d,
         ac,
     },
-
+    aa c;
 }

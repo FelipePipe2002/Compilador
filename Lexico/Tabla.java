@@ -91,6 +91,21 @@ public class Tabla {
         return false;
     }
 
+    public boolean existeMetodo(String nombre, String ambito){
+        eliminarSimbolo(nombre);
+        while (ambito != ""){
+            String nombreambito = nombre + ambito;
+            if(existeSimbolo(nombreambito)){
+                String tipo = tabla.get(nombreambito).getTipo();
+                tipo = tipo.toUpperCase();
+                if (tipo == "VOID")
+                    return true;
+            }
+            ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+        }
+        return false;
+    }
+
     public boolean existeClase(String nombre, String ambito){
         String nombreConAmbito = nombre + ambito;
         return ((tabla.containsKey(nombreConAmbito)) && (tabla.get(nombreConAmbito).getTipo() == "CLASS"));
@@ -102,7 +117,7 @@ public class Tabla {
         System.out.println("| Nombre               | Tipo                 | Uso   | Implement Interfaz   | Padre Herencia       | nivel |");
         System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
         for (String key : tabla.keySet()) {
-            System.out.printf("| %-20s | %-20s | %-5s | %-20s | %-20s | %-5s |\n", key,tabla.get(key).getTipo(),tabla.get(key).isUso(),tabla.get(key).getInterfaz(),tabla.get(key).getHerencia(),tabla.get(key).getNivelHerencia());
+            System.out.printf("| %-20s | %-20s | %-5s | %-20s | %-20s | %-5s |\n", key,tabla.get(key).getTipo().toUpperCase(),tabla.get(key).isUso(),tabla.get(key).getInterfaz(),tabla.get(key).getHerencia(),tabla.get(key).getNivelHerencia());
         }
         System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
     }

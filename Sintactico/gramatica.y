@@ -357,7 +357,12 @@ inicio_do : DO {
 sentencia_expresion : declaracion_variable
                     | factor_inmediato
                     | asignacion 
-                    | llamado_clase '(' ')' ',' 
+                    | llamado_clase '(' ')' ',' {
+                        if(!tablaSimbolos.existeMetodo($1.sval,ambito)){
+                                errores.add(new Error("No se declaro el Metodo " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                        }
+                        polaca.add("Call a " + $1.sval);
+                    }
                     | llamado_clase '(' ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
@@ -381,7 +386,7 @@ llamado_clase : ID {
 
 asignacion : llamado_clase '=' operacion ','  {
                 if(!tablaSimbolos.existeVariable($1.sval,ambito)){
-                        errores.add(new Error("No se declaro la variable " + $1.sval + "en el ambito reconocible", anLex.getLinea()));
+                        errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                 }
                 polaca.add($1.sval);polaca.add("=");
            } //chequear tipos entre llamado de clase y operacion
@@ -431,7 +436,7 @@ factor : factor_comun
 
 factor_inmediato : llamado_clase '--' {
                         if(!tablaSimbolos.existeVariable($1.sval,ambito)){
-                                errores.add(new Error("No se declaro la variable " + $1.sval + "en el ambito reconocible", anLex.getLinea()));
+                                errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                         }
                         polaca.add($1.sval);polaca.add("1");polaca.add("-");{polaca.add($1.sval);polaca.add("=");}
                  } //el operador inmediato es para todos los tipos? chequear
@@ -439,7 +444,7 @@ factor_inmediato : llamado_clase '--' {
 
 factor_comun : llamado_clase {
                 if(!tablaSimbolos.existeVariable($1.sval,ambito)){
-                        errores.add(new Error("No se declaro la variable " + $1.sval + "en el ambito reconocible", anLex.getLinea()));
+                        errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                 }
                 polaca.add($1.sval);
              }
@@ -480,8 +485,10 @@ tipo : DOUBLE {
      }
      | ID {
         if(!tablaSimbolos.existeClase($1.sval,ambito)){
-                errores.add(new Error("No se declaro la variable " + $1.sval + "en el ambito reconocible", anLex.getLinea()));
+                errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
         }
+        tipo = $1.sval;
+        tablaSimbolos.eliminarSimbolo($1.sval);
      }
      ;
 
