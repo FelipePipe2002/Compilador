@@ -22,7 +22,7 @@ public class CheckRangoPuntoFlotante extends AccionSemantica {
         BigDecimal doublezero= new BigDecimal("0.0");
 
         if (bufferValue.compareTo(doublemax) == 1 || (bufferValue.compareTo(doublemin) == -1 && !bufferValue.equals(doublezero))){
-            Error error = new Error("Constante fuera del rango de los punto flotante", this.getAnalizadorLexico().getLineaArchivo());
+            Error error = new Error("Constante fuera del rango de los punto flotante", this.getAnalizadorLexico().getLinea());
             this.getAnalizadorLexico().addErroresLexicos(error);
         }
         return true;

@@ -15,7 +15,7 @@ public class CheckRangoUI extends AccionSemantica {
         Integer bufferValue = Integer.parseInt(buffer);
         
         if(bufferValue>this.rango){
-            Error error = new Error("Constante fuera del rango de los enteros sin signo", this.getAnalizadorLexico().getLineaArchivo());
+            Error error = new Error("Constante fuera del rango de los enteros sin signo", this.getAnalizadorLexico().getLinea());
             this.getAnalizadorLexico().addErroresLexicos(error);
             return false;
             // throw new Exception("Constante fuera del rango de los enteros sin signo");

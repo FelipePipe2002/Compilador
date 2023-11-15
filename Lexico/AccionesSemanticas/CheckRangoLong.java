@@ -15,7 +15,7 @@ public class CheckRangoLong extends AccionSemantica {
         Long bufferValue = Long.parseLong(buffer);
         
         if(bufferValue>this.rango){
-            Error error = new Error("Constante fuera del rango de los enteros largos", this.getAnalizadorLexico().getLineaArchivo());
+            Error error = new Error("Constante fuera del rango de los enteros largos", this.getAnalizadorLexico().getLinea());
             this.getAnalizadorLexico().addErroresLexicos(error);
             return false;
             // throw new Exception("Constante fuera del rango de los enteros largos");
