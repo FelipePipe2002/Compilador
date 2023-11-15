@@ -20,7 +20,7 @@
 
 package Sintactico;
 import Lexico.*;
-import Lexico.Error;
+import Errores.Error;
 import java.util.ArrayList;
 
 //#line 24 "Parser.java"
@@ -709,10 +709,11 @@ final static String yyrule[] = {
 //#line 455 ".\gramatica.y"
 
 
-static AnalizadorLexico analizadorLex = null;
+static AnalizadorLexico anLex = null;
 static Parser par = null;
 static Token token = null;
 static ArrayList<String>  polaca;
+static ArrayList<Error> errores;
 static String ambito = ":main";
 static String tipo = "";
 static Tabla tablaSimbolos;
@@ -720,15 +721,16 @@ static Tabla tablaSimbolos;
 public static void main(String[] args) throws Exception{
         System.out.println("Iniciando compilacion...");
         tablaSimbolos = new Tabla();
-        analizadorLex = new AnalizadorLexico(args,tablaSimbolos);
+        errores = new ArrayList<Error>();
+        anLex = new AnalizadorLexico(args,tablaSimbolos,errores);
         
         polaca = new ArrayList<String>();
         
         par = new Parser(false);
         par.run();
 
-        analizadorLex.MostrarTablaSimbolos();
-        analizadorLex.MostrarErrores();
+        anLex.MostrarTablaSimbolos();
+        anLex.MostrarErrores();
         
         for (int i = 0; i < polaca.size(); i++) {
           System.out.println(i + " " + polaca.get(i));
@@ -739,7 +741,7 @@ public static void main(String[] args) throws Exception{
 
 private int yylex(){
         try {
-          token = analizadorLex.getToken();
+          token = anLex.getToken();
           int intToken = token.getTipo().getNumero();
           //System.out.println("yylex: " + token);
           yylval = new ParserVal(token.toString());
@@ -763,7 +765,7 @@ private boolean CheckRangoLong(String numero){
         else
             return false;
 }
-//#line 695 "Parser.java"
+//#line 697 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -920,19 +922,19 @@ boolean doaction;
 case 2:
 //#line 15 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("El programa tiene que terminar con \'}\'", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("El programa tiene que terminar con \'}\'", anLex.getLinea()));
          }
 break;
 case 3:
 //#line 18 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("El programa tiene que arrancar con \'{\'", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("El programa tiene que arrancar con \'{\'", anLex.getLinea()));
          }
 break;
 case 4:
 //#line 21 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("El programa tiene que estar contenido en \'{\' \'}\'", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("El programa tiene que estar contenido en \'{\' \'}\'", anLex.getLinea()));
         }
 break;
 case 10:
@@ -941,7 +943,7 @@ case 10:
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                         if((val_peek(1).sval != null)){
                                 if(!tablaSimbolos.agregarHerencia(val_peek(2).sval,val_peek(1).sval)){
-                                        analizadorLex.addErroresLexicos(new Error("No esta declarada la clase " + val_peek(1).sval.substring(0,val_peek(1).sval.lastIndexOf(":")), analizadorLex.getLineaArchivo())); 
+                                        errores.add(new Error("No esta declarada la clase " + val_peek(1).sval.substring(0,val_peek(1).sval.lastIndexOf(":")), anLex.getLinea())); 
                                 }
                         }
                     }
@@ -951,11 +953,11 @@ case 11:
 {
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                         if (!tablaSimbolos.agregarInterfaz(val_peek(4).sval,val_peek(2).sval + ":main")){
-                                analizadorLex.addErroresLexicos(new Error("No se encuentra la interfaz " + val_peek(2).sval, analizadorLex.getLineaArchivo())); 
+                                errores.add(new Error("No se encuentra la interfaz " + val_peek(2).sval, anLex.getLinea())); 
                         }
                         if((val_peek(1).sval != null)){
                                 if((!tablaSimbolos.agregarHerencia(val_peek(4).sval,val_peek(1).sval))){
-                                        analizadorLex.addErroresLexicos(new Error("No esta declarada la clase " + val_peek(1).sval.substring(0,val_peek(1).sval.lastIndexOf(":")), analizadorLex.getLineaArchivo())); 
+                                        errores.add(new Error("No esta declarada la clase " + val_peek(1).sval.substring(0,val_peek(1).sval.lastIndexOf(":")), anLex.getLinea())); 
                                 }
                         }
                     }
@@ -969,21 +971,21 @@ break;
 case 13:
 //#line 57 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
 case 14:
 //#line 61 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
 case 15:
 //#line 65 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
@@ -991,7 +993,7 @@ case 16:
 //#line 71 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,val_peek(1).sval)){
-                                analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                         }
                         yyval.sval = val_peek(0).sval + ambito;
                         ambito += ":" + val_peek(0).sval;
@@ -1001,7 +1003,7 @@ case 17:
 //#line 80 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,val_peek(1).sval)){
-                                analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                         }
                         ambito += ":" + val_peek(0).sval;
                      }
@@ -1021,49 +1023,49 @@ break;
 case 20:
 //#line 94 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                 }
 break;
 case 21:
 //#line 97 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
                 }
 break;
 case 22:
 //#line 100 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                 }
 break;
 case 24:
 //#line 106 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                 }
 break;
 case 25:
 //#line 109 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
                 }
 break;
 case 26:
 //#line 112 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                 }
 break;
 case 33:
 //#line 127 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Solo se permiten metodos abstractos", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Solo se permiten metodos abstractos", anLex.getLinea()));
                 }
 break;
 case 34:
 //#line 130 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Solo se permiten metodos abstractos", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Solo se permiten metodos abstractos", anLex.getLinea()));
                 }
 break;
 case 35:
@@ -1081,49 +1083,49 @@ break;
 case 37:
 //#line 141 ".\gramatica.y"
 {
-                                analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 38:
 //#line 145 ".\gramatica.y"
 {
-                                analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 39:
 //#line 149 ".\gramatica.y"
 {
-                                analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 40:
 //#line 153 ".\gramatica.y"
 {
-                                analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 41:
 //#line 157 ".\gramatica.y"
 {
-                                analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 42:
 //#line 161 ".\gramatica.y"
 {
-                                analizadorLex.addErroresLexicos(new Error("El parametro formal tiene que estar entre \'(\' \')\'", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 44:
 //#line 168 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                      }
 break;
 case 45:
@@ -1141,14 +1143,14 @@ break;
 case 47:
 //#line 179 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
 case 48:
 //#line 183 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\' antes o", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
@@ -1156,7 +1158,7 @@ case 49:
 //#line 189 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,val_peek(1).sval)){
-                                analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                         }
                         ambito += ":" + val_peek(0).sval;
                    }
@@ -1165,170 +1167,170 @@ case 50:
 //#line 197 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,tipo)){
-                                analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));
+                                errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                         }
                  }
 break;
 case 52:
 //#line 205 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 53:
 //#line 208 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
                   }
 break;
 case 54:
 //#line 211 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 65:
 //#line 233 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                   }
 break;
 case 67:
 //#line 239 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                    }
 break;
 case 68:
 //#line 242 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Cadena mal definida", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Cadena mal definida", anLex.getLinea()));
                    }
 break;
 case 69:
 //#line 245 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Cadena mal definida", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Cadena mal definida", anLex.getLinea()));
                    }
 break;
 case 70:
 //#line 248 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("No existe esa expresion para imprimir la cadena", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No existe esa expresion para imprimir la cadena", anLex.getLinea()));
                    }
 break;
 case 73:
 //#line 255 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 74:
 //#line 258 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 75:
 //#line 261 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("No se declaro una condicion en el IF", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No se declaro una condicion en el IF", anLex.getLinea()));
                     }
 break;
 case 76:
 //#line 264 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("No se declaro una condicion en el IF ELSE", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No se declaro una condicion en el IF ELSE", anLex.getLinea()));
                     }
 break;
 case 77:
 //#line 267 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("No se declaro una condicion en el IF", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No se declaro una condicion en el IF", anLex.getLinea()));
                     }
 break;
 case 78:
 //#line 270 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("No se declaro una condicion en el IF ELSE", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No se declaro una condicion en el IF ELSE", anLex.getLinea()));
                     }
 break;
 case 82:
 //#line 280 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 83:
 //#line 283 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Bloque sin instrucciones", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
                   }
 break;
 case 84:
 //#line 286 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 88:
 //#line 296 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
             }
 break;
 case 89:
 //#line 299 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
             }
 break;
 case 90:
 //#line 302 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
             }
 break;
 case 97:
 //#line 313 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("Comparacion mal definida", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("Comparacion mal definida", anLex.getLinea()));
            }
 break;
 case 99:
 //#line 319 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 100:
 //#line 322 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("No se declaro una condicion de corte", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No se declaro una condicion de corte", anLex.getLinea()));
                     }
 break;
 case 101:
 //#line 325 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("No se declaro una condicion de corte y falta una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No se declaro una condicion de corte y falta una \',\'", anLex.getLinea()));
                     }
 break;
 case 106:
 //#line 334 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 108:
 //#line 338 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 110:
 //#line 342 ".\gramatica.y"
 {
-                        analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 111:
@@ -1347,7 +1349,7 @@ case 113:
 //#line 355 ".\gramatica.y"
 {
                 if(!tablaSimbolos.existeVariable(val_peek(3).sval,ambito)){
-                        analizadorLex.addErroresLexicos(new Error("No se declaro la variable " + val_peek(3).sval + "en el ambito reconocible", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("No se declaro la variable " + val_peek(3).sval + "en el ambito reconocible", anLex.getLinea()));
                 }
                 polaca.add(val_peek(3).sval);polaca.add("=");
            }
@@ -1355,20 +1357,20 @@ break;
 case 114:
 //#line 361 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("Se esperaba una \',\'", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
            }
 break;
 case 115:
 //#line 364 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("No se puede declarar y asignar en la misma línea", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("No se puede declarar y asignar en la misma línea", anLex.getLinea()));
            }
 break;
 case 116:
 //#line 370 ".\gramatica.y"
 {
                 if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,tipo)){
-                        analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                 }
             }
 break;
@@ -1376,7 +1378,7 @@ case 117:
 //#line 375 ".\gramatica.y"
 {
                 if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,tipo)){
-                        analizadorLex.addErroresLexicos(new Error("Identificador ya usado en este ambito", analizadorLex.getLineaArchivo()));
+                        errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                 }
             }
 break;
@@ -1419,7 +1421,7 @@ break;
 case 129:
 //#line 413 ".\gramatica.y"
 {
-                analizadorLex.convertirNegativo(val_peek(0).sval);
+                anLex.convertirNegativo(val_peek(0).sval);
                 polaca.add("-" + val_peek(0).sval);
              }
 break;
@@ -1432,7 +1434,7 @@ break;
 case 131:
 //#line 420 ".\gramatica.y"
 {
-                analizadorLex.convertirNegativo(val_peek(0).sval);
+                anLex.convertirNegativo(val_peek(0).sval);
                 polaca.add("-" + val_peek(0).sval);
              }
 break;
@@ -1440,7 +1442,7 @@ case 132:
 //#line 424 ".\gramatica.y"
 {
                 if(CheckRangoLong(val_peek(0).sval)){
-                        analizadorLex.addErroresLexicos(new Error("LONG fuera de rango", analizadorLex.getLineaArchivo()));}
+                        errores.add(new Error("LONG fuera de rango", anLex.getLinea()));}
                 else {
                         polaca.add(val_peek(0).sval);
                 } 
@@ -1455,7 +1457,7 @@ break;
 case 134:
 //#line 434 ".\gramatica.y"
 {
-                analizadorLex.addErroresLexicos(new Error("Las variables tipo UINT no pueden ser negativas", analizadorLex.getLineaArchivo()));
+                errores.add(new Error("Las variables tipo UINT no pueden ser negativas", anLex.getLinea()));
              }
 break;
 case 135:
@@ -1479,10 +1481,10 @@ break;
 case 139:
 //#line 449 ".\gramatica.y"
 {
-        analizadorLex.addErroresLexicos(new Error("Tipo no reconocido", analizadorLex.getLineaArchivo()));
+        errores.add(new Error("Tipo no reconocido", anLex.getLinea()));
      }
 break;
-//#line 1409 "Parser.java"
+//#line 1411 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

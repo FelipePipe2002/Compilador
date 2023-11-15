@@ -2,8 +2,8 @@ package Lexico.AccionesSemanticas;
 
 import java.math.BigDecimal;
 
+import Errores.Error;
 import Lexico.AnalizadorLexico;
-import Lexico.Error;
 
 public class CheckRangoPuntoFlotante extends AccionSemantica {
     double rango;

@@ -1,8 +1,7 @@
 package Lexico.AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
-import Lexico.Error;
-
+import Errores.Error;;
 public class CheckRangoCaracteres extends AccionSemantica {
     int rango;
     

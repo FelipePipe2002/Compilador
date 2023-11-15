@@ -1,7 +1,7 @@
 package Lexico.AccionesSemanticas;
 
+import Errores.Error;
 import Lexico.AnalizadorLexico;
-import Lexico.Error;
 
 public class CheckRangoUI extends AccionSemantica {
     Integer rango;

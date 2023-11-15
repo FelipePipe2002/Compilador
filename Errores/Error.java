@@ -1,4 +1,5 @@
-package Lexico;
+package Errores;
+
 
 public class Error extends Exception {
     String mensaje;

@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import Errores.Error;
 import Lexico.AccionesSemanticas.Comentario;
 
 public class AnalizadorLexico{
@@ -17,7 +18,7 @@ public class AnalizadorLexico{
     public Tabla tablaSimbolos;
     private TablaPalabrasReservadas tablaPalabrasReservadas;
 
-    public AnalizadorLexico(String[] args,Tabla tablasimbolos) throws Exception{
+    public AnalizadorLexico(String[] args,Tabla tablasimbolos, ArrayList<Error> errores) throws Exception{
         if(args.length < 1){
             System.out.println("No se agrego ningun argumento");
             System.exit(1);
@@ -28,7 +29,7 @@ public class AnalizadorLexico{
         this.reader = new RandomAccessFile(args[0], "r");
         this.matrizTransicion = new MatrizDeTransicionEstados();
         this.matrizAcciones = new MatrizDeAS(this);
-        this.erroresLexicos = new ArrayList<Error>();
+        this.erroresLexicos = errores;
         this.buffer = "";
         this.lineaArchivo = 1;
         this.ultimoCararterLeido = ' ';
@@ -38,7 +39,7 @@ public class AnalizadorLexico{
 
     public Token getToken() throws Exception {
         int caracter = -1,viejoEstado=0, nuevoEstado=0;
-        this.lineaArchivo = this.getLineaArchivo();
+        this.lineaArchivo = this.getLinea();
         this.buffer = "";
 
 
@@ -122,7 +123,7 @@ public class AnalizadorLexico{
         this.lineaArchivo = this.lineaArchivo + 1;
     }
 
-    public int getLineaArchivo(){
+    public int getLinea(){
         return this.lineaArchivo;
     }
 
