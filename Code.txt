@@ -3,15 +3,28 @@
     CLASS aa{
         UINT a,
         VOID b(){
-            UINT b,
-            a = a+1_l,
+            LONG b;c,
+            UINT x;y,
+            b = 1_l,
+            c = 2_l,
+            x = 10_ui,
+            y = 2_ui,
+            IF (b < c) {
+                a = a + 1_l,
+            }
+            ELSE {
+                a = b + c,
+            }
+            END_IF,
+            DO { 
+                x = x + 1_ui,
+                y = y + 2_ui,
+            } WHILE (x < y),
         },
     },
-
     INTERFACE b{
         VOID pepe(),
     },
-    
     CLASS ab IMPLEMENT b{
         UINT a,
         aa,

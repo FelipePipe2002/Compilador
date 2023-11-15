@@ -4,6 +4,8 @@ package Sintactico;
 import Lexico.*;
 import Errores.Error;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 
 %}
 
@@ -250,31 +252,49 @@ sentencia_imprimir : PRINT CADENA ','
                    }
                    ;
 
-sentencia_seleccion : IF '(' comparacion ')' cuerpo_if END_IF ','  
-                    | IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF ','
-                    | IF '(' comparacion ')' cuerpo_if END_IF {
+sentencia_seleccion : condicion_if cuerpo_then END_IF ',' {
+                        polaca.add(pila.pop(),"[" + String.valueOf(polaca.size() + 1) + "]");
+                    }
+                    | condicion_if cuerpo_then cuerpo_else END_IF ',' {
+                        polaca.add(pila.pop(),"[" + String.valueOf(polaca.size() + 1) + "]");
+                    }
+                    | condicion_if cuerpo_then END_IF {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
-                    | IF '(' comparacion ')' cuerpo_if ELSE cuerpo_if END_IF {
+                    | condicion_if cuerpo_then cuerpo_else END_IF {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
-                    | IF '(' ')' cuerpo_if END_IF ',' {
-                        errores.add(new Error("No se declaro una condicion en el IF", anLex.getLinea()));
+                    | condicion_if cuerpo_then ',' {
+                        errores.add(new Error("Se esperaba un END_IF y se encontro una \',\'", anLex.getLinea()));
                     }
-                    | IF '(' ')' cuerpo_if ELSE cuerpo_if END_IF ',' {
-                        errores.add(new Error("No se declaro una condicion en el IF ELSE", anLex.getLinea()));
-                    }
-                    | IF '(' ')' cuerpo_if END_IF {
-                        errores.add(new Error("No se declaro una condicion en el IF", anLex.getLinea()));
-                    }
-                    | IF '(' ')' cuerpo_if ELSE cuerpo_if END_IF {
-                        errores.add(new Error("No se declaro una condicion en el IF ELSE", anLex.getLinea()));
+                    | condicion_if cuerpo_then cuerpo_else ',' {
+                        errores.add(new Error("Se esperaba un END_IF y se encontro una \',\'", anLex.getLinea()));
                     }
                     ;
 
-cuerpo_if : sentencia
-          | bloque_sentencias
-          ;
+condicion_if: IF '(' comparacion ')' {
+                pila.push(polaca.size());
+                polaca.add("BF"); //bifurcacion por falso;
+            }
+            | IF '(' ')' {
+                errores.add(new Error("Falta declarar condicion del IF ubicado", anLex.getLinea()));
+            }
+
+cuerpo_then : sentencia {
+                polaca.add(pila.pop(), "[" + String.valueOf(polaca.size() + 3) + "]");
+                pila.push(polaca.size());
+                polaca.add("BI"); //bifurcacion incondicional;
+            }
+            | bloque_sentencias {
+                polaca.add(pila.pop(), "[" + String.valueOf(polaca.size() + 3) + "]");
+                pila.push(polaca.size());
+                polaca.add("BI"); //bifurcacion incondicional;
+            }
+            ;
+
+cuerpo_else : ELSE sentencia
+            | ELSE bloque_sentencias
+            ;
 
 bloque_sentencias : '{' lista_sentencias '}'  
                   | '(' lista_sentencias ')' {
@@ -292,7 +312,9 @@ lista_sentencias : sentencia
                  | lista_sentencias sentencia
                  ;
 
-comparacion : operacion comparador operacion
+comparacion : operacion comparador operacion {
+                polaca.add($2.sval);
+            }
             | operacion comparador {
                 errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
             }
@@ -304,28 +326,45 @@ comparacion : operacion comparador operacion
             }
             ;
 
-comparador : '<'
-           | '>'
-           | '<='
-           | '>='
-           | '=='
-           | '!!'
+comparador : '<' {
+                $$.sval = $1.sval;
+           }
+           | '>' {
+                $$.sval = $1.sval;
+           }
+           | '<=' {
+                $$.sval = $1.sval;
+           }
+           | '>=' {
+                $$.sval = $1.sval;
+           }
+           | '==' {
+                $$.sval = $1.sval;
+           }
+           | '!!'{
+                $$.sval = $1.sval;
+           }
            | error {
                 errores.add(new Error("Comparacion mal definida", anLex.getLinea()));
            }
            ;
            
-sentencia_iteracion : DO bloque_sentencias WHILE '(' comparacion ')' ','
-                    | DO bloque_sentencias WHILE '(' comparacion ')'    {
+sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' ',' {
+                        polaca.add("[" + String.valueOf(pila.pop()) + "]");
+                        polaca.add("BF");
+                    }
+                    | inicio_do bloque_sentencias WHILE '(' comparacion ')' {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
-                    | DO bloque_sentencias WHILE '(' ')' "," {
-                        errores.add(new Error("No se declaro una condicion de corte", anLex.getLinea()));
-                    }
-                    | DO bloque_sentencias WHILE '(' ')'{
-                        errores.add(new Error("No se declaro una condicion de corte y falta una \',\'", anLex.getLinea()));
+                    | inicio_do bloque_sentencias WHILE '(' ')' {
+                        errores.add(new Error("No se declaro una condicion de corte en el WHILE que se ubica", anLex.getLinea()));
                     }
                     ;
+
+inicio_do : DO {
+                pila.push(polaca.size());
+             }
+             ;
 
 sentencia_expresion : declaracion_variable
                     | factor_inmediato
@@ -360,6 +399,9 @@ asignacion : llamado_clase '=' operacion ','  {
            } //chequear tipos entre llamado de clase y operacion
            | llamado_clase '=' operacion {
                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
+           }
+           | llamado_clase '=' operacion ';' {
+                errores.add(new Error("Se esperaba una \',\' y se encontro un \';\'", anLex.getLinea()));
            }
            | tipo llamado_clase '=' operacion ',' {
                 errores.add(new Error("No se puede declarar y asignar en la misma línea", anLex.getLinea()));
@@ -443,7 +485,7 @@ tipo : DOUBLE {
         tipo = "UINT";
      }
      | LONG {
-        tipo = "LONG";
+        tipo = "Long";
      }
      | ID
      | error {
@@ -462,6 +504,7 @@ static ArrayList<Error> errores;
 static String ambito = ":main";
 static String tipo = "";
 static Tabla tablaSimbolos;
+static Deque<Integer> pila; //Utiliza metodos push,pop y peek
 
 public static void main(String[] args) throws Exception{
         System.out.println("Iniciando compilacion...");
@@ -470,7 +513,7 @@ public static void main(String[] args) throws Exception{
         anLex = new AnalizadorLexico(args,tablaSimbolos,errores);
         
         polaca = new ArrayList<String>();
-        
+        pila = new LinkedList<>();
         par = new Parser(false);
         par.run();
 
