@@ -30,27 +30,27 @@ public class MatrizDeAS extends Matriz {
         AccionSemantica as8 = new Comentario(analizadorLexico);
         this.matrizAS = new AccionSemantica[][] {
             
-        //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  | " " | \t  | \n  | \r | otro | fin
-        /* 0 */   { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , null, null,  as7, null, null, null},
-        /* 1 */   { as0 ,as1y2, as0 , as0 ,as1y2, as0 ,as1y2,as1y2,as1y2, as0 , as0 , as0 ,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, as2 ,as1y2, as2 },
-        /* 2 */   { as1 , as0 , as1 , as0 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 3 */   { as1 , as1 , as0 , null, as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
-        /* 4 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , as5 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
-        /* 5 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as4 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
-        /* 6 */   { as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1,  as1 , null, as1 , null},
-        /* 7 */   {as1y6,as1y6, as0 ,as1y6,as1y6, as0 , as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6, as6 },
-        /* 8 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
-        /* 9 */   { as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
-        /* 10 */  {as1y6,as1y6, as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6, as6 },
-        /* 11 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 12 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 13 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 14 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
-        /* 15 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 16 */  { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , as0 , as0 , as7 , null, as0 , as0 },
-        /* 17 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as8 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
-        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as7, null, null, as1 },
-        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as8, null, null, as7, null, null, as1 }
+        //        |  l  |  L  |  d  |  _  |  .  | "d" | "D" |  +  |  -  | "u" | "i" | "l" |  {  |  }  |  (  |  )  |  ,  |  ;  |  =  |  >  |  <  |  !  |  %  |  *  |  /  | " " | \t  | \n  | \r | otro | fin
+        /* 0 */   { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , as0 , null, null,  as7, null, null, null},
+        /* 1 */   { as0 ,as1y2, as0 , as0 ,as1y2, as0 ,as1y2,as1y2,as1y2, as0 , as0 , as0 ,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2,as1y2, as2 ,as1y2, as2 },
+        /* 2 */   { as1 , as0 , as1 , as0 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 3 */   { as1 , as1 , as0 , null, as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 4 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , as5 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 5 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as4 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 6 */   { as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1,  as1 , null, as1 , null},
+        /* 7 */   {as1y6,as1y6, as0 ,as1y6,as1y6, as0 , as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6, as6 },
+        /* 8 */   { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 9 */   { as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 10 */  {as1y6,as1y6, as0 ,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6,as1y6, null,as1y6, as6 },
+        /* 11 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 12 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 13 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 14 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 },
+        /* 15 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as0 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 16 */  { as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , as0 , null, as0 , as0 , as0 , as0 , as7 , null, as0 , as0 },
+        /* 17 */  { as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as8 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , as1 , null, as1 , null},
+        /* 18 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as7 , null, null, as1 },
+        /* 19 */  { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, as8 , null, null, null, as7 , null, null, as1 }
         
         };
     }
@@ -58,7 +58,7 @@ public class MatrizDeAS extends Matriz {
     public void ejecutarAccionSemantica(int estado, int nuevoCaracter, String buffer){
         int pos;
         if (nuevoCaracter == -1){ // fin de archivo
-            pos = 29;
+            pos = 30;
         } else
             pos = this.reconocedor((char)nuevoCaracter);
 

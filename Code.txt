@@ -10,7 +10,7 @@
             x = 10_ui,
             y = 2_ui,
             IF (b < c) {
-                a = b + 1_l,
+                a = b / 1_l,
             }
             ELSE {
                 b = b + c,

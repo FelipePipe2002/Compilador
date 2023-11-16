@@ -46,14 +46,16 @@ public abstract class Matriz {
                 return 22;
             case '*':
                 return 23;
-            case ' ':
+            case '/':
                 return 24;
-            case '\t':
+            case ' ':
                 return 25;
-            case '\n':
+            case '\t':
                 return 26;
-            case '\r':
+            case '\n':
                 return 27;
+            case '\r':
+                return 28;
             default:
                 if(caracter.matches("[a-z]")){
                     return 0;
@@ -62,7 +64,7 @@ public abstract class Matriz {
                 } else if(caracter.matches("[0-9]")){
                     return 2;
                 } else { //otro
-                    return 28;
+                    return 29;
                 }
         }
     }
