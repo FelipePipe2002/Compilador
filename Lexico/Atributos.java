@@ -1,29 +1,31 @@
 package Lexico;
 
+import java.util.ArrayList;
+
 public class Atributos {
     private Token token;
     private String tipo;
     private boolean uso;
     private String interfaz;
     private String padreClase;
-    private int nivelHerencia;
+    private int nivel;
 
     public Atributos(Token token){
         this.token = token;
         this.tipo = token.toString();
         this.uso = false;
-        this.interfaz = " ";
-        this.padreClase = " ";
-        this.nivelHerencia = 0;
+        this.interfaz = "";
+        this.padreClase = "";
+        this.nivel = 0;
     }
 
     public Atributos(Token token, String tipo){
         this.token = token;
         this.tipo = tipo;
         this.uso = false;
-        this.interfaz = " ";
-        this.padreClase = " ";
-        this.nivelHerencia = 0;
+        this.interfaz = "";
+        this.padreClase = "";
+        this.nivel = 0;
     }
 
     public Token getToken() {
@@ -36,6 +38,7 @@ public class Atributos {
     public String getTipo() {
         return tipo;
     }
+
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
@@ -43,6 +46,7 @@ public class Atributos {
     public boolean isUso() {
         return uso;
     }
+
     public void setUso(boolean uso) {
         this.uso = uso;
     }
@@ -60,16 +64,23 @@ public class Atributos {
         setNivelHerencia(nivelHerenciaPadre + 1);
     }
 
-    public String getHerencia() {
+    public String getPadreClase() {
         return this.padreClase;
     }
 
     private void setNivelHerencia(int nivelHerenciaPadre) {
-        this.nivelHerencia = nivelHerenciaPadre;
+        this.nivel = nivelHerenciaPadre;
     }
 
     public int getNivelHerencia() {
-        return this.nivelHerencia;
+        return this.nivel;
     }
 
+    public void addProfundidad(int profundidadPadre) {
+        this.nivel = profundidadPadre + 1;
+    }
+
+    public int getProfundidad() {
+        return this.nivel;
+    }
 }

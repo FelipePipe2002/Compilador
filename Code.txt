@@ -1,19 +1,19 @@
 {
     LONG a,
     CLASS aa{
-        UINT d,
+        UINT a,
         VOID b(){
-            LONG b;d,
+            LONG b;c;t,
             UINT x;y,
-            d = 1_l,
-            d = 2_l,
+            b = 1_l,
+            c = 2_l,
             x = 10_ui,
             y = 2_ui,
-            IF (b < d) {
-                a = a + 1_l,
+            IF (b < c) {
+                a = b + 1_l,
             }
             ELSE {
-                a = b + d,
+                b = b + c,
             }
             END_IF,
             DO { 
@@ -26,18 +26,35 @@
         VOID pepe(),
     },
     CLASS ab IMPLEMENT b{
-        UINT d,
-        aa,
+        UINT a, 
+        VOID c(){
+            a=1_ui * 1_ui + 2_ui,
+        },
+        VOID pepe(){
+            a=2_ui,
+        },
     },
     
     CLASS ac{
-        UINT d,
+        UINT c,
+        VOID d(){
+            c= 1_l,
+            a = 2_l,
+            VOID e(){
+                c=2_l,
+            },
+        },
         ab,
     },
     
+    a=a-1_l,
+
+    ac x,
+
     CLASS ad{
         UINT d,
         ac,
     },
-    aa c;
+    x.ab.c(),
+
 }

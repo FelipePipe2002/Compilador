@@ -14,7 +14,7 @@ public class CheckRangoCaracteres extends AccionSemantica {
         if (buffer.length() > this.rango){
             buffer = buffer.substring(0,20);
             this.getAnalizadorLexico().setBuffer(buffer);
-            Error error = new Error("Exceso del rango de caracteres aceptable", this.getAnalizadorLexico().getLinea());
+            Error error = new Error("Exceso en la longitud de caracteres aceptable", this.getAnalizadorLexico().getLinea(),"WARNING");
             this.getAnalizadorLexico().addErroresLexicos(error);
         }
         return false;

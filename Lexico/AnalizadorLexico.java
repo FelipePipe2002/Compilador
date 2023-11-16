@@ -86,15 +86,6 @@ public class AnalizadorLexico{
         return token;
     }
 
-    public void MostrarErrores() throws Exception{
-        if (this.erroresLexicos.size()>0){
-            for (Error error : this.erroresLexicos) {
-                System.out.println(error.getMensaje() + " en la linea: " + error.getLinea());
-            }
-            //throw new Exception("Se han encontrado los errores anteriores");
-        }
-    }
-
     public void sumarCaracter(){
         this.buffer += this.ultimoCararterLeido;
     }
@@ -135,10 +126,6 @@ public class AnalizadorLexico{
         ArrayList<Error> aux = new ArrayList<Error>();
         aux.addAll(this.erroresLexicos);
         return aux;
-    }
-
-    public void MostrarTablaSimbolos(){
-        this.tablaSimbolos.imprimirTabla();
     }
 
     public void convertirNegativo(String numero){
