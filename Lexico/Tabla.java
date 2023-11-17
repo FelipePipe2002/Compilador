@@ -35,6 +35,22 @@ public class Tabla {
         return metodos;
     }
 
+    public void checkAtributosDeClase(String nombreVariable, String ambito) {
+        if (!ambito.equals(":main")) {
+            String posibleClase = ambito.substring(ambito.lastIndexOf(":") + 1, ambito.length()) + ambito.substring(0, ambito.lastIndexOf(":"));
+            if (tabla.get(posibleClase).getTipo() == "CLASS") {
+                if (nombreVariable.contains(";")) {
+                    String[] variables = nombreVariable.split(";");
+                    for (String variable : variables) {
+                        tabla.get(variable + ambito).setUso(true);
+                    }
+                } else {
+                    tabla.get(nombreVariable + ambito).setUso(true);
+                }
+            }
+        }
+    }
+
     public boolean implementaMetodosInterfaz(String nombreClase, String nombreInterfaz){
         ArrayList<String> metodosClase = new ArrayList<String>();
         metodosClase = getMetodos(nombreClase);
@@ -255,12 +271,27 @@ public class Tabla {
 
     public void imprimirTabla() {
         System.out.println("Tabla de simbolos:");
-        System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
-        System.out.println("| Nombre               | Tipo                 | Uso   | Implement Interfaz   | Padre Herencia       | nivel |");
-        System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
+        System.out.println("+-----------------+---------------+------------+-------+-----------+--------------+-------+");
+        System.out.println("|     Nombre      |     Tipo      |   Ambito   |  Uso  | Implement | Padre Heren. | Nivel |");
+        System.out.println("+-----------------+---------------+------------+-------+-----------+--------------+-------+");
         for (String key : tabla.keySet()) {
-            System.out.printf("| %-20s | %-20s | %-5s | %-20s | %-20s | %-5s |\n", key,tabla.get(key).getTipo(),tabla.get(key).isUso(),tabla.get(key).getInterfaz(),tabla.get(key).getPadreClase(),tabla.get(key).getNivelHerencia());
+            Atributos atributo = tabla.get(key);
+            String nombre = key;
+            String ambito = "";
+            if (key.contains(":")) {
+                nombre = key.substring(0, key.indexOf(":"));
+                ambito = key.substring(key.lastIndexOf(":") + 1, key.length());
+            }
+            String interfaz = atributo.getInterfaz();
+            if (interfaz.contains(":")) {
+                interfaz = interfaz.substring(0, interfaz.indexOf(":"));
+            }
+            String padreClase = atributo.getPadreClase();
+            if (padreClase.contains(":")) {
+                padreClase = padreClase.substring(0, padreClase.indexOf(":"));
+            }
+            System.out.printf("| %-15s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", nombre,atributo.getTipo(),ambito,atributo.isUso(),interfaz,padreClase,atributo.getNivelHerencia());
         }
-        System.out.println("+----------------------+----------------------+-------+----------------------+----------------------+-------+");
+        System.out.println("+-----------------+---------------+------------+-------+-----------+---------------+-------+");
     }
 }

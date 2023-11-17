@@ -9,6 +9,7 @@ public class Atributos {
     private String interfaz;
     private String padreClase;
     private int nivel;
+    private boolean atributoDeClase;
 
     public Atributos(Token token){
         this.token = token;
@@ -17,6 +18,7 @@ public class Atributos {
         this.interfaz = "";
         this.padreClase = "";
         this.nivel = 0;
+        this.atributoDeClase = false;
     }
 
     public Atributos(Token token, String tipo){
@@ -26,6 +28,7 @@ public class Atributos {
         this.interfaz = "";
         this.padreClase = "";
         this.nivel = 0;
+        this.atributoDeClase = false;
     }
 
     public Token getToken() {
@@ -82,5 +85,13 @@ public class Atributos {
 
     public int getProfundidad() {
         return this.nivel;
+    }
+
+    public void setAtributoClase(boolean esAtributoDeClase){
+        this.atributoDeClase = esAtributoDeClase;
+    }
+
+    public boolean getAtributoClase(){
+        return this.atributoDeClase;
     }
 }

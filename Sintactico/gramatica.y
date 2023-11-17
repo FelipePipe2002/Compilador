@@ -3,6 +3,7 @@
 package Sintactico;
 import Lexico.*;
 import Errores.Error;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -174,7 +175,9 @@ declaracion_funcion_interfaz : encabezado_funcion '(' ')' ','{
                              }
                              ;
 
-declaracion_variable : tipo lista_de_id ','
+declaracion_variable : tipo lista_de_id ',' {
+                        tablaSimbolos.checkAtributosDeClase($2.sval,ambito);
+                     }
                      ;
 
 declaracion_funcion : encabezado_funcion '(' ')' bloque_sentencias_funcion ',' {
@@ -242,7 +245,7 @@ sentencia : sentencia_expresion
           | sentencia_retorno 
           ;
 
-sentencia_retorno : RETURN ','
+sentencia_retorno : RETURN ',' { System.out.println("RETURN");} //agregar ret 
                   | RETURN ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                   }
@@ -421,11 +424,13 @@ lista_de_id : lista_de_id ';' ID {
                 if(!tablaSimbolos.agregarAmbito($3.sval,ambito,tipo)){
                         errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                 }
+                $$.sval = $1.sval + $2.sval + $3.sval;
             }
             | ID {
                 if(!tablaSimbolos.agregarAmbito($1.sval,ambito,tipo)){
                         errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                 }
+                $$.sval = $1.sval;
             }
             ;
 
@@ -518,6 +523,7 @@ static final int MAXPROFUNDIDADVOID = 1;
 static AnalizadorLexico anLex = null;
 static Parser par = null;
 static Token token = null;
+static HashMap<String, ArrayList<String>> polacasMetodos;
 static ArrayList<String>  polaca;
 static ArrayList<Error> errores;
 static String ambito = ":main";
@@ -531,6 +537,7 @@ public static void main(String[] args) throws Exception{
         errores = new ArrayList<Error>();
         anLex = new AnalizadorLexico(args,tablaSimbolos,errores);
         
+        polacasMetodos = new HashMap<String, ArrayList<String>>();
         polaca = new ArrayList<String>();
         pila = new LinkedList<>();
         par = new Parser(false);
