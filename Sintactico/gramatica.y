@@ -46,6 +46,11 @@ declaracion_clase : encabezado_clase bloque_clase ',' {
                                     if (tablaSimbolos.getNivelHerencia($1.sval) >= MAXNIVELHERENCIA ) {
                                         errores.add(new Error("La clase '" + $1.sval.substring(0,$1.sval.indexOf(":")) + "' no puede heredar, debido a que la clase padre '" + tablaSimbolos.getPadreClase(tablaSimbolos.getPadreClase($1.sval)).substring(0,$1.sval.indexOf(":")) + "' ya posee el maximo nivel de herencia permitido (" + MAXNIVELHERENCIA + ")", "ERROR"));
                                     }
+                                    ArrayList<String> aux = new ArrayList<>();
+                                    aux = tablaSimbolos.metodoSobreescriptos($1.sval);
+                                    if (aux.size() > 0) {
+                                        errores.add(new Error("La clase " + $1.sval.substring(0,$1.sval.indexOf(":")) + " esta sobreescribiendo el/los metodo/s:" + aux.toString() + " de su clase padre", anLex.getLinea()));
+                                    }
                                 }
                         }
                   } //chequear que el padre sea una clase
@@ -54,13 +59,18 @@ declaracion_clase : encabezado_clase bloque_clase ',' {
                         if (!tablaSimbolos.agregarInterfaz($1.sval,$3.sval + ":main")){
                             errores.add(new Error("No se encuentra la interfaz " + $3.sval, anLex.getLinea())); 
                         } else {
-                            if (!tablaSimbolos.implementaMetodosInterfaz(ambito + ":" + $1.sval.substring(0,$1.sval.lastIndexOf(":")),ambito + ":" + $3.sval)){
+                            if (!tablaSimbolos.implementaMetodosInterfaz(ambito + ":" + $1.sval.substring(0,$1.sval.indexOf(":")),ambito + ":" + $3.sval)){
                                 errores.add(new Error("La clase '" + $1.sval.substring(0,$1.sval.indexOf(":")) + "' no implementa todos los metodos de la interfaz '" + $3.sval + "'", anLex.getLinea()));
                             }
                         }
                         if(($4.sval != null)){
                                 if((!tablaSimbolos.agregarHerencia($1.sval,$4.sval))){
                                         errores.add(new Error("No esta declarada la clase '" + $4.sval.substring(0,$4.sval.lastIndexOf(":")), anLex.getLinea() + "'")); 
+                                }
+                                ArrayList<String> aux = new ArrayList<>();
+                                aux = tablaSimbolos.metodoSobreescriptos($1.sval);
+                                if (aux.size() > 0) {
+                                    errores.add(new Error("La clase " + $1.sval.substring(0,$1.sval.indexOf(":")) + " esta sobreescribiendo el/los metodo/s:" + aux.toString() + " de su clase padre", anLex.getLinea()));
                                 }
                         }
                   } //chequear que el padre sea una clase y que el ID interfaz sea una interfaz
@@ -251,7 +261,10 @@ sentencia_retorno : RETURN ',' { System.out.println("RETURN");} //agregar ret
                   }
                   ;
 
-sentencia_imprimir : PRINT CADENA ','  
+sentencia_imprimir : PRINT CADENA ','{
+                        polaca.add($2.sval);
+                        polaca.add("PRINT");
+                   }
                    | PRINT CADENA ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                    }
@@ -387,12 +400,6 @@ sentencia_expresion : declaracion_variable
                     | llamado_clase '(' operacion ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
-                    | TOD '(' operacion ')' ',' {
-                        
-                    }
-                    | TOD '(' operacion ')' ';'{
-                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
-                    }
                     ;
 
 llamado_clase : ID {
@@ -454,6 +461,13 @@ termino : factor
 
 factor : factor_comun
        | factor_inmediato
+       | TOD '(' llamado_clase ')' ',' {
+                if(!tablaSimbolos.existeVariable($3.sval,ambito)){
+                        errores.add(new Error("No se declaro la variable " + $3.sval + " en el ambito reconocible", anLex.getLinea()));
+                }
+                polaca.add($3.sval);
+                polaca.add("TOD");
+       }
        ;
 
 factor_inmediato : llamado_clase '--' {
@@ -523,7 +537,7 @@ static final int MAXPROFUNDIDADVOID = 1;
 static AnalizadorLexico anLex = null;
 static Parser par = null;
 static Token token = null;
-static HashMap<String, ArrayList<String>> polacasMetodos;
+static HashMap<String, ArrayList<String>> polacasMetodos; // :main -> polacaMain | :main:asd -> polacaAsd
 static ArrayList<String>  polaca;
 static ArrayList<Error> errores;
 static String ambito = ":main";
@@ -545,7 +559,7 @@ public static void main(String[] args) throws Exception{
 
         tablaSimbolos.imprimirTabla();
         for (String variable : tablaSimbolos.variablesNoUsadas()){
-            errores.add(new Error("La variable " + variable + " no fue asignada dentro del ambito donde fue declarada","WARNING"));
+            errores.add(new Error("La variable " + variable.substring(0,variable.indexOf(":")) + " no fue asignada dentro del ambito de " + variable.substring(variable.lastIndexOf(":") + 1, variable.length()),"WARNING"));
         }
         if (errores.size()>0){
             for (Error error : errores) {

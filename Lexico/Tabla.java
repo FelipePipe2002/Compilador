@@ -22,11 +22,11 @@ public class Tabla {
         return tabla.get(nombre).getToken();
     }
 
-    private ArrayList<String> getMetodos(String nombre) {
+    private ArrayList<String> getMetodos(String nombreClase) {
         ArrayList<String> metodos = new ArrayList<>();
 
         for (String nombreMetodo : tabla.keySet()) {
-            if (nombreMetodo.endsWith(nombre)) {
+            if (nombreMetodo.endsWith(nombreClase)) {
                 if (tabla.get(nombreMetodo).getTipo() == "VOID") {
                     metodos.add(nombreMetodo.substring(0,nombreMetodo.indexOf(":")));
                 }
@@ -136,6 +136,28 @@ public class Tabla {
         if (existeSimbolo(nombreConAmbito)) {
             tabla.get(nombreConAmbito).setUso(uso);
         }
+    }
+
+    private ArrayList<String> getMetodosPadres(String clasePadre) {
+        ArrayList<String> metodos = new ArrayList<>();
+        while (!clasePadre.equals("")) {
+            clasePadre = clasePadre.substring(0, clasePadre.indexOf(":"));
+            metodos.addAll(getMetodos(":main:" + clasePadre));
+            clasePadre = tabla.get(clasePadre+":main").getPadreClase();
+        }
+        return metodos;
+    }
+
+    public ArrayList<String> metodoSobreescriptos(String claseHija) {
+        ArrayList<String> metodosPadre = new ArrayList<>();
+        ArrayList<String> aux = new ArrayList<>();
+        metodosPadre = getMetodosPadres(tabla.get(claseHija).getPadreClase());
+        for (String metodo : getMetodos(":main:" + claseHija.substring(0,claseHija.indexOf(":")))) {
+            if (metodosPadre.contains(metodo)) {
+                aux.add(metodo);
+            }
+        }
+        return aux;
     }
 
     public boolean existeVariable(String nombre, String ambito){
@@ -290,8 +312,8 @@ public class Tabla {
             if (padreClase.contains(":")) {
                 padreClase = padreClase.substring(0, padreClase.indexOf(":"));
             }
-            System.out.printf("| %-15s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", nombre,atributo.getTipo(),ambito,atributo.isUso(),interfaz,padreClase,atributo.getNivelHerencia());
+            System.out.printf("| %-15s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", key,atributo.getTipo(),ambito,atributo.isUso(),interfaz,padreClase,atributo.getNivelHerencia());
         }
-        System.out.println("+-----------------+---------------+------------+-------+-----------+---------------+-------+");
+        System.out.println("+-----------------+---------------+------------+-------+-----------+--------------+-------+");
     }
 }

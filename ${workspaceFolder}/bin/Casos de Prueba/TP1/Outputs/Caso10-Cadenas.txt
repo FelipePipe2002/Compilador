@@ -1,9 +1,0 @@
-Cadena  holacomoandas
-Error Cadena
-Error a la hora de crear Error Cadena en la linea: 12
-Tabla de simbolos:
-+----------------------+----------------------+
-| Nombre               | Valor                |
-+----------------------+----------------------+
-|  holacomoandas       | Cadena               |
-+----------------------+----------------------+

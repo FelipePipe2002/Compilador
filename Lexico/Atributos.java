@@ -1,6 +1,6 @@
 package Lexico;
 
-import java.util.ArrayList;
+
 
 public class Atributos {
     private Token token;

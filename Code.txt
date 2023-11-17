@@ -1,9 +1,10 @@
-{
+{ *{:main}*
     LONG a,
     CLASS aa{
         UINT a,
         VOID b(){
             LONG b;c;t,
+            DOUBLE d,
             UINT x;y,
             b = 1_l,
             c = 2_l,
@@ -35,13 +36,14 @@
         },
     },
     
-    CLASS ac{
-        UINT c,
-        VOID d(){
-            c= 1_l,
+    CLASS ac{ *{:main:ac}*
+        UINT d,
+        VOID c(){ *{:main:ac:c}*
+            d = 1_l,
             a = 2_l,
-            VOID e(){
-                c=2_l,
+            PRINT %hola mundo%,
+            VOID e(){ *{:main:ac:c:e}*
+                d =2_l,
             },
         },
         ab,
@@ -52,9 +54,20 @@
     ac x,
 
     CLASS ad{
-        UINT d,
+        UINT q,
+        VOID d(){
+            a = 1_l,
+        },
         ac,
     },
-    x.ab.c(),
+    LONG c,
+    c= 1_l,
+    VOID asd(){
+        c = 1_l,
+        a = 2_l,
+        VOID e(){
+            c =2_l,
+        },
+    },
 
 }

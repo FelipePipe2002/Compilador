@@ -1,7 +1,7 @@
 @echo off
 cls
 cd .\Sintactico\
-.\yacc.exe -J .\gramatica.y
+.\yacc.exe -J -v .\gramatica.y
 cd ..
 set "line=package Sintactico;"
 set "file=.\Sintactico\ParserVal.java"
