@@ -3,7 +3,7 @@
     CLASS aa{
         UINT a,
         VOID b(){
-            LONG b;c;t,
+            LONG b;c,
             DOUBLE d,
             UINT x;y,
             b = 1_l,
@@ -49,15 +49,11 @@
         },
         ab,
     },
-    
-    a=a-1_l,
-
-    ac x,
 
     CLASS ad{
         UINT q,
         VOID d(DOUBLE b){
-            a = 1_l,
+            a = b + q,
             b=TOD(a),
         },
         ac,
@@ -65,18 +61,42 @@
     LONG c,
     c= 1_l,
     VOID asd(){
-        c = 1_l,
-        a = 2_l,
         VOID e(){
             c =2_l,
+            e(),
+            asd(),
         },
+        VOID r(){
+        c = 1_l,
+        a = 2_l,
+        },
+        e(),
+        r(),
+    },
+    
+    
+    c = 1_l,
+    a = 2_l,
+
+    VOID g(){
+        c = 1_l,
+        a = 2_l,
     },
     ad i;j,
     DOUBLE k,
     k = 1.1,
-    i.q=1_l,
-    i.d(k),
-    i.ac.ab.c(), 
+    i.q = 1_l,
+    j.q = 2_l,
+    
+    i.d(2.0),
+    j.d(2.0),
+    
+    i.ac.ab.pepe(),
+    i.d(5.5),
+    i.d(2.5),
+    asd(),
+    g(),
     i = j,
+    j = i,
     k = i.q + 5.5,
 }

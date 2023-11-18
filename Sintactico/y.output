@@ -137,8 +137,8 @@
  102                      | factor_inmediato
  103                      | asignacion
  104                      | llamado_clase '(' ')' ','
- 105                      | llamado_clase '(' ')' ';'
- 106                      | llamado_clase '(' operacion ')' ','
+ 105                      | llamado_clase '(' operacion ')' ','
+ 106                      | llamado_clase '(' ')' ';'
  107                      | llamado_clase '(' operacion ')' ';'
 
  108  llamado_clase : ID
@@ -554,8 +554,8 @@ state 32
 
 state 33
 	sentencia_expresion : llamado_clase . '(' ')' ','  (104)
-	sentencia_expresion : llamado_clase . '(' ')' ';'  (105)
-	sentencia_expresion : llamado_clase . '(' operacion ')' ','  (106)
+	sentencia_expresion : llamado_clase . '(' operacion ')' ','  (105)
+	sentencia_expresion : llamado_clase . '(' ')' ';'  (106)
 	sentencia_expresion : llamado_clase . '(' operacion ')' ';'  (107)
 	llamado_clase : llamado_clase . '.' ID  (109)
 	asignacion : llamado_clase . '=' operacion ','  (110)
@@ -938,8 +938,8 @@ state 61
 
 state 62
 	sentencia_expresion : llamado_clase '(' . ')' ','  (104)
-	sentencia_expresion : llamado_clase '(' . ')' ';'  (105)
-	sentencia_expresion : llamado_clase '(' . operacion ')' ','  (106)
+	sentencia_expresion : llamado_clase '(' . operacion ')' ','  (105)
+	sentencia_expresion : llamado_clase '(' . ')' ';'  (106)
 	sentencia_expresion : llamado_clase '(' . operacion ')' ';'  (107)
 
 	TOD  shift 67
@@ -1610,7 +1610,7 @@ state 127
 
 state 128
 	sentencia_expresion : llamado_clase '(' ')' . ','  (104)
-	sentencia_expresion : llamado_clase '(' ')' . ';'  (105)
+	sentencia_expresion : llamado_clase '(' ')' . ';'  (106)
 
 	','  shift 174
 	';'  shift 175
@@ -1618,7 +1618,7 @@ state 128
 
 
 state 129
-	sentencia_expresion : llamado_clase '(' operacion . ')' ','  (106)
+	sentencia_expresion : llamado_clase '(' operacion . ')' ','  (105)
 	sentencia_expresion : llamado_clase '(' operacion . ')' ';'  (107)
 	operacion : operacion . '+' termino  (116)
 	operacion : operacion . '-' termino  (117)
@@ -2109,13 +2109,13 @@ state 174
 
 
 state 175
-	sentencia_expresion : llamado_clase '(' ')' ';' .  (105)
+	sentencia_expresion : llamado_clase '(' ')' ';' .  (106)
 
-	.  reduce 105
+	.  reduce 106
 
 
 state 176
-	sentencia_expresion : llamado_clase '(' operacion ')' . ','  (106)
+	sentencia_expresion : llamado_clase '(' operacion ')' . ','  (105)
 	sentencia_expresion : llamado_clase '(' operacion ')' . ';'  (107)
 
 	','  shift 207
@@ -2428,9 +2428,9 @@ state 206
 
 
 state 207
-	sentencia_expresion : llamado_clase '(' operacion ')' ',' .  (106)
+	sentencia_expresion : llamado_clase '(' operacion ')' ',' .  (105)
 
-	.  reduce 106
+	.  reduce 105
 
 
 state 208

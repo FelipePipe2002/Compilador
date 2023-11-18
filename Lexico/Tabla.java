@@ -22,11 +22,11 @@ public class Tabla {
         return tabla.get(nombre).getToken();
     }
 
-    private ArrayList<String> getMetodos(String nombreClase) {
+    private ArrayList<String> getMetodos(String ambito) {
         ArrayList<String> metodos = new ArrayList<>();
 
         for (String nombreMetodo : tabla.keySet()) {
-            if (nombreMetodo.endsWith(nombreClase)) {
+            if (nombreMetodo.endsWith(ambito)) {
                 if (tabla.get(nombreMetodo).getTipo() == "VOID") {
                     metodos.add(nombreMetodo.substring(0,nombreMetodo.indexOf(":")));
                 }
@@ -51,9 +51,9 @@ public class Tabla {
         }
     }
 
-    public boolean implementaMetodosInterfaz(String nombreClase, String nombreInterfaz){
+    public boolean implementaMetodosInterfaz(String ambitoClase, String nombreInterfaz){
         ArrayList<String> metodosClase = new ArrayList<String>();
-        metodosClase = getMetodos(nombreClase);
+        metodosClase = getMetodos(ambitoClase);
         return metodosClase.containsAll(getMetodos(nombreInterfaz));
     }
 
@@ -153,8 +153,25 @@ public class Tabla {
         return metodos;
     }
 
-    public void getTipoAtributoClase(String nombre) {
-        nombre = nombre.substring(nombre.lastIndexOf("."),nombre.length());
+    public String getAmbitoMetodoInvocado(String nombre, String ambito) {
+        if (nombre.contains(".")) {
+            String nombreMetodoInvocado = nombre.substring(nombre.lastIndexOf(".") + 1, nombre.length());
+            nombre = nombre.substring(0,nombre.lastIndexOf("."));
+            if (nombre.contains(".")) {
+                return ":main:" + nombre.substring(nombre.lastIndexOf(".") + 1, nombre.length()) + ":" + nombreMetodoInvocado;
+            } else {
+                return ":main:" + tabla.get(nombre + ambito).getTipo() + ":" + nombreMetodoInvocado;
+            }
+        }
+        boolean ambitoEncontrado = false;
+        while (!ambitoEncontrado) {
+            if (getMetodos(ambito).contains(nombre)) {
+                ambitoEncontrado = true;
+            } else {
+                ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+            }
+        }
+        return ambito + ":" + nombre;
     }
 
     public ArrayList<String> metodoSobreescriptos(String claseHija) {

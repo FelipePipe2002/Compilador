@@ -239,6 +239,8 @@ parametro_formal : tipo ID {
                         } else {
                             //cambiar funcion a con parametro ambito.subString(lastIndexOf(":"),ambito.length())
                             tablaSimbolos.setParametro(ambito);
+                            metodosPolaca.get(ambito).add($2.sval);
+                            metodosPolaca.get(ambito).add("=");
                         }
                  }
                  ;
@@ -405,21 +407,22 @@ sentencia_expresion : declaracion_variable
                     | asignacion 
                     | llamado_clase '(' ')' ',' {
                         if(!tablaSimbolos.existeMetodo($1.sval,ambito,false)){
-                                errores.add(new Error("No se declaro el metodo " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                                errores.add(new Error("No se encuentra declarado el metodo " + $1.sval + " dentro del ambito reconocible", anLex.getLinea()));
+                        } else {
+                            String ambitoClase = tablaSimbolos.getAmbitoMetodoInvocado($1.sval,ambito);
+                            metodosPolaca.get(ambito).add("Call " + ambitoClase);
                         }
-                        // revisar variable $-1 ej: i.c   o -> i.ac.c 
-                        // -> ac.a() no se puede 
-                        // 
-                        metodosPolaca.get(ambito).add("Call " + $1.sval);
-                    }
-                    | llamado_clase '(' ')' ';'{
-                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
                     | llamado_clase '(' operacion ')' ','  {// Chequear tipo operacion con parametro de funcion
                         if(!tablaSimbolos.existeMetodo($1.sval,ambito,true)){
-                                errores.add(new Error("No se declaro el metodo " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                                errores.add(new Error("No se encuentra declarado el metodo " + $1.sval + " dentro del ambito reconocible", anLex.getLinea()));
+                        } else {
+                            String ambitoClase = tablaSimbolos.getAmbitoMetodoInvocado($1.sval,ambito);
+                            metodosPolaca.get(ambito).add("Call " + ambitoClase);
                         }
-                        metodosPolaca.get(ambito).add("Call " + $1.sval);
+                    }
+                    | llamado_clase '(' ')' ';'{
+                        errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
                     | llamado_clase '(' operacion ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
