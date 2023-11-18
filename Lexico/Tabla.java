@@ -117,6 +117,11 @@ public class Tabla {
         return tabla.get(nombreConAmbito).getProfundidad();
     }
 
+    public void setParametro(String ambito){
+        String nombreMetodo = ambito.substring(ambito.lastIndexOf(":") + 1,ambito.length()) + ambito.substring(0, ambito.lastIndexOf(":"));
+        tabla.get(nombreMetodo).setParametro(true);
+    }
+
     public boolean existeSimbolo(String nombre) {
         return tabla.containsKey(nombre);
     }
@@ -148,6 +153,10 @@ public class Tabla {
         return metodos;
     }
 
+    public void getTipoAtributoClase(String nombre) {
+        nombre = nombre.substring(nombre.lastIndexOf("."),nombre.length());
+    }
+
     public ArrayList<String> metodoSobreescriptos(String claseHija) {
         ArrayList<String> metodosPadre = new ArrayList<>();
         ArrayList<String> aux = new ArrayList<>();
@@ -167,7 +176,7 @@ public class Tabla {
                 String nombreambito = nombre + ambito;
                 if(existeSimbolo(nombreambito)){
                     String tipo = tabla.get(nombreambito).getTipo().toUpperCase();
-                    if (tipo == "UINT" || tipo == "LONG" || tipo == "DOUBLE")
+                    if(!(tipo == "VOID" || tipo == "CLASS" || tipo == "INTERFACE" || tipo == "Long" || tipo == "Uint" || tipo == "Double" || tipo == "Cadena"))
                         return true;
                 }
                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
@@ -188,17 +197,8 @@ public class Tabla {
                             if(!nombre.contains(".")){ //busco variable de clase
                                 eliminarSimbolo(nombre);
                                 if(existeSimbolo(nombre + ":main:" + clase)){
-                                    if(tabla.get(nombre + ":main:" + clase).getTipo() != "VOID")
-                                        return true;
-                                    else 
-                                        return false;
+                                    return (tabla.get(nombre + ":main:" + clase).getTipo() != "VOID");
                                 }else{
-                                    while(tabla.get(clase + ":main").getPadreClase() != ""){
-                                        clase = tabla.get(clase + ":main").getPadreClase();
-                                        if(existeSimbolo(nombre + ":main:" + clase)){
-                                            return true;
-                                        } 
-                                    }
                                     return false;
                                 }
                             } else if (tabla.get(clase + ":main").getPadreClase() != ""){ //busco clase
@@ -219,7 +219,7 @@ public class Tabla {
         return false;
     }
 
-    public boolean existeMetodo(String nombre, String ambito){
+    public boolean existeMetodo(String nombre, String ambito, boolean conParametro){
         eliminarSimbolo(nombre);
         if(!nombre.contains(".")){
             while (ambito != ""){
@@ -227,8 +227,7 @@ public class Tabla {
                 if(existeSimbolo(nombreConAmbito)){
                     String tipo = tabla.get(nombreConAmbito).getTipo();
                     tipo = tipo.toUpperCase();
-                    if (tipo == "VOID")
-                        return true;
+                    return ((tipo == "VOID") && (tabla.get(nombreConAmbito).isConParametro() == conParametro));
                 }
                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
             }
@@ -238,25 +237,22 @@ public class Tabla {
                 String nombreambito = nombre.substring(0,nombre.indexOf(".")) + ambito;
                 eliminarSimbolo(nombre.substring(0,nombre.indexOf(".")));
                 if(existeSimbolo(nombreambito)){
-                    String tipo = tabla.get(nombreambito).getTipo();
-                    while(existeSimbolo(tipo + ":main")){
-                        String tipoClase = tabla.get(tipo+":main").getTipo();
-                        if(tipoClase == "CLASS"){
-                            
-                            nombre = nombre.substring(nombre.indexOf(".")+1,nombre.length());
+                    String clase = tabla.get(nombreambito).getTipo();
+                    while(existeSimbolo(clase + ":main")){
+                        String tipoClase = tabla.get(clase + ":main").getTipo();
+                        if(tipoClase == "CLASS"){ 
 
+                            nombre = nombre.substring(nombre.indexOf(".") + 1,nombre.length());
                             if(!nombre.contains(".")){ //busco variable de clase
                                 eliminarSimbolo(nombre);
-                                if(existeSimbolo(nombre + ":main:" + tipo)){
-                                    if(tabla.get(nombre + ":main:" + tipo).getTipo() == "VOID")
-                                        return true;
-                                    else 
-                                        return false;
+
+                                if(existeSimbolo(nombre + ":main:" + clase)){
+                                    return (tabla.get(nombre + ":main:" + clase).getTipo() == "VOID") && (tabla.get(nombre + ":main:" + clase).isConParametro() == conParametro);
                                 }else{
                                     return false;
                                 }
-                            } else if (tabla.get(tipo + ":main").getPadreClase() != ""){ //busco clase
-                                tipo = nombre.substring(0, nombre.indexOf("."));
+                            } else if (tabla.get(clase + ":main").getPadreClase() != ""){ //busco clase
+                                clase = nombre.substring(0, nombre.indexOf("."));
                             } else {
                                 return false;
                             }
@@ -264,7 +260,6 @@ public class Tabla {
                             return false;
                         }
                     }
-
                     return false;
                 }
                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
@@ -282,7 +277,7 @@ public class Tabla {
         ArrayList<String> aux = new ArrayList<>();
         tabla.forEach((k,v) -> {
             String tipo = v.getTipo();
-            if(tipo == "LONG" || tipo == "UINT" || tipo == "DOUBLE"){
+            if(!(tipo == "VOID" || tipo == "CLASS" || tipo == "INTERFACE" || tipo == "Long" || tipo == "Uint" || tipo == "Double" || tipo == "Cadena")){
                 if(!v.isUso()){
                     aux.add(k);
                 }
@@ -300,6 +295,14 @@ public class Tabla {
             Atributos atributo = tabla.get(key);
             String nombre = key;
             String ambito = "";
+            String uso = "";
+            if(!(atributo.getTipo() == "VOID" || atributo.getTipo() == "CLASS" || atributo.getTipo() == "INTERFACE" || atributo.getTipo() == "Long" || atributo.getTipo() == "Uint" || atributo.getTipo() == "Double" || atributo.getTipo() == "Cadena")){
+                if(atributo.isUso()){
+                    uso = "true";
+                } else {
+                    uso = "false";
+                }
+            }
             if (key.contains(":")) {
                 nombre = key.substring(0, key.indexOf(":"));
                 ambito = key.substring(key.lastIndexOf(":") + 1, key.length());
@@ -312,7 +315,7 @@ public class Tabla {
             if (padreClase.contains(":")) {
                 padreClase = padreClase.substring(0, padreClase.indexOf(":"));
             }
-            System.out.printf("| %-15s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", key,atributo.getTipo(),ambito,atributo.isUso(),interfaz,padreClase,atributo.getNivelHerencia());
+            System.out.printf("| %-15s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", key,atributo.getTipo(),ambito,uso,interfaz,atributo.getPadreClase(),atributo.getNivelHerencia());
         }
         System.out.println("+-----------------+---------------+------------+-------+-----------+--------------+-------+");
     }

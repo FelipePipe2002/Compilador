@@ -161,7 +161,7 @@
 
  121  factor : factor_comun
  122         | factor_inmediato
- 123         | TOD '(' llamado_clase ')' ','
+ 123         | TOD '(' llamado_clase ')'
 
  124  factor_inmediato : llamado_clase "--"
 
@@ -999,7 +999,7 @@ state 66
 
 
 state 67
-	factor : TOD . '(' llamado_clase ')' ','  (123)
+	factor : TOD . '(' llamado_clase ')'  (123)
 
 	'('  shift 132
 	.  error
@@ -1649,7 +1649,7 @@ state 131
 
 
 state 132
-	factor : TOD '(' . llamado_clase ')' ','  (123)
+	factor : TOD '(' . llamado_clase ')'  (123)
 
 	ID  shift 68
 	.  error
@@ -2137,7 +2137,7 @@ state 178
 
 state 179
 	llamado_clase : llamado_clase . '.' ID  (109)
-	factor : TOD '(' llamado_clase . ')' ','  (123)
+	factor : TOD '(' llamado_clase . ')'  (123)
 
 	')'  shift 209
 	'.'  shift 63
@@ -2440,10 +2440,9 @@ state 208
 
 
 state 209
-	factor : TOD '(' llamado_clase ')' . ','  (123)
+	factor : TOD '(' llamado_clase ')' .  (123)
 
-	','  shift 219
-	.  error
+	.  reduce 123
 
 
 state 210
@@ -2465,8 +2464,8 @@ state 212
 	declaracion_funcion : encabezado_funcion '(' parametro_formal ')' . bloque_sentencias_funcion  (48)
 
 	'{'  shift 157
-	','  shift 220
-	';'  shift 221
+	','  shift 219
+	';'  shift 220
 	'('  shift 158
 	.  error
 
@@ -2507,40 +2506,34 @@ state 218
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' . ','  (97)
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' . ';'  (98)
 
-	','  shift 222
-	';'  shift 223
+	','  shift 221
+	';'  shift 222
 	.  error
 
 
 state 219
-	factor : TOD '(' llamado_clase ')' ',' .  (123)
-
-	.  reduce 123
-
-
-state 220
 	declaracion_funcion_interfaz : encabezado_funcion '(' parametro_formal ')' ',' .  (38)
 
 	.  reduce 38
 
 
-state 221
+state 220
 	declaracion_funcion_interfaz : encabezado_funcion '(' parametro_formal ')' ';' .  (40)
 
 	.  reduce 40
 
 
-state 222
+state 221
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' ',' .  (97)
 
 	.  reduce 97
 
 
-state 223
+state 222
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' ';' .  (98)
 
 	.  reduce 98
 
 
 41 terminals, 44 nonterminals
-136 grammar rules, 224 states
+136 grammar rules, 223 states

@@ -8,6 +8,7 @@
             UINT x;y,
             b = 1_l,
             c = 2_l,
+            d = TOD(c) * d + 1.1,
             x = 10_ui,
             y = 2_ui,
             IF (b < c) {
@@ -37,13 +38,13 @@
     },
     
     CLASS ac{ *{:main:ac}*
-        UINT d,
-        VOID c(){ *{:main:ac:c}*
-            d = 1_l,
+        UINT j,
+        VOID a(){ *{:main:ac:c}*
+            j = 1_l,
             a = 2_l,
             PRINT %hola mundo%,
             VOID e(){ *{:main:ac:c:e}*
-                d =2_l,
+                j =2_l,
             },
         },
         ab,
@@ -55,8 +56,9 @@
 
     CLASS ad{
         UINT q,
-        VOID d(){
+        VOID d(DOUBLE b){
             a = 1_l,
+            b=TOD(a),
         },
         ac,
     },
@@ -69,5 +71,12 @@
             c =2_l,
         },
     },
-
+    ad i;j,
+    DOUBLE k,
+    k = 1.1,
+    i.q=1_l,
+    i.d(k),
+    i.ac.ab.c(), 
+    i = j,
+    k = i.q + 5.5,
 }

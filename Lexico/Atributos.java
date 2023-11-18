@@ -10,6 +10,7 @@ public class Atributos {
     private String padreClase;
     private int nivel;
     private boolean atributoDeClase;
+    private boolean contieneParametro;
 
     public Atributos(Token token){
         this.token = token;
@@ -19,6 +20,7 @@ public class Atributos {
         this.padreClase = "";
         this.nivel = 0;
         this.atributoDeClase = false;
+        this.contieneParametro = false;
     }
 
     public Atributos(Token token, String tipo){
@@ -29,6 +31,7 @@ public class Atributos {
         this.padreClase = "";
         this.nivel = 0;
         this.atributoDeClase = false;
+        this.contieneParametro = false;
     }
 
     public Token getToken() {
@@ -93,5 +96,13 @@ public class Atributos {
 
     public boolean getAtributoClase(){
         return this.atributoDeClase;
+    }
+
+    public boolean isConParametro() {
+        return this.contieneParametro;
+    }
+
+    public void setParametro(boolean usaParametro) {
+        this.contieneParametro = usaParametro;
     }
 }

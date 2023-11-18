@@ -158,29 +158,36 @@ cuerpo_interfaz : declaracion_funcion_interfaz
                 ;
 
 declaracion_funcion_interfaz : encabezado_funcion '(' ')' ','{
+                                metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              | encabezado_funcion '(' parametro_formal ')'',' {
+                                metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              | encabezado_funcion '(' ')' ';'{
                                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
+                                metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              | encabezado_funcion '(' parametro_formal ')' ';'{
                                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
+                                metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              | encabezado_funcion parametro_formal ','  {
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
+                                metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              | encabezado_funcion ';'{
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
+                                metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              | encabezado_funcion parametro_formal ';'{
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
+                                metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
                              ;
@@ -191,17 +198,21 @@ declaracion_variable : tipo lista_de_id ',' {
                      ;
 
 declaracion_funcion : encabezado_funcion '(' ')' bloque_sentencias_funcion ',' {
+                        metodosPolaca.get(ambito).add("RET");
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
                     | encabezado_funcion '(' parametro_formal ')' bloque_sentencias_funcion ',' {
+                        metodosPolaca.get(ambito).add("RET");
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
                     | encabezado_funcion '(' ')' bloque_sentencias_funcion {
                         errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
+                        metodosPolaca.remove(ambito);
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
                     | encabezado_funcion '(' parametro_formal ')' bloque_sentencias_funcion {
                         errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
+                        metodosPolaca.remove(ambito);
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
                     ;
@@ -217,12 +228,17 @@ encabezado_funcion : VOID ID {
                             }
                         }
                         ambito += ":" + $2.sval;
+                        ArrayList<String> polacas = new ArrayList<String>();
+                        metodosPolaca.put(ambito,polacas);
                    }
                    ;
 
 parametro_formal : tipo ID {
                         if(!tablaSimbolos.agregarAmbito($2.sval,ambito,tipo)){
                                 errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
+                        } else {
+                            //cambiar funcion a con parametro ambito.subString(lastIndexOf(":"),ambito.length())
+                            tablaSimbolos.setParametro(ambito);
                         }
                  }
                  ;
@@ -262,8 +278,8 @@ sentencia_retorno : RETURN ',' { System.out.println("RETURN");} //agregar ret
                   ;
 
 sentencia_imprimir : PRINT CADENA ','{
-                        polaca.add($2.sval);
-                        polaca.add("PRINT");
+                        metodosPolaca.get(ambito).add($2.sval);
+                        metodosPolaca.get(ambito).add("PRINT");
                    }
                    | PRINT CADENA ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
@@ -271,10 +287,10 @@ sentencia_imprimir : PRINT CADENA ','{
                    ;
 
 sentencia_seleccion : condicion_if cuerpo_then END_IF ',' {
-                        polaca.add(pila.pop(),"[" + String.valueOf(polaca.size() + 1) + "]");
+                        metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
                     }
                     | condicion_if cuerpo_then cuerpo_else END_IF ',' {
-                        polaca.add(pila.pop(),"[" + String.valueOf(polaca.size() + 1) + "]");
+                        metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
                     }
                     | condicion_if cuerpo_then END_IF ';' {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
@@ -291,22 +307,22 @@ sentencia_seleccion : condicion_if cuerpo_then END_IF ',' {
                     ;
 
 condicion_if: IF '(' comparacion ')' {
-                pila.push(polaca.size());
-                polaca.add("BF"); //bifurcacion por falso;
+                pila.push(metodosPolaca.get(ambito).size());
+                metodosPolaca.get(ambito).add("BF"); //bifurcacion por falso;
             }
             | IF '(' ')' {
                 errores.add(new Error("Falta declarar condicion del IF ubicado", anLex.getLinea()));
             }
 
 cuerpo_then : sentencia {
-                polaca.add(pila.pop(), "[" + String.valueOf(polaca.size() + 3) + "]");
-                pila.push(polaca.size());
-                polaca.add("BI"); //bifurcacion incondicional;
+                metodosPolaca.get(ambito).add(pila.pop(), "[" + String.valueOf(metodosPolaca.get(ambito).size() + 3) + "]");
+                pila.push(metodosPolaca.get(ambito).size());
+                metodosPolaca.get(ambito).add("BI"); //bifurcacion incondicional;
             }
             | bloque_sentencias {
-                polaca.add(pila.pop(), "[" + String.valueOf(polaca.size() + 3) + "]");
-                pila.push(polaca.size());
-                polaca.add("BI"); //bifurcacion incondicional;
+                metodosPolaca.get(ambito).add(pila.pop(), "[" + String.valueOf(metodosPolaca.get(ambito).size() + 3) + "]");
+                pila.push(metodosPolaca.get(ambito).size());
+                metodosPolaca.get(ambito).add("BI"); //bifurcacion incondicional;
             }
             ;
 
@@ -331,7 +347,7 @@ lista_sentencias : sentencia
                  ;
 
 comparacion : operacion comparador operacion {
-                polaca.add($2.sval);
+                metodosPolaca.get(ambito).add($2.sval);
             }
             | operacion comparador {
                 errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
@@ -368,8 +384,8 @@ comparador : '<' {
            ;
            
 sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' ',' {
-                        polaca.add("[" + String.valueOf(pila.pop()) + "]");
-                        polaca.add("BF");
+                        metodosPolaca.get(ambito).add("[" + String.valueOf(pila.pop()) + "]");
+                        metodosPolaca.get(ambito).add("BF");
                     }
                     | inicio_do bloque_sentencias WHILE '(' comparacion ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
@@ -380,7 +396,7 @@ sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' ',' 
                     ;
 
 inicio_do : DO {
-                pila.push(polaca.size());
+                pila.push(metodosPolaca.get(ambito).size());
              }
              ;
 
@@ -388,15 +404,23 @@ sentencia_expresion : declaracion_variable
                     | factor_inmediato
                     | asignacion 
                     | llamado_clase '(' ')' ',' {
-                        if(!tablaSimbolos.existeMetodo($1.sval,ambito)){
-                                errores.add(new Error("No se declaro el Metodo " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                        if(!tablaSimbolos.existeMetodo($1.sval,ambito,false)){
+                                errores.add(new Error("No se declaro el metodo " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                         }
-                        polaca.add("Call a " + $1.sval);
+                        // revisar variable $-1 ej: i.c   o -> i.ac.c 
+                        // -> ac.a() no se puede 
+                        // 
+                        metodosPolaca.get(ambito).add("Call " + $1.sval);
                     }
                     | llamado_clase '(' ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
-                    | llamado_clase '(' operacion ')' ','  // Chequear tipo operacion con parametro de funcion?
+                    | llamado_clase '(' operacion ')' ','  {// Chequear tipo operacion con parametro de funcion
+                        if(!tablaSimbolos.existeMetodo($1.sval,ambito,true)){
+                                errores.add(new Error("No se declaro el metodo " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                        }
+                        metodosPolaca.get(ambito).add("Call " + $1.sval);
+                    }
                     | llamado_clase '(' operacion ')' ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
@@ -414,9 +438,11 @@ asignacion : llamado_clase '=' operacion ','  {
                 if(!tablaSimbolos.existeVariable($1.sval,ambito)){
                         errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                 } else {
+
+                        //tablaSimbolos.agregarSimbolo($1.sval + ambito,new Token());
                         tablaSimbolos.setUso($1.sval,ambito,true);
                 }
-                polaca.add($1.sval);polaca.add("=");
+                metodosPolaca.get(ambito).add($1.sval);metodosPolaca.get(ambito).add("=");
            } //chequear tipos entre llamado de clase y operacion
            | llamado_clase '=' operacion ';'{
                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
@@ -443,30 +469,30 @@ lista_de_id : lista_de_id ';' ID {
 
 operacion : termino
           | operacion '+' termino {
-                polaca.add("+");
+                metodosPolaca.get(ambito).add("+");
           } //chequear tipos entre el operando y el termino
           | operacion '-' termino {
-                polaca.add("-");
+                metodosPolaca.get(ambito).add("-");
           } //chequear tipos entre el operando y el termino
           ;
           
 termino : factor
         | termino '*' factor {
-                polaca.add("*");
+                metodosPolaca.get(ambito).add("*");
         } //chequear tipos entre el termino y el factor
         | termino '/' factor {
-                polaca.add("/");
+                metodosPolaca.get(ambito).add("/");
         } //chequear tipos entre el termino y el factor
         ;
 
 factor : factor_comun
        | factor_inmediato
-       | TOD '(' llamado_clase ')' ',' {
+       | TOD '(' llamado_clase ')' {
                 if(!tablaSimbolos.existeVariable($3.sval,ambito)){
                         errores.add(new Error("No se declaro la variable " + $3.sval + " en el ambito reconocible", anLex.getLinea()));
                 }
-                polaca.add($3.sval);
-                polaca.add("TOD");
+                metodosPolaca.get(ambito).add($3.sval);
+                metodosPolaca.get(ambito).add("TOD");
        }
        ;
 
@@ -474,7 +500,7 @@ factor_inmediato : llamado_clase '--' {
                         if(!tablaSimbolos.existeVariable($1.sval,ambito)){
                                 errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                         }
-                        polaca.add($1.sval);polaca.add("1");polaca.add("-");{polaca.add($1.sval);polaca.add("=");}
+                        metodosPolaca.get(ambito).add($1.sval);metodosPolaca.get(ambito).add("1");metodosPolaca.get(ambito).add("-");{metodosPolaca.get(ambito).add($1.sval);metodosPolaca.get(ambito).add("=");}
                  } //el operador inmediato es para todos los tipos? chequear
                  ;
 
@@ -482,30 +508,30 @@ factor_comun : llamado_clase {
                 if(!tablaSimbolos.existeVariable($1.sval,ambito)){
                         errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                 }
-                polaca.add($1.sval);
+                metodosPolaca.get(ambito).add($1.sval);
              }
              | '-' CTE_DOUBLE {
                 anLex.convertirNegativo($2.sval);
                 tablaSimbolos.eliminarSimbolo("-" + $2.sval);
-                polaca.add("-" + $2.sval);
+                metodosPolaca.get(ambito).add("-" + $2.sval);
              }
              | CTE_DOUBLE {
-                polaca.add($1.sval);
+                metodosPolaca.get(ambito).add($1.sval);
              }
              | '-' CTE_LONG {
                 anLex.convertirNegativo($2.sval);
                 tablaSimbolos.eliminarSimbolo($2.sval);
-                polaca.add("-" + $2.sval);
+                metodosPolaca.get(ambito).add("-" + $2.sval);
              }
              | CTE_LONG {
                 if(CheckRangoLong($1.sval)){
                         errores.add(new Error("LONG fuera de rango", anLex.getLinea()));}
                 else {
-                        polaca.add($1.sval);
+                        metodosPolaca.get(ambito).add($1.sval);
                 } 
              }
              | CTE_UINT {
-                polaca.add($1.sval);
+                metodosPolaca.get(ambito).add($1.sval);
              }
              | '-' CTE_UINT {
                 errores.add(new Error("Las constantes tipo UINT no pueden ser negativas", anLex.getLinea()));
@@ -537,7 +563,7 @@ static final int MAXPROFUNDIDADVOID = 1;
 static AnalizadorLexico anLex = null;
 static Parser par = null;
 static Token token = null;
-static HashMap<String, ArrayList<String>> polacasMetodos; // :main -> polacaMain | :main:asd -> polacaAsd
+static HashMap<String, ArrayList<String>> metodosPolaca; // :main -> polacaMain | :main:asd -> polacaAsd
 static ArrayList<String>  polaca;
 static ArrayList<Error> errores;
 static String ambito = ":main";
@@ -551,15 +577,18 @@ public static void main(String[] args) throws Exception{
         errores = new ArrayList<Error>();
         anLex = new AnalizadorLexico(args,tablaSimbolos,errores);
         
-        polacasMetodos = new HashMap<String, ArrayList<String>>();
+        metodosPolaca = new HashMap<String, ArrayList<String>>();
         polaca = new ArrayList<String>();
+        metodosPolaca.put(":main",polaca);
         pila = new LinkedList<>();
         par = new Parser(false);
         par.run();
 
         tablaSimbolos.imprimirTabla();
         for (String variable : tablaSimbolos.variablesNoUsadas()){
-            errores.add(new Error("La variable " + variable.substring(0,variable.indexOf(":")) + " no fue asignada dentro del ambito de " + variable.substring(variable.lastIndexOf(":") + 1, variable.length()),"WARNING"));
+            if(variable.contains(":")){
+                    errores.add(new Error("La variable " + variable.substring(0,variable.indexOf(":")) + " no fue asignada dentro del ambito de " + variable.substring(variable.lastIndexOf(":") + 1, variable.length()),"WARNING"));
+            }
         }
         if (errores.size()>0){
             for (Error error : errores) {
@@ -567,12 +596,16 @@ public static void main(String[] args) throws Exception{
             }
             //throw new Exception("Se han encontrado los errores anteriores");
         }
-
+        //System.out.println(polaca.toString());
         
-        for (int i = 0; i < polaca.size(); i++) {
+        
+        /* for (int i = 0; i < polaca.size(); i++) {
           System.out.println(i + " " + polaca.get(i));
-        }
+        } */
 
+        for (String key : metodosPolaca.keySet()) {
+            System.out.println(key + " = " + metodosPolaca.get(key).toString());
+        }
         System.out.println("Fin de la compilacion");
 }
 
