@@ -273,7 +273,7 @@ sentencia : sentencia_expresion
           | sentencia_retorno 
           ;
 
-sentencia_retorno : RETURN ',' { System.out.println("RETURN");} //agregar ret 
+sentencia_retorno : RETURN ',' { metodosPolaca.get(ambito).add("RETURN,");} 
                   | RETURN ';'{
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                   }
@@ -290,9 +290,11 @@ sentencia_imprimir : PRINT CADENA ','{
 
 sentencia_seleccion : condicion_if cuerpo_then END_IF ',' {
                         metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
+                        metodosPolaca.get(ambito).add("L" + "[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
                     }
                     | condicion_if cuerpo_then cuerpo_else END_IF ',' {
                         metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
+                        metodosPolaca.get(ambito).add("L" + "[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
                     }
                     | condicion_if cuerpo_then END_IF ';' {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
@@ -320,11 +322,13 @@ cuerpo_then : sentencia {
                 metodosPolaca.get(ambito).add(pila.pop(), "[" + String.valueOf(metodosPolaca.get(ambito).size() + 3) + "]");
                 pila.push(metodosPolaca.get(ambito).size());
                 metodosPolaca.get(ambito).add("BI"); //bifurcacion incondicional;
+                metodosPolaca.get(ambito).add("L[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
             }
             | bloque_sentencias {
                 metodosPolaca.get(ambito).add(pila.pop(), "[" + String.valueOf(metodosPolaca.get(ambito).size() + 3) + "]");
                 pila.push(metodosPolaca.get(ambito).size());
                 metodosPolaca.get(ambito).add("BI"); //bifurcacion incondicional;
+                metodosPolaca.get(ambito).add("L[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
             }
             ;
 
@@ -399,6 +403,7 @@ sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' comparacion ')' ',' 
 
 inicio_do : DO {
                 pila.push(metodosPolaca.get(ambito).size());
+                metodosPolaca.get(ambito).add("L[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
              }
              ;
 
