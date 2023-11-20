@@ -28,7 +28,7 @@
         VOID pepe(),
     },
     CLASS ab IMPLEMENT b{
-        UINT a, 
+        UINT a;b;d;f, 
         VOID c(){
             a=1_ui * 1_ui + 2_ui,
         },
@@ -38,10 +38,12 @@
     },
     
     CLASS ac{ *{:main:ac}*
-        UINT j,
+        UINT j;w,
         VOID a(){ *{:main:ac:c}*
-            j = 1_l,
+            w = 1_l,
+            j = 1_l + w,
             a = 2_l,
+            d = 1_ui,
             PRINT %hola mundo%,
             VOID e(){ *{:main:ac:c:e}*
                 j =2_l,
@@ -51,7 +53,8 @@
     },
 
     CLASS ad{
-        UINT q,
+        UINT q;y,
+        LONG w,
         VOID d(DOUBLE b){
             a = b + q,
             b=TOD(a),
@@ -62,7 +65,7 @@
     c= 1_l,
     VOID asd(){
         VOID e(){
-            c =2_l,
+            c = 2_l,
             e(),
             asd(),
         },
@@ -79,7 +82,7 @@
     a = 2_l,
 
     VOID g(){
-        c = 1_l,
+        c = 3_l,
         a = 2_l,
     },
     ad i;j,
@@ -87,11 +90,14 @@
     k = 1.1,
     i.q = 1_l,
     j.q = 2_l,
-    
+
     i.d(2.0),
-    j.d(2.0),
+    j.d(5_l),
     
+    i.ac.ab.a = 5_l,
     i.ac.ab.pepe(),
+    i.ac.w = 4_l,
+    
     i.d(5.5),
     i.d(2.5),
     asd(),

@@ -2,8 +2,6 @@ package Lexico;
 
 import java.util.HashMap;
 
-import Sintactico.Parser;
-
 import java.util.ArrayList;
 
 public class Tabla {
@@ -20,41 +18,6 @@ public class Tabla {
 
     public Token obtenerSimbolo(String nombre) {
         return tabla.get(nombre).getToken();
-    }
-
-    private ArrayList<String> getMetodos(String ambito) {
-        ArrayList<String> metodos = new ArrayList<>();
-
-        for (String nombreMetodo : tabla.keySet()) {
-            if (nombreMetodo.endsWith(ambito)) {
-                if (tabla.get(nombreMetodo).getTipo() == "VOID") {
-                    metodos.add(nombreMetodo.substring(0,nombreMetodo.indexOf(":")));
-                }
-            }
-        }
-        return metodos;
-    }
-
-    public void checkAtributosDeClase(String nombreVariable, String ambito) {
-        if (!ambito.equals(":main")) {
-            String posibleClase = ambito.substring(ambito.lastIndexOf(":") + 1, ambito.length()) + ambito.substring(0, ambito.lastIndexOf(":"));
-            if (tabla.get(posibleClase).getTipo() == "CLASS") {
-                if (nombreVariable.contains(";")) {
-                    String[] variables = nombreVariable.split(";");
-                    for (String variable : variables) {
-                        tabla.get(variable + ambito).setUso(true);
-                    }
-                } else {
-                    tabla.get(nombreVariable + ambito).setUso(true);
-                }
-            }
-        }
-    }
-
-    public boolean implementaMetodosInterfaz(String ambitoClase, String nombreInterfaz){
-        ArrayList<String> metodosClase = new ArrayList<String>();
-        metodosClase = getMetodos(ambitoClase);
-        return metodosClase.containsAll(getMetodos(nombreInterfaz));
     }
 
     public boolean agregarAmbito(String nombre, String ambito,String tipo) {
@@ -143,6 +106,37 @@ public class Tabla {
         }
     }
 
+    public void checkAtributosDeClase(String nombreVariable, String ambito) {
+        if (!ambito.equals(":main")) {
+            String posibleClase = ambito.substring(ambito.lastIndexOf(":") + 1, ambito.length()) + ambito.substring(0, ambito.lastIndexOf(":"));
+            if (tabla.get(posibleClase).getTipo() == "CLASS") {
+                String[] variables = nombreVariable.split(";");
+                for (String variable : variables) {
+                    tabla.get(variable + ambito).setUso(true);
+                }
+            }
+        }
+    }
+
+    private ArrayList<String> getMetodos(String ambito) {
+        ArrayList<String> metodos = new ArrayList<>();
+
+        for (String nombreMetodo : tabla.keySet()) {
+            if (nombreMetodo.endsWith(ambito)) {
+                if (tabla.get(nombreMetodo).getTipo() == "VOID") {
+                    metodos.add(nombreMetodo.substring(0,nombreMetodo.indexOf(":")));
+                }
+            }
+        }
+        return metodos;
+    }
+
+    public boolean implementaMetodosInterfaz(String ambitoClase, String nombreInterfaz){
+        ArrayList<String> metodosClase = new ArrayList<String>();
+        metodosClase = getMetodos(ambitoClase);
+        return metodosClase.containsAll(getMetodos(nombreInterfaz));
+    }
+
     private ArrayList<String> getMetodosPadres(String clasePadre) {
         ArrayList<String> metodos = new ArrayList<>();
         while (!clasePadre.equals("")) {
@@ -186,25 +180,36 @@ public class Tabla {
         return aux;
     }
 
-    public boolean existeVariable(String nombre, String ambito){
+    public String existeVariable(String nombre, String ambito){
         eliminarSimbolo(nombre);
         if(!nombre.contains(".")){
             while (ambito != ""){
-                String nombreambito = nombre + ambito;
-                if(existeSimbolo(nombreambito)){
-                    String tipo = tabla.get(nombreambito).getTipo().toUpperCase();
+                String nombreAmbito = nombre + ambito;
+                if(existeSimbolo(nombreAmbito)){
+                    String tipo = tabla.get(nombreAmbito).getTipo().toUpperCase();
                     if(!(tipo == "VOID" || tipo == "CLASS" || tipo == "INTERFACE" || tipo == "Long" || tipo == "Uint" || tipo == "Double" || tipo == "Cadena"))
-                        return true;
+                        return nombreAmbito;
+                    else{
+                        //significa que encontro una variable con el nombre que estoy buscando pero es un metodo, 
+                        //tendria que chequear que el ambito en el que estoy parado sea una clase
+                        //digamos, hacer lo mismo de abajo
+                    }
+                } else { //busco para padre, si la clase no tiene el atributo busco si el padre lo tiene antes de buscar en otros ambitos
+                    String clase = ambito.substring(ambito.lastIndexOf(":")+1,ambito.length());
+                    System.out.println(nombre + " | " + ambito + " || " + clase);
+                    if((tabla.get(clase + ":main") != null) && (tabla.get(clase + ":main").getTipo() == "CLASS")){
+                        System.out.println(clase + " - " + nombre);
+                    }
                 }
                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
             }
         } else {
             boolean encontrado = false;
             while (ambito != "" && !encontrado){
-                String nombreambito = nombre.substring(0,nombre.indexOf(".")) + ambito; //c.ab.x -> c:ambito
+                String nombreAmbito = nombre.substring(0,nombre.indexOf(".")) + ambito; //c.ab.x -> c:ambito
                 eliminarSimbolo(nombre.substring(0,nombre.indexOf(".")));
-                if(existeSimbolo(nombreambito)){
-                    String clase = tabla.get(nombreambito).getTipo(); //c -> clase1
+                if(existeSimbolo(nombreAmbito)){
+                    String clase = tabla.get(nombreAmbito).getTipo(); //c -> clase1
                     while(existeSimbolo(clase + ":main")){  //clase1:main -> true | false
                         String tipoClase = tabla.get(clase+":main").getTipo();
                         if(tipoClase == "CLASS"){ //si tipo:main es una clase
@@ -213,27 +218,27 @@ public class Tabla {
 
                             if(!nombre.contains(".")){ //busco variable de clase
                                 eliminarSimbolo(nombre);
-                                if(existeSimbolo(nombre + ":main:" + clase)){
-                                    return (tabla.get(nombre + ":main:" + clase).getTipo() != "VOID");
+                                if(existeSimbolo(nombre + ":main:" + clase) && (tabla.get(nombre + ":main:" + clase).getTipo() != "VOID")){
+                                    return nombre + ":main:" + clase;
                                 }else{
-                                    return false;
+                                    return "";
                                 }
                             } else if (tabla.get(clase + ":main").getPadreClase() != ""){ //busco clase
                                 clase = nombre.substring(0, nombre.indexOf(".")); //ab.x -> ab
                             } else { //c.xs.x
-                                return false;
+                                return "";
                             }
                         } else {
-                            return false;
+                            return "";
                         }
                     }
 
-                    return false;
+                    return "";
                 }
                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
             }
         }
-        return false;
+        return "";
     }
 
     public boolean existeMetodo(String nombre, String ambito, boolean conParametro){
@@ -251,10 +256,10 @@ public class Tabla {
         } else {
             boolean encontrado = false;
             while (ambito != "" && !encontrado){
-                String nombreambito = nombre.substring(0,nombre.indexOf(".")) + ambito;
+                String nombreAmbito = nombre.substring(0,nombre.indexOf(".")) + ambito;
                 eliminarSimbolo(nombre.substring(0,nombre.indexOf(".")));
-                if(existeSimbolo(nombreambito)){
-                    String clase = tabla.get(nombreambito).getTipo();
+                if(existeSimbolo(nombreAmbito)){
+                    String clase = tabla.get(nombreAmbito).getTipo();
                     while(existeSimbolo(clase + ":main")){
                         String tipoClase = tabla.get(clase + ":main").getTipo();
                         if(tipoClase == "CLASS"){ 
@@ -285,9 +290,65 @@ public class Tabla {
         return false;
     }
 
-    public boolean existeClase(String nombre, String ambito){
-        String nombreConAmbito = nombre + ambito;
+    public boolean existeClase(String nombre){
+        String nombreConAmbito = nombre + ":main";
         return ((tabla.containsKey(nombreConAmbito)) && (tabla.get(nombreConAmbito).getTipo() == "CLASS"));
+    }
+
+    public ArrayList<String> getAtributosClase(String ambito){
+        ArrayList<String> atributos = new ArrayList<>();
+        for (String id : tabla.keySet()) {
+            if (id.endsWith(ambito)) {
+                if (tabla.get(id).getTipo() != "VOID") {
+                    atributos.add(id.substring(0,id.indexOf(":")));
+                }
+            }
+        }
+        return atributos;
+    }
+
+    public void addAtributosClase(String nombreClase, String instancia, String ambito){
+        ArrayList<String> atributos = new ArrayList<>();
+        String[] instancias = instancia.split(";");
+        
+        for (String variable : instancias) {
+            String nombre = nombreClase + ":main";
+            String ambitoClase = ":main:" + nombreClase;
+            while (!nombre.equals("")) {
+                atributos = getAtributosClase(ambitoClase);
+                
+                for (String atributoClase : atributos) {
+                    Atributos atributo = tabla.get(atributoClase + ambitoClase);
+                    tabla.put(variable + "." + atributoClase + ambito, atributo);
+                }
+                nombre = tabla.get(nombre).getPadreClase();
+                
+                if (!nombre.equals("")) {
+                    ambitoClase = ":main:" + nombre.substring(0,nombre.indexOf(":"));
+                    variable = variable + "." + nombre.substring(0,nombre.indexOf(":"));
+                }
+            }
+        }
+    }
+
+    public ArrayList<String> getAtributosInstancia(String nombreInstancia, String ambito){
+        ArrayList<String> atributos = new ArrayList<>();
+        String claseHija = tabla.get(nombreInstancia.substring(0, nombreInstancia.length() - 1) + ambito).getTipo();
+
+        for (String nombre : tabla.keySet()) {
+            if (nombre.startsWith(nombreInstancia) && nombre.endsWith(ambito) && tabla.get(nombre).getTipo() != "VOID") {
+                atributos.add(nombre);
+                nombre = nombre.substring(0, nombre.lastIndexOf(":"));
+                String[] instanciaClase = nombre.split("\\.");
+                if (instanciaClase.length > 2){
+                    atributos.add(instanciaClase[instanciaClase.length - 1] + ":main:" + instanciaClase[instanciaClase.length - 2]);
+                } else {
+                    atributos.add(instanciaClase[instanciaClase.length - 1] + ":main:" + claseHija);
+                }
+                atributos.add("=");
+            }
+        }
+        return atributos;
     }
 
     public ArrayList<String> variablesNoUsadas(){

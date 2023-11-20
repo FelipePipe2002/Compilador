@@ -15,7 +15,9 @@ import java.util.LinkedList;
 
 
 %%
-programa : '{' componentes_programa '}' 
+programa : '{' componentes_programa '}' {
+                metodosPolaca.get(ambito).add("END " + ambito);
+         }
          | '{' componentes_programa {
                 errores.add(new Error("El programa tiene que terminar con \'}\'", anLex.getLinea()));
          }
@@ -194,15 +196,18 @@ declaracion_funcion_interfaz : encabezado_funcion '(' ')' ','{
 
 declaracion_variable : tipo lista_de_id ',' {
                         tablaSimbolos.checkAtributosDeClase($2.sval,ambito);
+                        if ($1.sval != null) {
+                            tablaSimbolos.addAtributosClase($1.sval,$2.sval,ambito);
+                        }
                      }
                      ;
 
 declaracion_funcion : encabezado_funcion '(' ')' bloque_sentencias_funcion ',' {
-                        metodosPolaca.get(ambito).add("RET");
+                        metodosPolaca.get(ambito).add("END");
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
                     | encabezado_funcion '(' parametro_formal ')' bloque_sentencias_funcion ',' {
-                        metodosPolaca.get(ambito).add("RET");
+                        metodosPolaca.get(ambito).add("END");
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
                     | encabezado_funcion '(' ')' bloque_sentencias_funcion {
@@ -239,7 +244,7 @@ parametro_formal : tipo ID {
                         } else {
                             //cambiar funcion a con parametro ambito.subString(lastIndexOf(":"),ambito.length())
                             tablaSimbolos.setParametro(ambito);
-                            metodosPolaca.get(ambito).add($2.sval);
+                            metodosPolaca.get(ambito).add($2.sval + ambito);
                             metodosPolaca.get(ambito).add("=");
                         }
                  }
@@ -289,8 +294,7 @@ sentencia_imprimir : PRINT CADENA ','{
                    ;
 
 sentencia_seleccion : condicion_if cuerpo_then END_IF ',' {
-                        metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
-                        metodosPolaca.get(ambito).add("L" + "[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
+                        metodosPolaca.get(ambito).remove(metodosPolaca.get(ambito).size() - 2);
                     }
                     | condicion_if cuerpo_then cuerpo_else END_IF ',' {
                         metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
@@ -415,14 +419,29 @@ sentencia_expresion : declaracion_variable
                                 errores.add(new Error("No se encuentra declarado el metodo " + $1.sval + " dentro del ambito reconocible", anLex.getLinea()));
                         } else {
                             String ambitoClase = tablaSimbolos.getAmbitoMetodoInvocado($1.sval,ambito);
+                            if ($1.sval.contains(".")) {
+                                    metodosPolaca.get(ambito).add($1.sval + ambito);    
+                                    String clase = $1.sval.substring(0,$1.sval.indexOf(".") + 1);
+                                    System.out.println(tablaSimbolos.getAtributosInstancia(clase, ambito).toString());
+                                    metodosPolaca.get(ambito).addAll(tablaSimbolos.getAtributosInstancia(clase, ambito));
+                            }
                             metodosPolaca.get(ambito).add("Call " + ambitoClase);
                         }
                     }
-                    | llamado_clase '(' operacion ')' ','  {// Chequear tipo operacion con parametro de funcion
+                    | llamado_clase '(' operacion ')' ','  { // Chequear tipo operacion con parametro de funcion
                         if(!tablaSimbolos.existeMetodo($1.sval,ambito,true)){
                                 errores.add(new Error("No se encuentra declarado el metodo " + $1.sval + " dentro del ambito reconocible", anLex.getLinea()));
                         } else {
+                            String operacion = metodosPolaca.get(ambito).get(metodosPolaca.get(ambito).size() - 1);
+                            metodosPolaca.get(ambito).remove(metodosPolaca.get(ambito).size() - 1);
                             String ambitoClase = tablaSimbolos.getAmbitoMetodoInvocado($1.sval,ambito);
+                            if ($1.sval.contains(".")) {
+                                    metodosPolaca.get(ambito).add($1.sval + ambito);    
+                                    String clase = $1.sval.substring(0,$1.sval.indexOf(".") + 1);
+                                    System.out.println(tablaSimbolos.getAtributosInstancia(clase, ambito).toString());
+                                    metodosPolaca.get(ambito).addAll(tablaSimbolos.getAtributosInstancia(clase, ambito));
+                            }
+                            metodosPolaca.get(ambito).add(operacion);
                             metodosPolaca.get(ambito).add("Call " + ambitoClase);
                         }
                     }
@@ -443,14 +462,14 @@ llamado_clase : ID {
               ;
 
 asignacion : llamado_clase '=' operacion ','  {
-                if(!tablaSimbolos.existeVariable($1.sval,ambito)){
+                String direccionNombre = tablaSimbolos.existeVariable($1.sval,ambito);
+                if(direccionNombre.equals("")){
                         errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                 } else {
-
                         //tablaSimbolos.agregarSimbolo($1.sval + ambito,new Token());
                         tablaSimbolos.setUso($1.sval,ambito,true);
+                        metodosPolaca.get(ambito).add(direccionNombre);metodosPolaca.get(ambito).add("=");
                 }
-                metodosPolaca.get(ambito).add($1.sval);metodosPolaca.get(ambito).add("=");
            } //chequear tipos entre llamado de clase y operacion
            | llamado_clase '=' operacion ';'{
                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
@@ -496,27 +515,33 @@ termino : factor
 factor : factor_comun
        | factor_inmediato
        | TOD '(' llamado_clase ')' {
-                if(!tablaSimbolos.existeVariable($3.sval,ambito)){
+                String direccionNombre = tablaSimbolos.existeVariable($3.sval,ambito);
+                if(direccionNombre.equals("")){
                         errores.add(new Error("No se declaro la variable " + $3.sval + " en el ambito reconocible", anLex.getLinea()));
+                } else {
+                    metodosPolaca.get(ambito).add(direccionNombre);
+                    metodosPolaca.get(ambito).add("TOD");
                 }
-                metodosPolaca.get(ambito).add($3.sval);
-                metodosPolaca.get(ambito).add("TOD");
        }
        ;
 
 factor_inmediato : llamado_clase '--' {
-                        if(!tablaSimbolos.existeVariable($1.sval,ambito)){
+                        String direccionNombre = tablaSimbolos.existeVariable($1.sval,ambito);
+                        if(direccionNombre.equals("")){
                                 errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                        } else {
+                            metodosPolaca.get(ambito).add(direccionNombre);metodosPolaca.get(ambito).add("1");metodosPolaca.get(ambito).add("-");{metodosPolaca.get(ambito).add(direccionNombre);metodosPolaca.get(ambito).add("=");}
                         }
-                        metodosPolaca.get(ambito).add($1.sval);metodosPolaca.get(ambito).add("1");metodosPolaca.get(ambito).add("-");{metodosPolaca.get(ambito).add($1.sval);metodosPolaca.get(ambito).add("=");}
                  } //el operador inmediato es para todos los tipos? chequear
                  ;
 
 factor_comun : llamado_clase {
-                if(!tablaSimbolos.existeVariable($1.sval,ambito)){
+                String direccionNombre = tablaSimbolos.existeVariable($1.sval,ambito);
+                if(direccionNombre.equals("")){
                         errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                } else {
+                    metodosPolaca.get(ambito).add(direccionNombre);
                 }
-                metodosPolaca.get(ambito).add($1.sval);
              }
              | '-' CTE_DOUBLE {
                 anLex.convertirNegativo($2.sval);
@@ -548,16 +573,22 @@ factor_comun : llamado_clase {
 
 tipo : DOUBLE {
         tipo = "DOUBLE";
+        $$.sval = null;
      }
      | UINT {
         tipo = "UINT";
+        $$.sval = null;
      }
      | LONG {
         tipo = "LONG";
+        $$.sval = null;
      }
      | ID {
-        if(!tablaSimbolos.existeClase($1.sval,ambito)){
-                errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+        if(!tablaSimbolos.existeClase($1.sval)){
+                errores.add(new Error("No se declaro la clase " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
+                $$.sval = null;
+        } else {
+                $$.sval = $1.sval;
         }
         tipo = $1.sval;
         tablaSimbolos.eliminarSimbolo($1.sval);

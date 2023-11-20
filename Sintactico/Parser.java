@@ -604,7 +604,7 @@ final static String yyrule[] = {
 "tipo : ID",
 };
 
-//#line 568 ".\gramatica.y"
+//#line 599 ".\gramatica.y"
 
 static final int MAXNIVELHERENCIA = 3;
 static final int MAXPROFUNDIDADVOID = 1;
@@ -837,26 +837,32 @@ boolean doaction;
     switch(yyn)
       {
 //########## USER-SUPPLIED ACTIONS ##########
+case 1:
+//#line 18 ".\gramatica.y"
+{
+                metodosPolaca.get(ambito).add("END " + ambito);
+         }
+break;
 case 2:
-//#line 19 ".\gramatica.y"
+//#line 21 ".\gramatica.y"
 {
                 errores.add(new Error("El programa tiene que terminar con \'}\'", anLex.getLinea()));
          }
 break;
 case 3:
-//#line 22 ".\gramatica.y"
+//#line 24 ".\gramatica.y"
 {
                 errores.add(new Error("El programa tiene que arrancar con \'{\'", anLex.getLinea()));
          }
 break;
 case 4:
-//#line 25 ".\gramatica.y"
+//#line 27 ".\gramatica.y"
 {
                 errores.add(new Error("El programa tiene que estar contenido en \'{\' \'}\'", anLex.getLinea()));
         }
 break;
 case 11:
-//#line 40 ".\gramatica.y"
+//#line 42 ".\gramatica.y"
 {
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                         if((val_peek(1).sval != null)){
@@ -876,7 +882,7 @@ case 11:
                   }
 break;
 case 12:
-//#line 57 ".\gramatica.y"
+//#line 59 ".\gramatica.y"
 {
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                         if (!tablaSimbolos.agregarInterfaz(val_peek(4).sval,val_peek(2).sval + ":main")){
@@ -899,34 +905,34 @@ case 12:
                   }
 break;
 case 13:
-//#line 77 ".\gramatica.y"
+//#line 79 ".\gramatica.y"
 {
                       ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                   }
 break;
 case 14:
-//#line 80 ".\gramatica.y"
+//#line 82 ".\gramatica.y"
 {
                       errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                       ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                   }
 break;
 case 15:
-//#line 84 ".\gramatica.y"
+//#line 86 ".\gramatica.y"
 {
                       errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                       ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                   }
 break;
 case 16:
-//#line 88 ".\gramatica.y"
+//#line 90 ".\gramatica.y"
 {
                       errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
                       ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                   }
 break;
 case 17:
-//#line 94 ".\gramatica.y"
+//#line 96 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,val_peek(1).sval)){
                                 errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
@@ -936,7 +942,7 @@ case 17:
                  }
 break;
 case 18:
-//#line 103 ".\gramatica.y"
+//#line 105 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,val_peek(1).sval)){
                                 errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
@@ -945,81 +951,81 @@ case 18:
                      }
 break;
 case 19:
-//#line 111 ".\gramatica.y"
+//#line 113 ".\gramatica.y"
 {
                 yyval.sval = null;
              }
 break;
 case 20:
-//#line 114 ".\gramatica.y"
+//#line 116 ".\gramatica.y"
 {
                 yyval.sval = val_peek(1).sval + ":main";
              }
 break;
 case 21:
-//#line 117 ".\gramatica.y"
+//#line 119 ".\gramatica.y"
 {
                 errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
              }
 break;
 case 22:
-//#line 120 ".\gramatica.y"
+//#line 122 ".\gramatica.y"
 {
                 errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
              }
 break;
 case 23:
-//#line 123 ".\gramatica.y"
+//#line 125 ".\gramatica.y"
 {
                 errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
              }
 break;
 case 26:
-//#line 131 ".\gramatica.y"
+//#line 133 ".\gramatica.y"
 {
                         errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                 }
 break;
 case 27:
-//#line 134 ".\gramatica.y"
+//#line 136 ".\gramatica.y"
 {
                         errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
                 }
 break;
 case 28:
-//#line 137 ".\gramatica.y"
+//#line 139 ".\gramatica.y"
 {
                         errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                 }
 break;
 case 35:
-//#line 152 ".\gramatica.y"
+//#line 154 ".\gramatica.y"
 {
                         errores.add(new Error("Solo se permiten metodos abstractos", anLex.getLinea()));
                 }
 break;
 case 36:
-//#line 155 ".\gramatica.y"
+//#line 157 ".\gramatica.y"
 {
                         errores.add(new Error("Solo se permiten metodos abstractos", anLex.getLinea()));
                 }
 break;
 case 37:
-//#line 160 ".\gramatica.y"
+//#line 162 ".\gramatica.y"
 {
                                 metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 38:
-//#line 164 ".\gramatica.y"
+//#line 166 ".\gramatica.y"
 {
                                 metodosPolaca.remove(ambito);
                                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                              }
 break;
 case 39:
-//#line 168 ".\gramatica.y"
+//#line 170 ".\gramatica.y"
 {
                                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                                 metodosPolaca.remove(ambito);
@@ -1027,7 +1033,7 @@ case 39:
                              }
 break;
 case 40:
-//#line 173 ".\gramatica.y"
+//#line 175 ".\gramatica.y"
 {
                                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                                 metodosPolaca.remove(ambito);
@@ -1035,7 +1041,7 @@ case 40:
                              }
 break;
 case 41:
-//#line 178 ".\gramatica.y"
+//#line 180 ".\gramatica.y"
 {
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 metodosPolaca.remove(ambito);
@@ -1043,7 +1049,7 @@ case 41:
                              }
 break;
 case 42:
-//#line 183 ".\gramatica.y"
+//#line 185 ".\gramatica.y"
 {
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 metodosPolaca.remove(ambito);
@@ -1051,7 +1057,7 @@ case 42:
                              }
 break;
 case 43:
-//#line 188 ".\gramatica.y"
+//#line 190 ".\gramatica.y"
 {
                                 errores.add(new Error("El parametro formal tiene que estar entre \'(\' \')\'", anLex.getLinea()));
                                 metodosPolaca.remove(ambito);
@@ -1059,34 +1065,29 @@ case 43:
                              }
 break;
 case 44:
-//#line 195 ".\gramatica.y"
+//#line 197 ".\gramatica.y"
 {
                         tablaSimbolos.checkAtributosDeClase(val_peek(1).sval,ambito);
+                        if (val_peek(2).sval != null) {
+                            tablaSimbolos.addAtributosClase(val_peek(2).sval,val_peek(1).sval,ambito);
+                        }
                      }
 break;
 case 45:
-//#line 200 ".\gramatica.y"
+//#line 205 ".\gramatica.y"
 {
-                        metodosPolaca.get(ambito).add("RET");
+                        metodosPolaca.get(ambito).add("END");
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
 case 46:
-//#line 204 ".\gramatica.y"
+//#line 209 ".\gramatica.y"
 {
-                        metodosPolaca.get(ambito).add("RET");
+                        metodosPolaca.get(ambito).add("END");
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
 case 47:
-//#line 208 ".\gramatica.y"
-{
-                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
-                        metodosPolaca.remove(ambito);
-                        ambito = ambito.substring(0,ambito.lastIndexOf(":"));
-                    }
-break;
-case 48:
 //#line 213 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
@@ -1094,8 +1095,16 @@ case 48:
                         ambito = ambito.substring(0,ambito.lastIndexOf(":"));
                     }
 break;
+case 48:
+//#line 218 ".\gramatica.y"
+{
+                        errores.add(new Error("Se esperaba una \',\' antes o", anLex.getLinea()));
+                        metodosPolaca.remove(ambito);
+                        ambito = ambito.substring(0,ambito.lastIndexOf(":"));
+                    }
+break;
 case 49:
-//#line 220 ".\gramatica.y"
+//#line 225 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,val_peek(1).sval)){
                             errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
@@ -1112,112 +1121,111 @@ case 49:
                    }
 break;
 case 50:
-//#line 236 ".\gramatica.y"
+//#line 241 ".\gramatica.y"
 {
                         if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,tipo)){
                                 errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
                         } else {
                             /*cambiar funcion a con parametro ambito.subString(lastIndexOf(":"),ambito.length())*/
                             tablaSimbolos.setParametro(ambito);
-                            metodosPolaca.get(ambito).add(val_peek(0).sval);
+                            metodosPolaca.get(ambito).add(val_peek(0).sval + ambito);
                             metodosPolaca.get(ambito).add("=");
                         }
                  }
 break;
 case 52:
-//#line 249 ".\gramatica.y"
+//#line 254 ".\gramatica.y"
 {
                         errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 53:
-//#line 252 ".\gramatica.y"
+//#line 257 ".\gramatica.y"
 {
                         errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
                   }
 break;
 case 54:
-//#line 255 ".\gramatica.y"
+//#line 260 ".\gramatica.y"
 {
                         errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 64:
-//#line 276 ".\gramatica.y"
+//#line 281 ".\gramatica.y"
 { metodosPolaca.get(ambito).add("RETURN,");}
 break;
 case 65:
-//#line 277 ".\gramatica.y"
+//#line 282 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                   }
 break;
 case 66:
-//#line 282 ".\gramatica.y"
+//#line 287 ".\gramatica.y"
 {
                         metodosPolaca.get(ambito).add(val_peek(1).sval);
                         metodosPolaca.get(ambito).add("PRINT");
                    }
 break;
 case 67:
-//#line 286 ".\gramatica.y"
+//#line 291 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                    }
 break;
 case 68:
-//#line 291 ".\gramatica.y"
+//#line 296 ".\gramatica.y"
 {
-                        metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
-                        metodosPolaca.get(ambito).add("L" + "[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
+                        metodosPolaca.get(ambito).remove(metodosPolaca.get(ambito).size() - 2);
                     }
 break;
 case 69:
-//#line 295 ".\gramatica.y"
+//#line 299 ".\gramatica.y"
 {
                         metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
                         metodosPolaca.get(ambito).add("L" + "[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
                     }
 break;
 case 70:
-//#line 299 ".\gramatica.y"
+//#line 303 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 71:
-//#line 302 ".\gramatica.y"
+//#line 306 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 72:
-//#line 305 ".\gramatica.y"
+//#line 309 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba un END_IF y se encontro una \',\'", anLex.getLinea()));
                     }
 break;
 case 73:
-//#line 308 ".\gramatica.y"
+//#line 312 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba un END_IF y se encontro una \',\'", anLex.getLinea()));
                     }
 break;
 case 74:
-//#line 313 ".\gramatica.y"
+//#line 317 ".\gramatica.y"
 {
                 pila.push(metodosPolaca.get(ambito).size());
                 metodosPolaca.get(ambito).add("BF"); /*bifurcacion por falso;*/
             }
 break;
 case 75:
-//#line 317 ".\gramatica.y"
+//#line 321 ".\gramatica.y"
 {
                 errores.add(new Error("Falta declarar condicion del IF ubicado", anLex.getLinea()));
             }
 break;
 case 76:
-//#line 321 ".\gramatica.y"
+//#line 325 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add(pila.pop(), "[" + String.valueOf(metodosPolaca.get(ambito).size() + 3) + "]");
                 pila.push(metodosPolaca.get(ambito).size());
@@ -1226,7 +1234,7 @@ case 76:
             }
 break;
 case 77:
-//#line 327 ".\gramatica.y"
+//#line 331 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add(pila.pop(), "[" + String.valueOf(metodosPolaca.get(ambito).size() + 3) + "]");
                 pila.push(metodosPolaca.get(ambito).size());
@@ -1235,188 +1243,203 @@ case 77:
             }
 break;
 case 81:
-//#line 340 ".\gramatica.y"
+//#line 344 ".\gramatica.y"
 {
                         errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 82:
-//#line 343 ".\gramatica.y"
+//#line 347 ".\gramatica.y"
 {
                         errores.add(new Error("Bloque sin instrucciones", anLex.getLinea()));
                   }
 break;
 case 83:
-//#line 346 ".\gramatica.y"
+//#line 350 ".\gramatica.y"
 {
                         errores.add(new Error("Los delimitadores estan mal utilizados, se esperaba una \'{\'", anLex.getLinea()));
                   }
 break;
 case 86:
-//#line 355 ".\gramatica.y"
+//#line 359 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add(val_peek(1).sval);
             }
 break;
 case 87:
-//#line 358 ".\gramatica.y"
+//#line 362 ".\gramatica.y"
 {
                 errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
             }
 break;
 case 88:
-//#line 361 ".\gramatica.y"
+//#line 365 ".\gramatica.y"
 {
                 errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
             }
 break;
 case 89:
-//#line 364 ".\gramatica.y"
+//#line 368 ".\gramatica.y"
 {
                 errores.add(new Error("La comparacion tiene que estar compuesta por: Lado1, Comparador, Lado2", anLex.getLinea()));
             }
 break;
 case 90:
-//#line 369 ".\gramatica.y"
+//#line 373 ".\gramatica.y"
 {
                 yyval.sval = val_peek(0).sval;
            }
 break;
 case 91:
-//#line 372 ".\gramatica.y"
+//#line 376 ".\gramatica.y"
 {
                 yyval.sval = val_peek(0).sval;
            }
 break;
 case 92:
-//#line 375 ".\gramatica.y"
+//#line 379 ".\gramatica.y"
 {
                 yyval.sval = val_peek(0).sval;
            }
 break;
 case 93:
-//#line 378 ".\gramatica.y"
+//#line 382 ".\gramatica.y"
 {
                 yyval.sval = val_peek(0).sval;
            }
 break;
 case 94:
-//#line 381 ".\gramatica.y"
+//#line 385 ".\gramatica.y"
 {
                 yyval.sval = val_peek(0).sval;
            }
 break;
 case 95:
-//#line 384 ".\gramatica.y"
+//#line 388 ".\gramatica.y"
 {
                 yyval.sval = val_peek(0).sval;
            }
 break;
 case 96:
-//#line 387 ".\gramatica.y"
+//#line 391 ".\gramatica.y"
 {
                 errores.add(new Error("Comparacion mal definida", anLex.getLinea()));
            }
 break;
 case 97:
-//#line 392 ".\gramatica.y"
+//#line 396 ".\gramatica.y"
 {
                         metodosPolaca.get(ambito).add("[" + String.valueOf(pila.pop()) + "]");
                         metodosPolaca.get(ambito).add("BF");
                     }
 break;
 case 98:
-//#line 396 ".\gramatica.y"
+//#line 400 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 99:
-//#line 399 ".\gramatica.y"
+//#line 403 ".\gramatica.y"
 {
                         errores.add(new Error("No se declaro una condicion de corte en el WHILE que se ubica", anLex.getLinea()));
                     }
 break;
 case 100:
-//#line 404 ".\gramatica.y"
+//#line 408 ".\gramatica.y"
 {
                 pila.push(metodosPolaca.get(ambito).size());
                 metodosPolaca.get(ambito).add("L[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
              }
 break;
 case 104:
-//#line 413 ".\gramatica.y"
+//#line 417 ".\gramatica.y"
 {
                         if(!tablaSimbolos.existeMetodo(val_peek(3).sval,ambito,false)){
                                 errores.add(new Error("No se encuentra declarado el metodo " + val_peek(3).sval + " dentro del ambito reconocible", anLex.getLinea()));
                         } else {
                             String ambitoClase = tablaSimbolos.getAmbitoMetodoInvocado(val_peek(3).sval,ambito);
+                            if (val_peek(3).sval.contains(".")) {
+                                    metodosPolaca.get(ambito).add(val_peek(3).sval + ambito);    
+                                    String clase = val_peek(3).sval.substring(0,val_peek(3).sval.indexOf(".") + 1);
+                                    System.out.println(tablaSimbolos.getAtributosInstancia(clase, ambito).toString());
+                                    metodosPolaca.get(ambito).addAll(tablaSimbolos.getAtributosInstancia(clase, ambito));
+                            }
                             metodosPolaca.get(ambito).add("Call " + ambitoClase);
                         }
                     }
 break;
 case 105:
-//#line 421 ".\gramatica.y"
-{/* Chequear tipo operacion con parametro de funcion*/
+//#line 431 ".\gramatica.y"
+{ /* Chequear tipo operacion con parametro de funcion*/
                         if(!tablaSimbolos.existeMetodo(val_peek(4).sval,ambito,true)){
                                 errores.add(new Error("No se encuentra declarado el metodo " + val_peek(4).sval + " dentro del ambito reconocible", anLex.getLinea()));
                         } else {
+                            String operacion = metodosPolaca.get(ambito).get(metodosPolaca.get(ambito).size() - 1);
+                            metodosPolaca.get(ambito).remove(metodosPolaca.get(ambito).size() - 1);
                             String ambitoClase = tablaSimbolos.getAmbitoMetodoInvocado(val_peek(4).sval,ambito);
+                            if (val_peek(4).sval.contains(".")) {
+                                    metodosPolaca.get(ambito).add(val_peek(4).sval + ambito);    
+                                    String clase = val_peek(4).sval.substring(0,val_peek(4).sval.indexOf(".") + 1);
+                                    System.out.println(tablaSimbolos.getAtributosInstancia(clase, ambito).toString());
+                                    metodosPolaca.get(ambito).addAll(tablaSimbolos.getAtributosInstancia(clase, ambito));
+                            }
+                            metodosPolaca.get(ambito).add(operacion);
                             metodosPolaca.get(ambito).add("Call " + ambitoClase);
                         }
                     }
 break;
 case 106:
-//#line 429 ".\gramatica.y"
+//#line 448 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 107:
-//#line 432 ".\gramatica.y"
+//#line 451 ".\gramatica.y"
 {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
                     }
 break;
 case 108:
-//#line 437 ".\gramatica.y"
+//#line 456 ".\gramatica.y"
 {
                 yyval.sval = val_peek(0).sval;
               }
 break;
 case 109:
-//#line 440 ".\gramatica.y"
+//#line 459 ".\gramatica.y"
 {
                 yyval.sval += "." + val_peek(0).sval;
               }
 break;
 case 110:
-//#line 445 ".\gramatica.y"
+//#line 464 ".\gramatica.y"
 {
-                if(!tablaSimbolos.existeVariable(val_peek(3).sval,ambito)){
+                String direccionNombre = tablaSimbolos.existeVariable(val_peek(3).sval,ambito);
+                if(direccionNombre.equals("")){
                         errores.add(new Error("No se declaro la variable " + val_peek(3).sval + " en el ambito reconocible", anLex.getLinea()));
                 } else {
-
                         /*tablaSimbolos.agregarSimbolo($1.sval + ambito,new Token());*/
                         tablaSimbolos.setUso(val_peek(3).sval,ambito,true);
+                        metodosPolaca.get(ambito).add(direccionNombre);metodosPolaca.get(ambito).add("=");
                 }
-                metodosPolaca.get(ambito).add(val_peek(3).sval);metodosPolaca.get(ambito).add("=");
            }
 break;
 case 111:
-//#line 455 ".\gramatica.y"
+//#line 474 ".\gramatica.y"
 {
                 errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
            }
 break;
 case 112:
-//#line 458 ".\gramatica.y"
+//#line 477 ".\gramatica.y"
 {
                 errores.add(new Error("No se puede declarar y asignar en la misma línea", anLex.getLinea()));
            }
 break;
 case 113:
-//#line 464 ".\gramatica.y"
+//#line 483 ".\gramatica.y"
 {
                 if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,tipo)){
                         errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
@@ -1425,7 +1448,7 @@ case 113:
             }
 break;
 case 114:
-//#line 470 ".\gramatica.y"
+//#line 489 ".\gramatica.y"
 {
                 if(!tablaSimbolos.agregarAmbito(val_peek(0).sval,ambito,tipo)){
                         errores.add(new Error("Identificador ya usado en este ambito", anLex.getLinea()));
@@ -1434,59 +1457,65 @@ case 114:
             }
 break;
 case 116:
-//#line 479 ".\gramatica.y"
+//#line 498 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add("+");
           }
 break;
 case 117:
-//#line 482 ".\gramatica.y"
+//#line 501 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add("-");
           }
 break;
 case 119:
-//#line 488 ".\gramatica.y"
+//#line 507 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add("*");
         }
 break;
 case 120:
-//#line 491 ".\gramatica.y"
+//#line 510 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add("/");
         }
 break;
 case 123:
-//#line 498 ".\gramatica.y"
+//#line 517 ".\gramatica.y"
 {
-                if(!tablaSimbolos.existeVariable(val_peek(1).sval,ambito)){
+                String direccionNombre = tablaSimbolos.existeVariable(val_peek(1).sval,ambito);
+                if(direccionNombre.equals("")){
                         errores.add(new Error("No se declaro la variable " + val_peek(1).sval + " en el ambito reconocible", anLex.getLinea()));
+                } else {
+                    metodosPolaca.get(ambito).add(direccionNombre);
+                    metodosPolaca.get(ambito).add("TOD");
                 }
-                metodosPolaca.get(ambito).add(val_peek(1).sval);
-                metodosPolaca.get(ambito).add("TOD");
        }
 break;
 case 124:
-//#line 507 ".\gramatica.y"
+//#line 528 ".\gramatica.y"
 {
-                        if(!tablaSimbolos.existeVariable(val_peek(1).sval,ambito)){
+                        String direccionNombre = tablaSimbolos.existeVariable(val_peek(1).sval,ambito);
+                        if(direccionNombre.equals("")){
                                 errores.add(new Error("No se declaro la variable " + val_peek(1).sval + " en el ambito reconocible", anLex.getLinea()));
+                        } else {
+                            metodosPolaca.get(ambito).add(direccionNombre);metodosPolaca.get(ambito).add("1");metodosPolaca.get(ambito).add("-");{metodosPolaca.get(ambito).add(direccionNombre);metodosPolaca.get(ambito).add("=");}
                         }
-                        metodosPolaca.get(ambito).add(val_peek(1).sval);metodosPolaca.get(ambito).add("1");metodosPolaca.get(ambito).add("-");{metodosPolaca.get(ambito).add(val_peek(1).sval);metodosPolaca.get(ambito).add("=");}
                  }
 break;
 case 125:
-//#line 515 ".\gramatica.y"
+//#line 538 ".\gramatica.y"
 {
-                if(!tablaSimbolos.existeVariable(val_peek(0).sval,ambito)){
+                String direccionNombre = tablaSimbolos.existeVariable(val_peek(0).sval,ambito);
+                if(direccionNombre.equals("")){
                         errores.add(new Error("No se declaro la variable " + val_peek(0).sval + " en el ambito reconocible", anLex.getLinea()));
+                } else {
+                    metodosPolaca.get(ambito).add(direccionNombre);
                 }
-                metodosPolaca.get(ambito).add(val_peek(0).sval);
              }
 break;
 case 126:
-//#line 521 ".\gramatica.y"
+//#line 546 ".\gramatica.y"
 {
                 anLex.convertirNegativo(val_peek(0).sval);
                 tablaSimbolos.eliminarSimbolo("-" + val_peek(0).sval);
@@ -1494,13 +1523,13 @@ case 126:
              }
 break;
 case 127:
-//#line 526 ".\gramatica.y"
+//#line 551 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add(val_peek(0).sval);
              }
 break;
 case 128:
-//#line 529 ".\gramatica.y"
+//#line 554 ".\gramatica.y"
 {
                 anLex.convertirNegativo(val_peek(0).sval);
                 tablaSimbolos.eliminarSimbolo(val_peek(0).sval);
@@ -1508,7 +1537,7 @@ case 128:
              }
 break;
 case 129:
-//#line 534 ".\gramatica.y"
+//#line 559 ".\gramatica.y"
 {
                 if(CheckRangoLong(val_peek(0).sval)){
                         errores.add(new Error("LONG fuera de rango", anLex.getLinea()));}
@@ -1518,46 +1547,52 @@ case 129:
              }
 break;
 case 130:
-//#line 541 ".\gramatica.y"
+//#line 566 ".\gramatica.y"
 {
                 metodosPolaca.get(ambito).add(val_peek(0).sval);
              }
 break;
 case 131:
-//#line 544 ".\gramatica.y"
+//#line 569 ".\gramatica.y"
 {
                 errores.add(new Error("Las constantes tipo UINT no pueden ser negativas", anLex.getLinea()));
              }
 break;
 case 132:
-//#line 549 ".\gramatica.y"
+//#line 574 ".\gramatica.y"
 {
         tipo = "DOUBLE";
+        yyval.sval = null;
      }
 break;
 case 133:
-//#line 552 ".\gramatica.y"
+//#line 578 ".\gramatica.y"
 {
         tipo = "UINT";
+        yyval.sval = null;
      }
 break;
 case 134:
-//#line 555 ".\gramatica.y"
+//#line 582 ".\gramatica.y"
 {
         tipo = "LONG";
+        yyval.sval = null;
      }
 break;
 case 135:
-//#line 558 ".\gramatica.y"
+//#line 586 ".\gramatica.y"
 {
-        if(!tablaSimbolos.existeClase(val_peek(0).sval,ambito)){
-                errores.add(new Error("No se declaro la variable " + val_peek(0).sval + " en el ambito reconocible", anLex.getLinea()));
+        if(!tablaSimbolos.existeClase(val_peek(0).sval)){
+                errores.add(new Error("No se declaro la clase " + val_peek(0).sval + " en el ambito reconocible", anLex.getLinea()));
+                yyval.sval = null;
+        } else {
+                yyval.sval = val_peek(0).sval;
         }
         tipo = val_peek(0).sval;
         tablaSimbolos.eliminarSimbolo(val_peek(0).sval);
      }
 break;
-//#line 1484 "Parser.java"
+//#line 1519 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
