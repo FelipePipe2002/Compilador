@@ -1,6 +1,7 @@
 package Lexico;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import Errores.Error;
@@ -74,6 +75,39 @@ public class AnalizadorLexico{
                 this.buffer += "_l";
             } else if (token.getTipo() == TokenType.UInt){
                 this.buffer += "_ui";
+            } else if (token.getTipo() == TokenType.Cadena){
+                this.buffer = '"' + this.buffer + '"';
+            } else if (token.getTipo() == TokenType.Double){
+                if (this.buffer.contains("d") || this.buffer.contains("D")) {
+                    BigDecimal bufferValue = new BigDecimal(this.buffer.replaceAll("[dD]", "E"));
+                    String numero = bufferValue.stripTrailingZeros().toPlainString();
+                    if (!numero.contains(".")) {
+                        this.buffer = "0." + numero.replaceAll("0+\\.?$", "") + "E" + numero.length();
+                    } else {
+                        numero = numero.substring(numero.indexOf(".") + 1, numero.length());
+                        int cantCeros = 1;
+                        while (cantCeros < numero.length() && numero.charAt(cantCeros) == '0') {
+                            cantCeros += 1;
+                        }
+                        this.buffer = "0." + numero.replaceFirst("^0+", "") + "E-" + cantCeros;
+                    }
+                } else {
+                    BigDecimal bufferValue = new BigDecimal(this.buffer);
+                    String numero = bufferValue.stripTrailingZeros().toPlainString();
+                    if (numero.charAt(0) == '0') {
+                            int cantCeros = 0;
+                            numero = numero.substring(2, numero.length());
+                            while (numero.charAt(cantCeros) == '0') {
+                                cantCeros += 1;  
+                            }
+                            if (cantCeros > 0)
+                                this.buffer = "0." + numero.substring(cantCeros, numero.length()) + "E-" + cantCeros;
+                            else
+                                this.buffer = "0." + numero.substring(cantCeros, numero.length());
+                    } else {
+                        this.buffer = "0." + numero.replaceAll("0*$", "") + "E" + numero.length();
+                    }
+                }
             }
 
             if(!this.tablaSimbolos.existeSimbolo(this.buffer)){

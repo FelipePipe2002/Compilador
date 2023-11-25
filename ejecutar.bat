@@ -11,6 +11,12 @@ set "file=.\Sintactico\ParserVal.java"
   type %file%
 ) > %file%.tmp
 
+cd .\Assembler\
+rm codigo.asm
+rm codigo.obj
+rm codigo.exe
+cd ..
+
 move /y %file%.tmp %file%
 echo Compilando...
 javac .\Lexico\*.java
@@ -23,3 +29,7 @@ if errorlevel 1 (
     java .\Sintactico\Parser.java ./Code.txt
 )
 
+cd .\Assembler\
+\masm32\bin\ml /c /Zd /coff codigo.asm
+\masm32\bin\Link /SUBSYSTEM:CONSOLE codigo.obj
+.\codigo.exe

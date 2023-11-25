@@ -16,6 +16,10 @@ public class Tabla {
         tabla.put(nombre, aux);
     }
 
+    public String getTipo(String nombre){
+        return tabla.get(nombre).getTipo();
+    }
+
     public Token obtenerSimbolo(String nombre) {
         return tabla.get(nombre).getToken();
     }
@@ -80,9 +84,22 @@ public class Tabla {
         return tabla.get(nombreConAmbito).getProfundidad();
     }
 
-    public void setParametro(String ambito){
+    public void setParametro(String nombreParamentro, String ambito){
         String nombreMetodo = ambito.substring(ambito.lastIndexOf(":") + 1,ambito.length()) + ambito.substring(0, ambito.lastIndexOf(":"));
+        tabla.get(nombreParamentro + ambito).setParametro(true);
         tabla.get(nombreMetodo).setParametro(true);
+    }
+
+    public String getParametro(String ambitoMetodo){
+        for (String nombre : tabla.keySet()) {
+            if (nombre.endsWith(ambitoMetodo)) {
+                String tipo = tabla.get(nombre).getTipo();
+                if (tipo.equalsIgnoreCase("UINT") || tipo.equalsIgnoreCase("LONG") || tipo.equalsIgnoreCase("DOUBLE")) {
+                    return nombre;
+                }
+            }
+        }
+        return "Parametro invalido";
     }
 
     public boolean existeSimbolo(String nombre) {
@@ -189,17 +206,6 @@ public class Tabla {
                     String tipo = tabla.get(nombreAmbito).getTipo().toUpperCase();
                     if(!(tipo == "VOID" || tipo == "CLASS" || tipo == "INTERFACE" || tipo == "Long" || tipo == "Uint" || tipo == "Double" || tipo == "Cadena"))
                         return nombreAmbito;
-                    else{
-                        //significa que encontro una variable con el nombre que estoy buscando pero es un metodo, 
-                        //tendria que chequear que el ambito en el que estoy parado sea una clase
-                        //digamos, hacer lo mismo de abajo
-                    }
-                } else { //busco para padre, si la clase no tiene el atributo busco si el padre lo tiene antes de buscar en otros ambitos
-                    String clase = ambito.substring(ambito.lastIndexOf(":")+1,ambito.length());
-                    System.out.println(nombre + " | " + ambito + " || " + clase);
-                    if((tabla.get(clase + ":main") != null) && (tabla.get(clase + ":main").getTipo() == "CLASS")){
-                        System.out.println(clase + " - " + nombre);
-                    }
                 }
                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
             }
@@ -364,11 +370,19 @@ public class Tabla {
         return aux;
     }
 
+    public ArrayList<String> getSimbolos(){
+        ArrayList<String> aux = new ArrayList<>();
+        for (String key : tabla.keySet()) {
+            aux.add(key);
+        }
+        return aux;
+    }
+
     public void imprimirTabla() {
         System.out.println("Tabla de simbolos:");
-        System.out.println("+-----------------+---------------+------------+-------+-----------+--------------+-------+");
-        System.out.println("|     Nombre      |     Tipo      |   Ambito   |  Uso  | Implement | Padre Heren. | Nivel |");
-        System.out.println("+-----------------+---------------+------------+-------+-----------+--------------+-------+");
+        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+-------+");
+        System.out.println("|              Nombre              |     Uso       |   Ambito   | Usado | Implement | Padre Heren. | Nivel |");
+        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+-------+");
         for (String key : tabla.keySet()) {
             Atributos atributo = tabla.get(key);
             String nombre = key;
@@ -376,10 +390,13 @@ public class Tabla {
             String uso = "";
             if(!(atributo.getTipo() == "VOID" || atributo.getTipo() == "CLASS" || atributo.getTipo() == "INTERFACE" || atributo.getTipo() == "Long" || atributo.getTipo() == "Uint" || atributo.getTipo() == "Double" || atributo.getTipo() == "Cadena")){
                 if(atributo.isUso()){
-                    uso = "true";
+                    uso = "si";
                 } else {
-                    uso = "false";
+                    uso = "no";
                 }
+            }
+            if (atributo.getTipo().equals("Cadena") && key.length() > 25) {
+                key = key.substring(0,25) + "...";
             }
             if (key.contains(":")) {
                 nombre = key.substring(0, key.indexOf(":"));
@@ -393,8 +410,8 @@ public class Tabla {
             if (padreClase.contains(":")) {
                 padreClase = padreClase.substring(0, padreClase.indexOf(":"));
             }
-            System.out.printf("| %-15s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", key,atributo.getTipo(),ambito,uso,interfaz,atributo.getPadreClase(),atributo.getNivelHerencia());
+            System.out.printf("| %-32s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", key,atributo.getTipo(),ambito,uso,interfaz,atributo.getPadreClase(),atributo.getNivelHerencia());
         }
-        System.out.println("+-----------------+---------------+------------+-------+-----------+--------------+-------+");
+        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+-------+");
     }
 }

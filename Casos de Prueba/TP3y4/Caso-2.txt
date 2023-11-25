@@ -1,0 +1,14 @@
+{
+    LONG a,
+    UINT b,
+    DOUBLE c,
+    a=2_l,
+    b=3_ui,
+    *{c = b + a, falla por que son tipos distintos, borrar esto para probar}*
+    c = TOD(b) + TOD(a),
+
+    IF(c == 5.0){
+        PRINT % Se hizo la conversion de tipos%,
+    } END_IF,
+
+}

@@ -1,0 +1,18 @@
+{
+    CLASS a{
+        LONG a,
+        VOID d(){
+            a = 1_l,
+        },
+    },
+    
+    CLASS b{
+        UNIT a,
+        VOID d(){ *{el metodo se llama c pq no permite reescritura de metodos}*
+            a = 1_ui,
+        },
+        a,
+    },
+
+    *{a = 1_l viola la restriccion de alcance por que no hay ninguna a declarada en el main}*
+}

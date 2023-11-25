@@ -1,108 +1,12 @@
-{ *{:main}*
-    LONG a,
-    CLASS aa{
-        UINT a,
-        VOID b(){
-            LONG b;c,
-            DOUBLE d,
-            UINT x;y,
-            b = 1_l,
-            c = 2_l,
-            d = TOD(c) * d + 1.1,
-            x = 10_ui,
-            y = 2_ui,
-            IF (b < c) {
-                a = b / 1_l,
-            }
-            ELSE {
-                b = b + c,
-            }
-            END_IF,
-            DO { 
-                x = x + 1_ui,
-                y = y + 2_ui,
-            } WHILE (x < y),
-        },
-    },
-    INTERFACE b{
-        VOID pepe(),
-    },
-    CLASS ab IMPLEMENT b{
-        UINT a;b;d;f, 
-        VOID c(){
-            a=1_ui * 1_ui + 2_ui,
-        },
-        VOID pepe(){
-            a=2_ui,
-        },
-    },
-    
-    CLASS ac{ *{:main:ac}*
-        UINT j;w,
-        VOID a(){ *{:main:ac:c}*
-            w = 1_l,
-            j = 1_l + w,
-            a = 2_l,
-            d = 1_ui,
-            PRINT %hola mundo%,
-            VOID e(){ *{:main:ac:c:e}*
-                j =2_l,
-            },
-        },
-        ab,
-    },
-
-    CLASS ad{
-        UINT q;y,
-        LONG w,
-        VOID d(DOUBLE b){
-            a = b + q,
-            b=TOD(a),
-        },
-        ac,
-    },
-    LONG c,
-    c= 1_l,
-    VOID asd(){
-        VOID e(){
-            c = 2_l,
-            e(),
-            asd(),
-        },
-        VOID r(){
-        c = 1_l,
-        a = 2_l,
-        },
-        e(),
-        r(),
-    },
-    
-    
-    c = 1_l,
-    a = 2_l,
-
-    VOID g(){
-        c = 3_l,
-        a = 2_l,
-    },
-    ad i;j,
-    DOUBLE k,
-    k = 1.1,
-    i.q = 1_l,
-    j.q = 2_l,
-
-    i.d(2.0),
-    j.d(5_l),
-    
-    i.ac.ab.a = 5_l,
-    i.ac.ab.pepe(),
-    i.ac.w = 4_l,
-    
-    i.d(5.5),
-    i.d(2.5),
-    asd(),
-    g(),
-    i = j,
-    j = i,
-    k = i.q + 5.5,
+{ *{testeos de los temas asignados}*
+*{controlar resultados negativos en restas de enteros sin signo}*
+    UINT a,
+    *{a = 3_ui - 4_ui,}*
+*{Controlar overflow para la suma de enteros}*
+    LONG b,
+    *{b = 2147483640_l + 2147483640_l,}*
+*{Controlar overflow para el producto de punto flotante}*
+    DOUBLE c,
+    c = 1.6D+100 * 1.d+100, *{Pusimos JNO para que no salte todo el tiempo, cuando quisimos 
+                            probar con JO siempre mostraba el error aunque no haya overflow}*
 }

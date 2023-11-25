@@ -1,0 +1,65 @@
+{
+    LONG x,
+    x = 3_l,
+
+    CLASS papapepe {
+        LONG a,
+    },
+
+    CLASS pepe{
+        LONG a,
+        VOID b(){
+            a = x,
+        },
+        papapepe,
+    },
+
+    VOID a(){
+        LONG x,
+        x=1_l,
+    },
+    VOID b(){
+        VOID c(){
+            x = 2_l,
+        },
+        PRINT %metodo b de main%,
+        c(), *{herencia}*
+    },
+
+    VOID d(LONG e){
+        e = 5_l,
+        DO {
+            e--, *{testeo de operador resta inmediata}*
+            PRINT % Ejecuto while %,
+        } WHILE(e > 0_l), *{testeo de sentencia de iteracion}*
+    },
+    
+    a(),
+    PRINT %Chequeo de ambito%,
+    IF( x == 3_l){ *{testeo de sentencia de seleccion}*
+        PRINT % el llamado a a anterior modifico x de su ambito %,
+    } END_IF,
+
+    b(),
+    IF( x == 2_l){
+        PRINT % el llamado a b anterior modifico x de main %,
+    } END_IF,
+
+    d(x),
+    IF( x == 2_l){
+        PRINT % como el el pasaje de parametros es por copia no altero el valor de x en el main %,
+    } END_IF,
+
+    pepe i,
+    i.b(),
+    IF(i.a == x){ *{testeo de herencia}*
+        PRINT % la variable i de tipo pepe copio el valor de x de main %,
+    } END_IF,
+
+    DOUBLE w,
+    w = TOD(x),
+    IF(TOD(x) == TOD(2_ui)){
+        PRINT % conversiones explicitas %,
+    } END_IF,    
+
+}

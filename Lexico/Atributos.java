@@ -5,7 +5,7 @@ package Lexico;
 public class Atributos {
     private Token token;
     private String tipo;
-    private boolean uso;
+    private boolean uso; //clase, metodo, parametro, identificador, const
     private String interfaz;
     private String padreClase;
     private int nivel;
