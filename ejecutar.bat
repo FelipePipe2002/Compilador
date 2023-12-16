@@ -12,9 +12,9 @@ set "file=.\Sintactico\ParserVal.java"
 ) > %file%.tmp
 
 cd .\Assembler\
-rm codigo.asm
-rm codigo.obj
-rm codigo.exe
+rm *.asm
+rm *.obj
+rm *.exe
 cd ..
 
 move /y %file%.tmp %file%
@@ -30,6 +30,6 @@ if errorlevel 1 (
 )
 
 cd .\Assembler\
-\masm32\bin\ml /c /Zd /coff codigo.asm
-\masm32\bin\Link /SUBSYSTEM:CONSOLE codigo.obj
-.\codigo.exe
+\masm32\bin\ml /c /Zd /coff Code.asm
+\masm32\bin\Link /SUBSYSTEM:CONSOLE Code.obj
+.\Code.exe

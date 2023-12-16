@@ -1,12 +1,38 @@
-{ *{testeos de los temas asignados}*
-*{controlar resultados negativos en restas de enteros sin signo}*
-    UINT a,
-    *{a = 3_ui - 4_ui,}*
-*{Controlar overflow para la suma de enteros}*
-    LONG b,
-    *{b = 2147483640_l + 2147483640_l,}*
-*{Controlar overflow para el producto de punto flotante}*
-    DOUBLE c,
-    c = 1.6D+100 * 1.d+100, *{Pusimos JNO para que no salte todo el tiempo, cuando quisimos 
-                            probar con JO siempre mostraba el error aunque no haya overflow}*
+{
+    CLASS a {
+        DOUBLE x; y; z,
+        VOID f1 (UINT h) {
+            h = 4_ui,
+        },
+    },
+
+    INTERFACE c {
+        VOID f4 (UINT s),
+        VOID f5 (DOUBLE d),
+        VOID f6 (LONG u),
+        VOID f7 (),
+    },
+
+	
+
+    CLASS b IMPLEMENT c {
+        a r; t,
+        VOID f5 () {
+			UINT a,
+			a = 3_ui,
+        },
+        VOID f4 (UINT s) {
+            s = 2_ui,
+        },
+		VOID f6 (LONG u) {
+            u = -1_l,
+        },
+		VOID f7 () {
+            DOUBLE d,
+			d = -1.5,
+        },
+    },
+
+	
+
 }

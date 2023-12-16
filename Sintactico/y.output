@@ -136,7 +136,7 @@
  102  inicio_do : DO
 
  103  sentencia_expresion : declaracion_variable
- 104                      | factor_inmediato
+ 104                      | factor_inmediato ','
  105                      | asignacion
  106                      | llamado_clase '(' ')' ','
  107                      | llamado_clase '(' operacion ')' ','
@@ -165,7 +165,7 @@
  124         | factor_inmediato
  125         | TOD '(' operacion ')'
 
- 126  factor_inmediato : llamado_clase "--" ','
+ 126  factor_inmediato : llamado_clase "--"
 
  127  factor_comun : llamado_clase
  128               | '-' CTE_DOUBLE
@@ -552,9 +552,10 @@ state 30
 
 
 state 31
-	sentencia_expresion : factor_inmediato .  (104)
+	sentencia_expresion : factor_inmediato . ','  (104)
 
-	.  reduce 104
+	','  shift 65
+	.  error
 
 
 state 32
@@ -571,12 +572,12 @@ state 33
 	llamado_clase : llamado_clase . '.' ID  (111)
 	asignacion : llamado_clase . '=' operacion ','  (112)
 	asignacion : llamado_clase . '=' operacion ';'  (113)
-	factor_inmediato : llamado_clase . "--" ','  (126)
+	factor_inmediato : llamado_clase . "--"  (126)
 
-	'('  shift 65
-	'.'  shift 66
-	'='  shift 67
-	"--"  shift 68
+	'('  shift 66
+	'.'  shift 67
+	'='  shift 68
+	"--"  shift 69
 	.  error
 
 
@@ -584,38 +585,38 @@ state 34
 	condicion_if : IF '(' . comparacion ')'  (76)
 	condicion_if : IF '(' . ')'  (77)
 
-	error  shift 69
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	')'  shift 75
-	'<'  shift 76
-	'>'  shift 77
-	"<="  shift 78
-	">="  shift 79
-	"=="  shift 80
-	"!!"  shift 81
-	'-'  shift 82
+	error  shift 70
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	')'  shift 76
+	'<'  shift 77
+	'>'  shift 78
+	"<="  shift 79
+	">="  shift 80
+	"=="  shift 81
+	"!!"  shift 82
+	'-'  shift 83
 	.  error
 
-	comparacion  goto 83
-	operacion  goto 84
-	comparador  goto 85
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
+	comparacion  goto 84
+	operacion  goto 85
+	comparador  goto 86
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 35
 	sentencia_imprimir : PRINT CADENA . ','  (68)
 	sentencia_imprimir : PRINT CADENA . ';'  (69)
 
-	','  shift 91
-	';'  shift 92
+	','  shift 92
+	';'  shift 93
 	.  error
 
 
@@ -666,7 +667,7 @@ state 41
 	INTERFACE  shift 9
 	RETURN  shift 10
 	ID  shift 11
-	'}'  shift 93
+	'}'  shift 94
 	$end  reduce 2
 
 	declaracion  goto 43
@@ -712,7 +713,7 @@ state 45
 	declaracion_clase : encabezado_clase IMPLEMENT . ID bloque_clase ','  (12)
 	declaracion_clase : encabezado_clase IMPLEMENT . ID bloque_clase ';'  (15)
 
-	ID  shift 94
+	ID  shift 95
 	.  error
 
 
@@ -726,15 +727,15 @@ state 46
 	UINT  shift 6
 	DOUBLE  shift 7
 	ID  shift 52
-	'}'  shift 95
+	'}'  shift 96
 	.  error
 
-	declaracion_funcion  goto 96
-	cuerpo_clase  goto 97
-	miembro_clase  goto 98
-	declaracion_variable  goto 99
+	declaracion_funcion  goto 97
+	cuerpo_clase  goto 98
+	miembro_clase  goto 99
+	declaracion_variable  goto 100
 	encabezado_funcion  goto 22
-	tipo  goto 100
+	tipo  goto 101
 
 
 state 47
@@ -746,23 +747,23 @@ state 47
 	UINT  shift 6
 	DOUBLE  shift 7
 	ID  shift 52
-	')'  shift 101
+	')'  shift 102
 	.  error
 
-	declaracion_funcion  goto 96
-	cuerpo_clase  goto 102
-	miembro_clase  goto 98
-	declaracion_variable  goto 99
+	declaracion_funcion  goto 97
+	cuerpo_clase  goto 103
+	miembro_clase  goto 99
+	declaracion_variable  goto 100
 	encabezado_funcion  goto 22
-	tipo  goto 100
+	tipo  goto 101
 
 
 state 48
 	declaracion_clase : encabezado_clase bloque_clase . ','  (11)
 	declaracion_clase : encabezado_clase bloque_clase . ';'  (14)
 
-	','  shift 103
-	';'  shift 104
+	','  shift 104
+	';'  shift 105
 	.  error
 
 
@@ -771,13 +772,13 @@ state 49
 	bloque_interfaz : '{' . '}'  (27)
 
 	VOID  shift 4
-	'}'  shift 105
+	'}'  shift 106
 	.  error
 
-	declaracion_funcion  goto 106
-	cuerpo_interfaz  goto 107
-	declaracion_funcion_interfaz  goto 108
-	encabezado_funcion  goto 109
+	declaracion_funcion  goto 107
+	cuerpo_interfaz  goto 108
+	declaracion_funcion_interfaz  goto 109
+	encabezado_funcion  goto 110
 
 
 state 50
@@ -785,21 +786,21 @@ state 50
 	bloque_interfaz : '(' . ')'  (28)
 
 	VOID  shift 4
-	')'  shift 110
+	')'  shift 111
 	.  error
 
-	declaracion_funcion  goto 106
-	cuerpo_interfaz  goto 111
-	declaracion_funcion_interfaz  goto 108
-	encabezado_funcion  goto 109
+	declaracion_funcion  goto 107
+	cuerpo_interfaz  goto 112
+	declaracion_funcion_interfaz  goto 109
+	encabezado_funcion  goto 110
 
 
 state 51
 	declaracion_clase : encabezado_interface bloque_interfaz . ','  (13)
 	declaracion_clase : encabezado_interface bloque_interfaz . ';'  (16)
 
-	','  shift 112
-	';'  shift 113
+	','  shift 113
+	';'  shift 114
 	.  error
 
 
@@ -820,27 +821,27 @@ state 53
 	UINT  shift 6
 	DOUBLE  shift 7
 	ID  shift 52
-	')'  shift 114
+	')'  shift 115
 	.  error
 
-	parametro_formal  goto 115
+	parametro_formal  goto 116
 	tipo  goto 55
 
 
 state 54
 	declaracion_funcion : encabezado_funcion parametro_formal . bloque_sentencias_funcion ','  (47)
 
-	'{'  shift 116
-	'('  shift 117
+	'{'  shift 117
+	'('  shift 118
 	.  error
 
-	bloque_sentencias_funcion  goto 118
+	bloque_sentencias_funcion  goto 119
 
 
 state 55
 	parametro_formal : tipo . ID  (52)
 
-	ID  shift 119
+	ID  shift 120
 	.  error
 
 
@@ -858,8 +859,8 @@ state 57
 	declaracion_variable : tipo lista_de_id . ','  (44)
 	lista_de_id : lista_de_id . ';' ID  (115)
 
-	','  shift 120
-	';'  shift 121
+	','  shift 121
+	';'  shift 122
 	.  error
 
 
@@ -867,8 +868,8 @@ state 58
 	llamado_clase : llamado_clase . '.' ID  (111)
 	asignacion : tipo llamado_clase . '=' operacion ','  (114)
 
-	'.'  shift 66
-	'='  shift 122
+	'.'  shift 67
+	'='  shift 123
 	.  error
 
 
@@ -884,10 +885,10 @@ state 59
 	DO  shift 8
 	RETURN  shift 10
 	ID  shift 11
-	'}'  shift 123
+	'}'  shift 124
 	.  error
 
-	sentencia  goto 124
+	sentencia  goto 125
 	declaracion_variable  goto 21
 	tipo  goto 23
 	sentencia_expresion  goto 24
@@ -896,7 +897,7 @@ state 59
 	sentencia_imprimir  goto 27
 	sentencia_retorno  goto 28
 	condicion_if  goto 29
-	lista_sentencias  goto 125
+	lista_sentencias  goto 126
 	inicio_do  goto 30
 	factor_inmediato  goto 31
 	asignacion  goto 32
@@ -915,10 +916,10 @@ state 60
 	DO  shift 8
 	RETURN  shift 10
 	ID  shift 11
-	')'  shift 126
+	')'  shift 127
 	.  error
 
-	sentencia  goto 124
+	sentencia  goto 125
 	declaracion_variable  goto 21
 	tipo  goto 23
 	sentencia_expresion  goto 24
@@ -927,7 +928,7 @@ state 60
 	sentencia_imprimir  goto 27
 	sentencia_retorno  goto 28
 	condicion_if  goto 29
-	lista_sentencias  goto 127
+	lista_sentencias  goto 128
 	inicio_do  goto 30
 	factor_inmediato  goto 31
 	asignacion  goto 32
@@ -948,12 +949,12 @@ state 62
 	sentencia_seleccion : condicion_if cuerpo_then . ','  (74)
 	sentencia_seleccion : condicion_if cuerpo_then . cuerpo_else ','  (75)
 
-	ELSE  shift 128
-	END_IF  shift 129
-	','  shift 130
+	ELSE  shift 129
+	END_IF  shift 130
+	','  shift 131
 	.  error
 
-	cuerpo_else  goto 131
+	cuerpo_else  goto 132
 
 
 state 63
@@ -967,147 +968,152 @@ state 64
 	sentencia_iteracion : inicio_do bloque_sentencias . WHILE '(' comparacion ')' ';'  (100)
 	sentencia_iteracion : inicio_do bloque_sentencias . WHILE '(' ')' ','  (101)
 
-	WHILE  shift 132
+	WHILE  shift 133
 	.  error
 
 
 state 65
+	sentencia_expresion : factor_inmediato ',' .  (104)
+
+	.  reduce 104
+
+
+state 66
 	sentencia_expresion : llamado_clase '(' . ')' ','  (106)
 	sentencia_expresion : llamado_clase '(' . operacion ')' ','  (107)
 	sentencia_expresion : llamado_clase '(' . ')' ';'  (108)
 	sentencia_expresion : llamado_clase '(' . operacion ')' ';'  (109)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	')'  shift 133
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	')'  shift 134
+	'-'  shift 83
 	.  error
 
-	operacion  goto 134
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
-
-
-state 66
-	llamado_clase : llamado_clase '.' . ID  (111)
-
-	ID  shift 135
-	.  error
+	operacion  goto 135
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 67
-	asignacion : llamado_clase '=' . operacion ','  (112)
-	asignacion : llamado_clase '=' . operacion ';'  (113)
+	llamado_clase : llamado_clase '.' . ID  (111)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	ID  shift 136
 	.  error
-
-	operacion  goto 136
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
 
 
 state 68
-	factor_inmediato : llamado_clase "--" . ','  (126)
+	asignacion : llamado_clase '=' . operacion ','  (112)
+	asignacion : llamado_clase '=' . operacion ';'  (113)
 
-	','  shift 137
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	.  error
+
+	operacion  goto 137
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 69
+	factor_inmediato : llamado_clase "--" .  (126)
+
+	.  reduce 126
+
+
+state 70
 	comparador : error .  (98)
 
 	.  reduce 98
 
 
-state 70
+state 71
 	factor : TOD . '(' operacion ')'  (125)
 
 	'('  shift 138
 	.  error
 
 
-state 71
+state 72
 	llamado_clase : ID .  (110)
 
 	.  reduce 110
 
 
-state 72
+state 73
 	factor_comun : CTE_LONG .  (131)
 
 	.  reduce 131
 
 
-state 73
+state 74
 	factor_comun : CTE_UINT .  (132)
 
 	.  reduce 132
 
 
-state 74
+state 75
 	factor_comun : CTE_DOUBLE .  (129)
 
 	.  reduce 129
 
 
-state 75
+state 76
 	condicion_if : IF '(' ')' .  (77)
 
 	.  reduce 77
 
 
-state 76
+state 77
 	comparador : '<' .  (92)
 
 	.  reduce 92
 
 
-state 77
+state 78
 	comparador : '>' .  (93)
 
 	.  reduce 93
 
 
-state 78
+state 79
 	comparador : "<=" .  (94)
 
 	.  reduce 94
 
 
-state 79
+state 80
 	comparador : ">=" .  (95)
 
 	.  reduce 95
 
 
-state 80
+state 81
 	comparador : "==" .  (96)
 
 	.  reduce 96
 
 
-state 81
+state 82
 	comparador : "!!" .  (97)
 
 	.  reduce 97
 
 
-state 82
+state 83
 	factor_comun : '-' . CTE_DOUBLE  (128)
 	factor_comun : '-' . CTE_LONG  (130)
 	factor_comun : '-' . CTE_UINT  (133)
@@ -1118,26 +1124,26 @@ state 82
 	.  error
 
 
-state 83
+state 84
 	condicion_if : IF '(' comparacion . ')'  (76)
 
 	')'  shift 142
 	.  error
 
 
-state 84
+state 85
 	comparacion : operacion . comparador operacion  (88)
 	comparacion : operacion . comparador  (89)
 	operacion : operacion . '+' termino  (118)
 	operacion : operacion . '-' termino  (119)
 
-	error  shift 69
-	'<'  shift 76
-	'>'  shift 77
-	"<="  shift 78
-	">="  shift 79
-	"=="  shift 80
-	"!!"  shift 81
+	error  shift 70
+	'<'  shift 77
+	'>'  shift 78
+	"<="  shift 79
+	">="  shift 80
+	"=="  shift 81
+	"!!"  shift 82
 	'+'  shift 143
 	'-'  shift 144
 	.  error
@@ -1145,39 +1151,39 @@ state 84
 	comparador  goto 145
 
 
-state 85
+state 86
 	comparacion : comparador . operacion  (90)
 	comparacion : comparador .  (91)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	')'  reduce 91
 
 	operacion  goto 146
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
-state 86
+state 87
 	factor : factor_inmediato .  (124)
 
 	.  reduce 124
 
 
-state 87
+state 88
 	llamado_clase : llamado_clase . '.' ID  (111)
-	factor_inmediato : llamado_clase . "--" ','  (126)
+	factor_inmediato : llamado_clase . "--"  (126)
 	factor_comun : llamado_clase .  (127)
 
-	'.'  shift 66
-	"--"  shift 68
+	'.'  shift 67
+	"--"  shift 69
 	error  reduce 127
 	','  reduce 127
 	';'  reduce 127
@@ -1194,7 +1200,7 @@ state 87
 	'/'  reduce 127
 
 
-state 88
+state 89
 	operacion : termino .  (117)
 	termino : termino . '*' factor  (121)
 	termino : termino . '/' factor  (122)
@@ -1215,37 +1221,37 @@ state 88
 	'-'  reduce 117
 
 
-state 89
+state 90
 	termino : factor .  (120)
 
 	.  reduce 120
 
 
-state 90
+state 91
 	factor : factor_comun .  (123)
 
 	.  reduce 123
 
 
-state 91
+state 92
 	sentencia_imprimir : PRINT CADENA ',' .  (68)
 
 	.  reduce 68
 
 
-state 92
+state 93
 	sentencia_imprimir : PRINT CADENA ';' .  (69)
 
 	.  reduce 69
 
 
-state 93
+state 94
 	programa : '{' componentes_programa '}' .  (1)
 
 	.  reduce 1
 
 
-state 94
+state 95
 	declaracion_clase : encabezado_clase IMPLEMENT ID . bloque_clase ','  (12)
 	declaracion_clase : encabezado_clase IMPLEMENT ID . bloque_clase ';'  (15)
 
@@ -1256,19 +1262,19 @@ state 94
 	bloque_clase  goto 149
 
 
-state 95
+state 96
 	bloque_clase : '{' '}' .  (22)
 
 	.  reduce 22
 
 
-state 96
+state 97
 	miembro_clase : declaracion_funcion .  (32)
 
 	.  reduce 32
 
 
-state 97
+state 98
 	bloque_clase : '{' cuerpo_clase . '}'  (19)
 	bloque_clase : '{' cuerpo_clase . herencia_clase '}'  (20)
 	cuerpo_clase : cuerpo_clase . miembro_clase  (30)
@@ -1281,27 +1287,27 @@ state 97
 	'}'  shift 151
 	.  error
 
-	declaracion_funcion  goto 96
+	declaracion_funcion  goto 97
 	herencia_clase  goto 152
 	miembro_clase  goto 153
-	declaracion_variable  goto 99
+	declaracion_variable  goto 100
 	encabezado_funcion  goto 22
-	tipo  goto 100
+	tipo  goto 101
 
 
-state 98
+state 99
 	cuerpo_clase : miembro_clase .  (29)
 
 	.  reduce 29
 
 
-state 99
+state 100
 	miembro_clase : declaracion_variable .  (31)
 
 	.  reduce 31
 
 
-state 100
+state 101
 	declaracion_variable : tipo . lista_de_id ','  (44)
 
 	ID  shift 154
@@ -1310,13 +1316,13 @@ state 100
 	lista_de_id  goto 57
 
 
-state 101
+state 102
 	bloque_clase : '(' ')' .  (23)
 
 	.  reduce 23
 
 
-state 102
+state 103
 	bloque_clase : '(' cuerpo_clase . ')'  (21)
 	cuerpo_clase : cuerpo_clase . miembro_clase  (30)
 
@@ -1328,38 +1334,38 @@ state 102
 	')'  shift 155
 	.  error
 
-	declaracion_funcion  goto 96
+	declaracion_funcion  goto 97
 	miembro_clase  goto 153
-	declaracion_variable  goto 99
+	declaracion_variable  goto 100
 	encabezado_funcion  goto 22
-	tipo  goto 100
+	tipo  goto 101
 
 
-state 103
+state 104
 	declaracion_clase : encabezado_clase bloque_clase ',' .  (11)
 
 	.  reduce 11
 
 
-state 104
+state 105
 	declaracion_clase : encabezado_clase bloque_clase ';' .  (14)
 
 	.  reduce 14
 
 
-state 105
+state 106
 	bloque_interfaz : '{' '}' .  (27)
 
 	.  reduce 27
 
 
-state 106
+state 107
 	cuerpo_interfaz : declaracion_funcion .  (35)
 
 	.  reduce 35
 
 
-state 107
+state 108
 	bloque_interfaz : '{' cuerpo_interfaz . '}'  (25)
 	cuerpo_interfaz : cuerpo_interfaz . declaracion_funcion_interfaz  (34)
 	cuerpo_interfaz : cuerpo_interfaz . declaracion_funcion  (36)
@@ -1370,16 +1376,16 @@ state 107
 
 	declaracion_funcion  goto 157
 	declaracion_funcion_interfaz  goto 158
-	encabezado_funcion  goto 109
+	encabezado_funcion  goto 110
 
 
-state 108
+state 109
 	cuerpo_interfaz : declaracion_funcion_interfaz .  (33)
 
 	.  reduce 33
 
 
-state 109
+state 110
 	declaracion_funcion_interfaz : encabezado_funcion . '(' ')' ','  (37)
 	declaracion_funcion_interfaz : encabezado_funcion . '(' parametro_formal ')' ','  (38)
 	declaracion_funcion_interfaz : encabezado_funcion . '(' ')' ';'  (39)
@@ -1406,13 +1412,13 @@ state 109
 	tipo  goto 55
 
 
-state 110
+state 111
 	bloque_interfaz : '(' ')' .  (28)
 
 	.  reduce 28
 
 
-state 111
+state 112
 	bloque_interfaz : '(' cuerpo_interfaz . ')'  (26)
 	cuerpo_interfaz : cuerpo_interfaz . declaracion_funcion_interfaz  (34)
 	cuerpo_interfaz : cuerpo_interfaz . declaracion_funcion  (36)
@@ -1423,46 +1429,46 @@ state 111
 
 	declaracion_funcion  goto 157
 	declaracion_funcion_interfaz  goto 158
-	encabezado_funcion  goto 109
+	encabezado_funcion  goto 110
 
 
-state 112
+state 113
 	declaracion_clase : encabezado_interface bloque_interfaz ',' .  (13)
 
 	.  reduce 13
 
 
-state 113
+state 114
 	declaracion_clase : encabezado_interface bloque_interfaz ';' .  (16)
 
 	.  reduce 16
 
 
-state 114
+state 115
 	declaracion_funcion : encabezado_funcion '(' ')' . bloque_sentencias_funcion ','  (45)
 	declaracion_funcion : encabezado_funcion '(' ')' . bloque_sentencias_funcion  (49)
 
-	'{'  shift 116
-	'('  shift 117
+	'{'  shift 117
+	'('  shift 118
 	.  error
 
 	bloque_sentencias_funcion  goto 163
 
 
-state 115
+state 116
 	declaracion_funcion : encabezado_funcion '(' parametro_formal . ')' bloque_sentencias_funcion ','  (46)
 	declaracion_funcion : encabezado_funcion '(' parametro_formal . bloque_sentencias_funcion ','  (48)
 	declaracion_funcion : encabezado_funcion '(' parametro_formal . ')' bloque_sentencias_funcion  (50)
 
-	'{'  shift 116
-	'('  shift 117
+	'{'  shift 117
+	'('  shift 118
 	')'  shift 164
 	.  error
 
 	bloque_sentencias_funcion  goto 165
 
 
-state 116
+state 117
 	bloque_sentencias_funcion : '{' . lista_sentencias_funcion '}'  (53)
 	bloque_sentencias_funcion : '{' . '}'  (55)
 
@@ -1497,7 +1503,7 @@ state 116
 	llamado_clase  goto 33
 
 
-state 117
+state 118
 	bloque_sentencias_funcion : '(' . lista_sentencias_funcion ')'  (54)
 	bloque_sentencias_funcion : '(' . ')'  (56)
 
@@ -1532,64 +1538,64 @@ state 117
 	llamado_clase  goto 33
 
 
-state 118
+state 119
 	declaracion_funcion : encabezado_funcion parametro_formal bloque_sentencias_funcion . ','  (47)
 
 	','  shift 173
 	.  error
 
 
-state 119
+state 120
 	parametro_formal : tipo ID .  (52)
 
 	.  reduce 52
 
 
-state 120
+state 121
 	declaracion_variable : tipo lista_de_id ',' .  (44)
 
 	.  reduce 44
 
 
-state 121
+state 122
 	lista_de_id : lista_de_id ';' . ID  (115)
 
 	ID  shift 174
 	.  error
 
 
-state 122
+state 123
 	asignacion : tipo llamado_clase '=' . operacion ','  (114)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	.  error
 
 	operacion  goto 175
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
-state 123
+state 124
 	bloque_sentencias : '{' '}' .  (84)
 
 	.  reduce 84
 
 
-state 124
+state 125
 	lista_sentencias : sentencia .  (86)
 
 	.  reduce 86
 
 
-state 125
+state 126
 	bloque_sentencias : '{' lista_sentencias . '}'  (82)
 	lista_sentencias : lista_sentencias . sentencia  (87)
 
@@ -1619,13 +1625,13 @@ state 125
 	llamado_clase  goto 33
 
 
-state 126
+state 127
 	bloque_sentencias : '(' ')' .  (85)
 
 	.  reduce 85
 
 
-state 127
+state 128
 	bloque_sentencias : '(' lista_sentencias . ')'  (83)
 	lista_sentencias : lista_sentencias . sentencia  (87)
 
@@ -1655,7 +1661,7 @@ state 127
 	llamado_clase  goto 33
 
 
-state 128
+state 129
 	cuerpo_else : ELSE . sentencia  (80)
 	cuerpo_else : ELSE . bloque_sentencias  (81)
 
@@ -1687,7 +1693,7 @@ state 128
 	llamado_clase  goto 33
 
 
-state 129
+state 130
 	sentencia_seleccion : condicion_if cuerpo_then END_IF . ','  (70)
 	sentencia_seleccion : condicion_if cuerpo_then END_IF . ';'  (72)
 
@@ -1696,13 +1702,13 @@ state 129
 	.  error
 
 
-state 130
+state 131
 	sentencia_seleccion : condicion_if cuerpo_then ',' .  (74)
 
 	.  reduce 74
 
 
-state 131
+state 132
 	sentencia_seleccion : condicion_if cuerpo_then cuerpo_else . END_IF ','  (71)
 	sentencia_seleccion : condicion_if cuerpo_then cuerpo_else . END_IF ';'  (73)
 	sentencia_seleccion : condicion_if cuerpo_then cuerpo_else . ','  (75)
@@ -1712,7 +1718,7 @@ state 131
 	.  error
 
 
-state 132
+state 133
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE . '(' comparacion ')' ','  (99)
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE . '(' comparacion ')' ';'  (100)
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE . '(' ')' ','  (101)
@@ -1721,7 +1727,7 @@ state 132
 	.  error
 
 
-state 133
+state 134
 	sentencia_expresion : llamado_clase '(' ')' . ','  (106)
 	sentencia_expresion : llamado_clase '(' ')' . ';'  (108)
 
@@ -1730,7 +1736,7 @@ state 133
 	.  error
 
 
-state 134
+state 135
 	sentencia_expresion : llamado_clase '(' operacion . ')' ','  (107)
 	sentencia_expresion : llamado_clase '(' operacion . ')' ';'  (109)
 	operacion : operacion . '+' termino  (118)
@@ -1742,13 +1748,13 @@ state 134
 	.  error
 
 
-state 135
+state 136
 	llamado_clase : llamado_clase '.' ID .  (111)
 
 	.  reduce 111
 
 
-state 136
+state 137
 	asignacion : llamado_clase '=' operacion . ','  (112)
 	asignacion : llamado_clase '=' operacion . ';'  (113)
 	operacion : operacion . '+' termino  (118)
@@ -1761,29 +1767,23 @@ state 136
 	.  error
 
 
-state 137
-	factor_inmediato : llamado_clase "--" ',' .  (126)
-
-	.  reduce 126
-
-
 state 138
 	factor : TOD '(' . operacion ')'  (125)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	.  error
 
 	operacion  goto 191
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 139
@@ -1813,57 +1813,57 @@ state 142
 state 143
 	operacion : operacion '+' . termino  (118)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	.  error
 
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
 	termino  goto 192
-	factor  goto 89
-	factor_comun  goto 90
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 144
 	operacion : operacion '-' . termino  (119)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	.  error
 
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
 	termino  goto 193
-	factor  goto 89
-	factor_comun  goto 90
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 145
 	comparacion : operacion comparador . operacion  (88)
 	comparacion : operacion comparador .  (89)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	')'  reduce 89
 
 	operacion  goto 194
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 146
@@ -1879,35 +1879,35 @@ state 146
 state 147
 	termino : termino '*' . factor  (121)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	.  error
 
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
 	factor  goto 195
-	factor_comun  goto 90
+	factor_comun  goto 91
 
 
 state 148
 	termino : termino '/' . factor  (122)
 
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
-	'-'  shift 82
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
+	'-'  shift 83
 	.  error
 
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
 	factor  goto 196
-	factor_comun  goto 90
+	factor_comun  goto 91
 
 
 state 149
@@ -2009,13 +2009,13 @@ state 161
 	declaracion_funcion_interfaz : encabezado_funcion parametro_formal . ';'  (43)
 	declaracion_funcion : encabezado_funcion parametro_formal . bloque_sentencias_funcion ','  (47)
 
-	'{'  shift 116
+	'{'  shift 117
 	','  shift 203
 	';'  shift 204
-	'('  shift 117
+	'('  shift 118
 	.  error
 
-	bloque_sentencias_funcion  goto 118
+	bloque_sentencias_funcion  goto 119
 
 
 state 162
@@ -2049,8 +2049,8 @@ state 164
 	declaracion_funcion : encabezado_funcion '(' parametro_formal ')' . bloque_sentencias_funcion ','  (46)
 	declaracion_funcion : encabezado_funcion '(' parametro_formal ')' . bloque_sentencias_funcion  (50)
 
-	'{'  shift 116
-	'('  shift 117
+	'{'  shift 117
+	'('  shift 118
 	.  error
 
 	bloque_sentencias_funcion  goto 206
@@ -2246,30 +2246,30 @@ state 185
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' . comparacion ')' ';'  (100)
 	sentencia_iteracion : inicio_do bloque_sentencias WHILE '(' . ')' ','  (101)
 
-	error  shift 69
-	TOD  shift 70
-	ID  shift 71
-	CTE_LONG  shift 72
-	CTE_UINT  shift 73
-	CTE_DOUBLE  shift 74
+	error  shift 70
+	TOD  shift 71
+	ID  shift 72
+	CTE_LONG  shift 73
+	CTE_UINT  shift 74
+	CTE_DOUBLE  shift 75
 	')'  shift 214
-	'<'  shift 76
-	'>'  shift 77
-	"<="  shift 78
-	">="  shift 79
-	"=="  shift 80
-	"!!"  shift 81
-	'-'  shift 82
+	'<'  shift 77
+	'>'  shift 78
+	"<="  shift 79
+	">="  shift 80
+	"=="  shift 81
+	"!!"  shift 82
+	'-'  shift 83
 	.  error
 
 	comparacion  goto 215
-	operacion  goto 84
-	comparador  goto 85
-	factor_inmediato  goto 86
-	llamado_clase  goto 87
-	termino  goto 88
-	factor  goto 89
-	factor_comun  goto 90
+	operacion  goto 85
+	comparador  goto 86
+	factor_inmediato  goto 87
+	llamado_clase  goto 88
+	termino  goto 89
+	factor  goto 90
+	factor_comun  goto 91
 
 
 state 186
@@ -2410,10 +2410,10 @@ state 201
 	declaracion_funcion : encabezado_funcion '(' ')' . bloque_sentencias_funcion ','  (45)
 	declaracion_funcion : encabezado_funcion '(' ')' . bloque_sentencias_funcion  (49)
 
-	'{'  shift 116
+	'{'  shift 117
 	','  shift 219
 	';'  shift 220
-	'('  shift 117
+	'('  shift 118
 	.  error
 
 	bloque_sentencias_funcion  goto 163
@@ -2426,8 +2426,8 @@ state 202
 	declaracion_funcion : encabezado_funcion '(' parametro_formal . bloque_sentencias_funcion ','  (48)
 	declaracion_funcion : encabezado_funcion '(' parametro_formal . ')' bloque_sentencias_funcion  (50)
 
-	'{'  shift 116
-	'('  shift 117
+	'{'  shift 117
+	'('  shift 118
 	')'  shift 221
 	.  error
 
@@ -2566,10 +2566,10 @@ state 221
 	declaracion_funcion : encabezado_funcion '(' parametro_formal ')' . bloque_sentencias_funcion ','  (46)
 	declaracion_funcion : encabezado_funcion '(' parametro_formal ')' . bloque_sentencias_funcion  (50)
 
-	'{'  shift 116
+	'{'  shift 117
 	','  shift 225
 	';'  shift 226
-	'('  shift 117
+	'('  shift 118
 	.  error
 
 	bloque_sentencias_funcion  goto 206

@@ -428,12 +428,15 @@ inicio_do : DO {
              ;
 
 sentencia_expresion : declaracion_variable
-                    | factor_inmediato
+                    | factor_inmediato ',' { 
+                        if(!$1.sval.equals("")){
+                            metodosPolaca.get(ambito).add($1.sval);
+                            metodosPolaca.get(ambito).add("=");
+                        }
+                    }
                     | asignacion 
                     | llamado_clase '(' ')' ',' {
-                        if(!tablaSimbolos.existeMetodo($1.sval,ambito,false)){
-                                errores.add(new Error("No se encuentra declarado el metodo " + $1.sval + " dentro del ambito reconocible", anLex.getLinea()));
-                        } else {
+                        if(tablaSimbolos.existeMetodo($1.sval,ambito,false)){
                             String ambitoMetodo = tablaSimbolos.getAmbitoMetodoInvocado($1.sval,ambito);
                             if ($1.sval.contains(".")) {
                                     String clase = $1.sval.substring(0,$1.sval.indexOf(".") + 1);
@@ -443,9 +446,7 @@ sentencia_expresion : declaracion_variable
                         }
                     }
                     | llamado_clase '(' operacion ')' ','  { // Chequear tipo operacion con parametro de funcion
-                        if(!tablaSimbolos.existeMetodo($1.sval,ambito,true)){
-                                errores.add(new Error("No se encuentra declarado el metodo " + $1.sval + " dentro del ambito reconocible", anLex.getLinea()));
-                        } else {
+                        if(tablaSimbolos.existeMetodo($1.sval,ambito,true)){
                             String operacion = metodosPolaca.get(ambito).get(metodosPolaca.get(ambito).size() - 1);
                             metodosPolaca.get(ambito).remove(metodosPolaca.get(ambito).size() - 1);
                             String ambitoMetodo = tablaSimbolos.getAmbitoMetodoInvocado($1.sval,ambito);
@@ -533,8 +534,9 @@ factor : factor_comun
        }
        ;
 
-factor_inmediato : llamado_clase '--' ',' {
+factor_inmediato : llamado_clase '--' {
                         String direccionNombre = tablaSimbolos.existeVariable($1.sval,ambito);
+                        $$.sval = direccionNombre;
                         if(direccionNombre.equals("")){
                                 errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                         } else {
@@ -542,14 +544,16 @@ factor_inmediato : llamado_clase '--' ',' {
                             String tipo = tablaSimbolos.getTipo(direccionNombre);
                             if (tipo.equals("UINT")) {
                                 metodosPolaca.get(ambito).add("1_ui");
+                                tablaSimbolos.agregarSimbolo("1_ui", new Token(TokenType.UInt));
                             } else if (tipo.equals("LONG")) {
                                 metodosPolaca.get(ambito).add("1_l");
+                                tablaSimbolos.agregarSimbolo("1_l", new Token(TokenType.Long));
                             } else {
-                                metodosPolaca.get(ambito).add("1.0");
+                                
+                                metodosPolaca.get(ambito).add("0.1E1");
+                                tablaSimbolos.agregarSimbolo("0.1E1", new Token(TokenType.Double));
                             }
                             metodosPolaca.get(ambito).add("-");
-                            metodosPolaca.get(ambito).add(direccionNombre);
-                            metodosPolaca.get(ambito).add("=");
                         }
                  } //el operador inmediato es para todos los tipos? chequear
                  ;
@@ -564,7 +568,6 @@ factor_comun : llamado_clase {
              }
              | '-' CTE_DOUBLE {
                 anLex.convertirNegativo($2.sval);
-                tablaSimbolos.eliminarSimbolo("-" + $2.sval);
                 metodosPolaca.get(ambito).add("-" + $2.sval);
              }
              | CTE_DOUBLE {
@@ -572,7 +575,6 @@ factor_comun : llamado_clase {
              }
              | '-' CTE_LONG {
                 anLex.convertirNegativo($2.sval);
-                tablaSimbolos.eliminarSimbolo($2.sval);
                 metodosPolaca.get(ambito).add("-" + $2.sval);
              }
              | CTE_LONG {
@@ -626,14 +628,23 @@ static ArrayList<String> polaca;
 static ArrayList<Error> errores;
 static String ambito = ":main";
 static String tipo = "";
+static String filename = "";
 static Tabla tablaSimbolos;
 static Deque<Integer> pila; //Utiliza metodos push,pop y peek
 
 public static void main(String[] args) throws Exception{
         System.out.println("Iniciando compilacion...");
-        tablaSimbolos = new Tabla();
+        if(args.length < 1){
+            System.out.println("No se agrego ningun argumento");
+            System.exit(1);
+        } else if(args[0].length() < 5 || !args[0].substring(args[0].length() - 4).equals(".txt")) {
+            System.out.println("El argumento que se ingreso no es un archivo");
+	        System.exit(3);
+        } 
+        filename = args[0];
         errores = new ArrayList<Error>();
-        anLex = new AnalizadorLexico(args,tablaSimbolos,errores);
+        tablaSimbolos = new Tabla(errores);
+        anLex = new AnalizadorLexico(filename,tablaSimbolos,errores);
         
         metodosPolaca = new HashMap<String, ArrayList<String>>();
         polaca = new ArrayList<String>();
@@ -673,7 +684,7 @@ public static void main(String[] args) throws Exception{
                     System.out.println(error.toString());
                 }
             } else {
-                generarAssembler.exportar();
+                generarAssembler.exportar(filename.substring(2,filename.lastIndexOf(".")));
             }
         } else {
             System.out.println("No se pudo generar el Assembler debido a que el codigo presenta errores");

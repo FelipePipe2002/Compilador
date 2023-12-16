@@ -87,9 +87,7 @@ public class GeneradorAssembler {
     }
 
     public void cargarAssembler(String nombreMetodoPolaca) {
-        // System.out.println("Nombre metodo: " + nombreMetodoPolaca);
         for (String token : metodosPolaca.get(nombreMetodoPolaca)) {
-            // System.out.println(token);
             /*--------------------------------------OPERADORES--------------------------------------*/
             if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) { 
                 
@@ -105,10 +103,10 @@ public class GeneradorAssembler {
                 operando2 = operando2.replaceAll(":","@").replaceAll("\\.","_");
                 
                 if (tipoDeOperandos.equals("UINT")) {
-                    if (Character.isDigit(operando1.charAt(0))) {
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))) {
                         operando1 = operando1.substring(0,operando1.length()-3);
                     }
-                    if (Character.isDigit(operando2.charAt(0))) {
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))) {
                         operando2 = operando2.substring(0,operando2.length()-3);
                     }
                     switch (token) {
@@ -126,10 +124,10 @@ public class GeneradorAssembler {
                             break;
                     }
                 } else if (tipoDeOperandos.equals("LONG")) {
-                    if (Character.isDigit(operando1.charAt(0))) {
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))) {
                         operando1 = operando1.substring(0,operando1.length()-2);
                     }
-                    if (Character.isDigit(operando2.charAt(0))) {
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))) {
                         operando2 = operando2.substring(0,operando2.length()-2);
                     }
                     switch (token) {
@@ -147,11 +145,10 @@ public class GeneradorAssembler {
                             break;
                     }
                 } else if (tipoDeOperandos.equals("DOUBLE")) {
-                    System.out.println(operando1);
-                    if (Character.isDigit(operando1.charAt(0)) || operando1.charAt(0) == '.'){
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))){
                         operando1 = "@" + operando1.replaceAll("\\.","_").replaceAll("-","@");
                     }
-                    if (Character.isDigit(operando2.charAt(0)) || operando2.charAt(0) == '.'){
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))){
                         operando2 = "@" + operando2.replaceAll("\\.","_").replaceAll("-","@");
                     }
                     switch (token) {
@@ -181,11 +178,10 @@ public class GeneradorAssembler {
                 operando1 = operando1.replaceAll(":","@").replaceAll("\\.","_");
                 operando2 = operando2.replaceAll(":","@").replaceAll("\\.","_");
                 if (tipoDeOperandos.equals("UINT")) {
-                    if (Character.isDigit(operando1.charAt(0))) {
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))) {
                         operando1 = operando1.substring(0,operando1.length()-3);
                     }
-                    System.out.println(operando2);
-                    if (Character.isDigit(operando2.charAt(0))) {
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))) {
                         operando2 = operando2.substring(0,operando2.length()-3);
                     }
                     this.codigo += "MOV CX, " + operando1 + "\n";
@@ -211,10 +207,10 @@ public class GeneradorAssembler {
                             break;
                     }
                 } else if (tipoDeOperandos.equals("LONG")) {
-                    if (Character.isDigit(operando1.charAt(0))) {
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))) {
                         operando1 = operando1.substring(0,operando1.length()-2);
                     }
-                    if (Character.isDigit(operando2.charAt(0))) {
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))) {
                         operando2 = operando2.substring(0,operando2.length()-2);
                     }
                     this.codigo += "MOV ECX, " + operando1 + "\n";
@@ -240,10 +236,10 @@ public class GeneradorAssembler {
                             break;
                     }
                 } else if (tipoDeOperandos.equals("DOUBLE")) {
-                    if (Character.isDigit(operando1.charAt(0)) || operando1.charAt(0) == '.'){
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))){
                         operando1 = "@" + operando1.replaceAll("\\.","_").replaceAll("-","@");
                     }
-                    if (Character.isDigit(operando2.charAt(0)) || operando2.charAt(0) == '.'){
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))){
                         operando2 = "@" + operando2.replaceAll("\\.","_").replaceAll("-","@");
                     }
                     this.codigo += "FLD " + operando1 + "\n";
@@ -285,29 +281,29 @@ public class GeneradorAssembler {
                 operando2 = operando2.replaceAll(":","@").replaceAll("\\.","_");
                 
                 if (tipoDeOperandos.equals("UINT")) {
-                    if (Character.isDigit(operando1.charAt(0))) {
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))) {
                         operando1 = operando1.substring(0,operando1.length()-3);
-                    }
-                    if (Character.isDigit(operando2.charAt(0))) {
+                    } 
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))) {
                         operando2 = operando2.substring(0,operando2.length()-3);
                     }
                     this.codigo += "MOV AX, " + operando1 + "\n";
                     this.codigo += "MOV " + operando2 + ", AX\n";
                 } else if (tipoDeOperandos.equals("LONG")) {
-                    if (Character.isDigit(operando1.charAt(0))) {
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))) {
                         operando1 = operando1.substring(0,operando1.length()-2);
                     }
-                    if (Character.isDigit(operando2.charAt(0))) {
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))) {
                         operando2 = operando2.substring(0,operando2.length()-2);
                     }
                     this.codigo += "MOV EAX, " + operando1 + "\n";
                     this.codigo += "MOV " + operando2 + ", EAX\n";
                 } else if (tipoDeOperandos.equals("DOUBLE")) {
 
-                    if (Character.isDigit(operando1.charAt(0)) || operando1.charAt(0) == '.'){
+                    if (Character.isDigit(operando1.charAt(0)) || (operando1.charAt(0) == '-' && Character.isDigit(operando1.charAt(1)))){
                         operando1 = "@" + operando1.replaceAll("\\.","_").replaceAll("-","@");
                     }
-                    if (Character.isDigit(operando2.charAt(0)) || operando2.charAt(0) == '.'){
+                    if (Character.isDigit(operando2.charAt(0)) || (operando2.charAt(0) == '-' && Character.isDigit(operando2.charAt(1)))){
                         operando2 = "@" + operando2.replaceAll("\\.","_").replaceAll("-","@");
                     }
                     this.codigo += "FLD " + operando1 + "\n";
@@ -619,15 +615,12 @@ public class GeneradorAssembler {
         }
     }
     
-    public void exportar(){
-        String filePath = "./Assembler/codigo.asm";
-
-        try (FileWriter fileWriter = new FileWriter("./Assembler/codigo.asm")) {
+    public void exportar(String filename){
+        try (FileWriter fileWriter = new FileWriter("./Assembler/" + filename + ".asm")) {
             fileWriter.write(this.data + this.codigo);
             System.out.println("Se genero el codigo assembler");
         } catch (IOException e) {
             System.err.println("Error a la hora de generar el codigo" + e.getMessage());
         }
-        
     }
 }

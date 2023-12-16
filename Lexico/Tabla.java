@@ -3,11 +3,18 @@ package Lexico;
 import java.util.HashMap;
 
 import java.util.ArrayList;
+import Errores.Error;
 
 public class Tabla {
     private HashMap<String, Atributos> tabla;
+    private ArrayList<Error> errores;
 
     public Tabla() {
+        this.tabla = new HashMap<String, Atributos>();
+    }
+
+    public Tabla(ArrayList<Error> errores) {
+        this.errores = errores;
         this.tabla = new HashMap<String, Atributos>();
     }
 
@@ -112,7 +119,6 @@ public class Tabla {
 
     public void convertirNegativo(String nombre){
         Token aux = obtenerSimbolo(nombre);
-        eliminarSimbolo(nombre);
         agregarSimbolo("-"+nombre,aux);
     }
 
@@ -150,8 +156,40 @@ public class Tabla {
 
     public boolean implementaMetodosInterfaz(String ambitoClase, String nombreInterfaz){
         ArrayList<String> metodosClase = new ArrayList<String>();
-        metodosClase = getMetodos(ambitoClase);
+        System.out.println(ambitoClase);
+        metodosClase = getMetodos(ambitoClase); //ab:main
+        ArrayList<String> parametrosMetodos = new ArrayList<>(); // metodo:ab:main 
+        parametrosMetodos = getTiposParametros(ambitoClase,metodosClase);
+        ArrayList<String> metodosInterfaz = new ArrayList<String>();
+        metodosInterfaz = getMetodos(nombreInterfaz); //ab:main -> main:ab
+        ArrayList<String> parametrosMetodosInterfaz = new ArrayList<String>();
+        parametrosMetodosInterfaz = getTiposParametros(nombreInterfaz,metodosInterfaz); //ab:main -> main:ab
+        
+        for (int i = 0; i < metodosClase.size(); i++) {
+            
+            System.out.println(metodosClase.get(i) + " | " + parametrosMetodos.get(i));
+        }
         return metodosClase.containsAll(getMetodos(nombreInterfaz));
+    }
+
+    public ArrayList<String> getTiposParametros(String ambitoClase,ArrayList<String> metodos){
+        ArrayList<String> params = new ArrayList<>();
+        for (String metodo : metodos) {
+            boolean encontro =false;
+            for (String nombre : tabla.keySet()) {
+                if (nombre.endsWith(ambitoClase + ":" + metodo)) { //:main:ab:metodo
+                    System.out.println("Busco parametro: " + nombre);
+                    if(tabla.get(nombre).isConParametro()){
+                        params.add(tabla.get(nombre).getTipo());
+                        encontro = true;
+                    }
+                } 
+            }
+            if(!encontro){
+                params.add(null);
+            }
+        }
+        return params;
     }
 
     private ArrayList<String> getMetodosPadres(String clasePadre) {
@@ -255,6 +293,11 @@ public class Tabla {
                 if(existeSimbolo(nombreConAmbito)){
                     String tipo = tabla.get(nombreConAmbito).getTipo();
                     tipo = tipo.toUpperCase();
+                    if((tipo == "VOID") && conParametro && (tabla.get(nombreConAmbito).isConParametro() != conParametro)){
+                        this.errores.add(new Error("No existe el metodo con parametro " + nombre,"ERROR"));
+                    } else if((tipo == "VOID") && !conParametro && (tabla.get(nombreConAmbito).isConParametro() != conParametro)){
+                        this.errores.add(new Error("No existe el metodo sin parametro " + nombre,"ERROR"));
+                    }
                     return ((tipo == "VOID") && (tabla.get(nombreConAmbito).isConParametro() == conParametro));
                 }
                 ambito = ambito.substring(0,ambito.lastIndexOf(":"));
@@ -275,6 +318,11 @@ public class Tabla {
                                 eliminarSimbolo(nombre);
 
                                 if(existeSimbolo(nombre + ":main:" + clase)){
+                                    if((tabla.get(nombre + ":main:" + clase).getTipo() == "VOID") && conParametro && (tabla.get(nombre + ":main:" + clase).isConParametro() != conParametro)){
+                                        this.errores.add(new Error("No existe el metodo con parametro " + nombre,"ERROR"));
+                                    } else if((tabla.get(nombre + ":main:" + clase).getTipo() == "VOID") && !conParametro && (tabla.get(nombre + ":main:" + clase).isConParametro() != conParametro)){
+                                        this.errores.add(new Error("No existe el metodo sin parametro " + nombre,"ERROR"));
+                                    }
                                     return (tabla.get(nombre + ":main:" + clase).getTipo() == "VOID") && (tabla.get(nombre + ":main:" + clase).isConParametro() == conParametro);
                                 }else{
                                     return false;

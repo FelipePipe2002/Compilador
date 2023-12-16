@@ -19,15 +19,8 @@ public class AnalizadorLexico{
     public Tabla tablaSimbolos;
     private TablaPalabrasReservadas tablaPalabrasReservadas;
 
-    public AnalizadorLexico(String[] args,Tabla tablasimbolos, ArrayList<Error> errores) throws Exception{
-        if(args.length < 1){
-            System.out.println("No se agrego ningun argumento");
-            System.exit(1);
-        } else if(args[0].length() < 5 || !args[0].substring(args[0].length() - 4).equals(".txt")) {
-            System.out.println("El argumento que se ingreso no es un archivo");
-	        System.exit(3);
-        } 
-        this.reader = new RandomAccessFile(args[0], "r");
+    public AnalizadorLexico(String filename,Tabla tablasimbolos, ArrayList<Error> errores) throws Exception{
+        this.reader = new RandomAccessFile(filename, "r");
         this.matrizTransicion = new MatrizDeTransicionEstados();
         this.matrizAcciones = new MatrizDeAS(this);
         this.erroresLexicos = errores;
@@ -84,17 +77,25 @@ public class AnalizadorLexico{
                     if (!numero.contains(".")) {
                         this.buffer = "0." + numero.replaceAll("0+\\.?$", "") + "E" + numero.length();
                     } else {
-                        numero = numero.substring(numero.indexOf(".") + 1, numero.length());
-                        int cantCeros = 1;
-                        while (cantCeros < numero.length() && numero.charAt(cantCeros) == '0') {
-                            cantCeros += 1;
-                        }
-                        this.buffer = "0." + numero.replaceFirst("^0+", "") + "E-" + cantCeros;
+                        if (numero.charAt(0) == '0'){
+                            numero = numero.substring(numero.indexOf(".") + 1, numero.length());
+                            int cantCeros = 1;
+                            while (cantCeros < numero.length() && numero.charAt(cantCeros) == '0') {
+                                cantCeros += 1;
+                            }
+                            this.buffer = "0." + numero.replaceFirst("^0+", "") + "E-" + cantCeros;
+                        } else {
+                            this.buffer = "0." + numero.replaceAll("0*$", "").replace(".", "") + "E" + numero.substring(0, numero.indexOf(".")).length();
+                        }     
                     }
                 } else {
                     BigDecimal bufferValue = new BigDecimal(this.buffer);
                     String numero = bufferValue.stripTrailingZeros().toPlainString();
-                    if (numero.charAt(0) == '0') {
+                    // if (numero.contains(".")) {
+                    //     numero = numero.replace(".", "");
+                    // }
+
+                    if (numero.charAt(0) == '0' && !numero.equals("0")) {
                             int cantCeros = 0;
                             numero = numero.substring(2, numero.length());
                             while (numero.charAt(cantCeros) == '0') {
@@ -105,11 +106,10 @@ public class AnalizadorLexico{
                             else
                                 this.buffer = "0." + numero.substring(cantCeros, numero.length());
                     } else {
-                        this.buffer = "0." + numero.replaceAll("0*$", "") + "E" + numero.length();
+                        this.buffer = "0." + numero.replaceAll("0*$", "").replace(".", "") + "E" + numero.substring(0, numero.indexOf(".")).length();
                     }
                 }
             }
-
             if(!this.tablaSimbolos.existeSimbolo(this.buffer)){
                 this.tablaSimbolos.agregarSimbolo(this.buffer,token);
             }
