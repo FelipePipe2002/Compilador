@@ -94,6 +94,7 @@ public class Tabla {
     public void setParametro(String nombreParamentro, String ambito){
         String nombreMetodo = ambito.substring(ambito.lastIndexOf(":") + 1,ambito.length()) + ambito.substring(0, ambito.lastIndexOf(":"));
         tabla.get(nombreParamentro + ambito).setParametro(true);
+        tabla.get(nombreParamentro + ambito).setParametroDeFuncion(nombreMetodo);
         tabla.get(nombreMetodo).setParametro(true);
     }
 
@@ -154,9 +155,8 @@ public class Tabla {
         return metodos;
     }
 
-    public boolean implementaMetodosInterfaz(String ambitoClase, String nombreInterfaz){
+    public void implementaMetodosInterfaz(String ambitoClase, String nombreInterfaz){
         ArrayList<String> metodosClase = new ArrayList<String>();
-        System.out.println(ambitoClase);
         metodosClase = getMetodos(ambitoClase); 
         ArrayList<String> parametrosMetodos = new ArrayList<>(); 
         parametrosMetodos = getTiposParametros(ambitoClase,metodosClase);
@@ -164,19 +164,28 @@ public class Tabla {
         metodosInterfaz = getMetodos(nombreInterfaz); 
         ArrayList<String> parametrosMetodosInterfaz = new ArrayList<String>();
         parametrosMetodosInterfaz = getTiposParametros(nombreInterfaz,metodosInterfaz); 
-        
+
         for (int i = 0; i < metodosClase.size(); i++) {
             String metodoClase = metodosClase.get(i);
             for (int j = 0; j < metodosInterfaz.size(); j++) {
                 String metodoInterfaz = metodosInterfaz.get(j);
                 if (metodoClase.equals(metodoInterfaz)) {
-                    if (parametrosMetodos.get(i).equals(parametrosMetodosInterfaz.get(j))) {
-                        return true;
+                    if (parametrosMetodos.get(i) != null && parametrosMetodosInterfaz.get(j) != null){
+                        if (!parametrosMetodos.get(i).equals(parametrosMetodosInterfaz.get(j))) {
+                            errores.add(new Error("El metodo " + metodoClase + " de la clase " + ambitoClase.substring(ambitoClase.lastIndexOf(":")+1, ambitoClase.length()) + " implementa el metodo con un parametro de tipo no correspondiente","ERROR"));
+                            return;
+                        }
+                    } else if(parametrosMetodos.get(i) != null || parametrosMetodosInterfaz.get(j) != null){
+                        errores.add(new Error("El metodo " + metodoClase + " de la clase " + ambitoClase.substring(ambitoClase.lastIndexOf(":")+1, ambitoClase.length()) + " implementa el metodo con un parametro no correspondiente","ERROR"));
+                        return;
                     }
                 }
             }
         }
-        return false;
+        if(!metodosClase.containsAll(metodosInterfaz)){
+            errores.add(new Error("No se implementaron todos los metodos de la interfaz " + nombreInterfaz.substring(nombreInterfaz.lastIndexOf(":")+1, nombreInterfaz.length()) + " en la clase " + ambitoClase.substring(ambitoClase.lastIndexOf(":")+1, ambitoClase.length()), "ERROR"));
+            return;
+        }
     }
 
     public ArrayList<String> getTiposParametros(String ambitoClase,ArrayList<String> metodos){
@@ -256,6 +265,7 @@ public class Tabla {
             }
         } else {
             boolean encontrado = false;
+            String nombreAux=nombre;
             while (ambito != "" && !encontrado){
                 String nombreAmbito = nombre.substring(0,nombre.indexOf(".")) + ambito; //c.ab.x -> c:ambito
                 eliminarSimbolo(nombre.substring(0,nombre.indexOf(".")));
@@ -265,17 +275,17 @@ public class Tabla {
                         String tipoClase = tabla.get(clase+":main").getTipo();
                         if(tipoClase == "CLASS"){ //si tipo:main es una clase
                             
-                            nombre = nombre.substring(nombre.indexOf(".")+1,nombre.length()); //c.ab.x -> ab.x -> x
+                            nombreAux = nombreAux.substring(nombreAux.indexOf(".")+1,nombreAux.length()); //c.ab.x -> ab.x -> x
 
-                            if(!nombre.contains(".")){ //busco variable de clase
-                                eliminarSimbolo(nombre);
-                                if(existeSimbolo(nombre + ":main:" + clase) && (tabla.get(nombre + ":main:" + clase).getTipo() != "VOID")){
-                                    return nombre + ":main:" + clase;
+                            if(!nombreAux.contains(".")){ //busco variable de clase
+                                eliminarSimbolo(nombreAux);
+                                if(existeSimbolo(nombreAux + ":main:" + clase) && (tabla.get(nombreAux + ":main:" + clase).getTipo() != "VOID")){
+                                    return nombre + nombreAmbito.substring(nombreAmbito.indexOf(":"),nombreAmbito.length());
                                 }else{
                                     return "";
                                 }
                             } else if (tabla.get(clase + ":main").getPadreClase() != ""){ //busco clase
-                                clase = nombre.substring(0, nombre.indexOf(".")); //ab.x -> ab
+                                clase = nombreAux.substring(0, nombreAux.indexOf(".")); //ab.x -> ab
                             } else { //c.xs.x
                                 return "";
                             }
@@ -412,6 +422,27 @@ public class Tabla {
         return atributos;
     }
 
+    public ArrayList<String> setAtributosInstancia(String nombreInstancia, String ambito){
+        ArrayList<String> atributos = new ArrayList<>();
+        String claseHija = tabla.get(nombreInstancia.substring(0, nombreInstancia.length() - 1) + ambito).getTipo();
+
+        for (String nombre : tabla.keySet()) {
+            if (nombre.startsWith(nombreInstancia) && nombre.endsWith(ambito) && tabla.get(nombre).getTipo() != "VOID") {
+                String nombreAux = nombre;
+                nombre = nombre.substring(0, nombre.lastIndexOf(":"));
+                String[] instanciaClase = nombre.split("\\.");
+                if (instanciaClase.length > 2){
+                    atributos.add(instanciaClase[instanciaClase.length - 1] + ":main:" + instanciaClase[instanciaClase.length - 2]);
+                } else {
+                    atributos.add(instanciaClase[instanciaClase.length - 1] + ":main:" + claseHija);
+                }
+                atributos.add(nombreAux);
+                atributos.add("=");
+            }
+        }
+        return atributos;
+    }
+
     public ArrayList<String> variablesNoUsadas(){
         ArrayList<String> aux = new ArrayList<>();
         tabla.forEach((k,v) -> {
@@ -435,9 +466,9 @@ public class Tabla {
 
     public void imprimirTabla() {
         System.out.println("Tabla de simbolos:");
-        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+-------+");
-        System.out.println("|              Nombre              |     Uso       |   Ambito   | Usado | Implement | Padre Heren. | Nivel |");
-        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+-------+");
+        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+--------------+-------+");
+        System.out.println("|              Nombre              |     Uso       |   Ambito   | Usado | Implement | Padre Heren. | Parametro de | Nivel |");
+        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+--------------+-------+");
         for (String key : tabla.keySet()) {
             Atributos atributo = tabla.get(key);
             String nombre = key;
@@ -465,8 +496,8 @@ public class Tabla {
             if (padreClase.contains(":")) {
                 padreClase = padreClase.substring(0, padreClase.indexOf(":"));
             }
-            System.out.printf("| %-32s | %-13s | %-10s | %-5s | %-9s | %-12s | %-5s |\n", key,atributo.getTipo(),ambito,uso,interfaz,atributo.getPadreClase(),atributo.getNivelHerencia());
+            System.out.printf("| %-32s | %-13s | %-10s | %-5s | %-9s | %-12s | %-12s | %-5s |\n", key,atributo.getTipo(),ambito,uso,interfaz,atributo.getPadreClase(),atributo.getParametroDeFuncion(),atributo.getNivelHerencia());
         }
-        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+-------+");
+        System.out.println("+----------------------------------+---------------+------------+-------+-----------+--------------+--------------+-------+");
     }
 }

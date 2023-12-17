@@ -91,10 +91,6 @@ public class AnalizadorLexico{
                 } else {
                     BigDecimal bufferValue = new BigDecimal(this.buffer);
                     String numero = bufferValue.stripTrailingZeros().toPlainString();
-                    // if (numero.contains(".")) {
-                    //     numero = numero.replace(".", "");
-                    // }
-
                     if (numero.charAt(0) == '0' && !numero.equals("0")) {
                             int cantCeros = 0;
                             numero = numero.substring(2, numero.length());
@@ -106,7 +102,11 @@ public class AnalizadorLexico{
                             else
                                 this.buffer = "0." + numero.substring(cantCeros, numero.length());
                     } else {
-                        this.buffer = "0." + numero.replaceAll("0*$", "").replace(".", "") + "E" + numero.substring(0, numero.indexOf(".")).length();
+                        if (numero.contains(".")) {
+                            this.buffer = "0." + numero.replaceAll("0*$", "").replace(".", "") + "E" + numero.substring(0, numero.indexOf(".")).length();
+                        } else {
+                            this.buffer = "0." + numero.replaceAll("0*$", "") + "E" + numero.length();
+                        }
                     }
                 }
             }
@@ -116,7 +116,6 @@ public class AnalizadorLexico{
             token = new LexemToken(token.getTipo(),buffer);
         }
 
-        
         return token;
     }
 

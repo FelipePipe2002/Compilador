@@ -1,38 +1,4 @@
-{
-    CLASS a {
-        DOUBLE x; y; z,
-        VOID f1 (UINT h) {
-            h = 4_ui,
-        },
-    },
-
-    INTERFACE c {
-        VOID f4 (UINT s),
-        VOID f5 (DOUBLE d),
-        VOID f6 (LONG u),
-        VOID f7 (),
-    },
-
-	
-
-    CLASS b IMPLEMENT c {
-        a r; t,
-        VOID f5 () {
-			UINT a,
-			a = 3_ui,
-        },
-        VOID f4 (UINT s) {
-            s = 2_ui,
-        },
-		VOID f6 (LONG u) {
-            u = -1_l,
-        },
-		VOID f7 () {
-            DOUBLE d,
-			d = -1.5,
-        },
-    },
-
-	
-
+{ 
+    DOUBLE c,
+	c = 1.d+2 * 0.1d+20,
 }

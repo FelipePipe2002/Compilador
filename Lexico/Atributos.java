@@ -11,7 +11,9 @@ public class Atributos {
     private int nivel;
     private boolean atributoDeClase;
     private boolean contieneParametro;
+    private String parametroDeFuncion;
 
+    
     public Atributos(Token token){
         this.token = token;
         this.tipo = token.toString();
@@ -21,6 +23,7 @@ public class Atributos {
         this.nivel = 0;
         this.atributoDeClase = false;
         this.contieneParametro = false;
+        this.parametroDeFuncion = "";
     }
 
     public Atributos(Token token, String tipo){
@@ -32,6 +35,7 @@ public class Atributos {
         this.nivel = 0;
         this.atributoDeClase = false;
         this.contieneParametro = false;
+        this.parametroDeFuncion = "";
     }
 
     public Token getToken() {
@@ -44,40 +48,40 @@ public class Atributos {
     public String getTipo() {
         return tipo;
     }
-
+    
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-
+    
     public boolean isUso() {
         return uso;
     }
-
+    
     public void setUso(boolean uso) {
         this.uso = uso;
     }
-
+    
     public void addInterfaz(String interfaz) {
         this.interfaz = interfaz;
     }
-
+    
     public String getInterfaz() {
         return this.interfaz;
     }
-
+    
     public void addHerencia(String padre, int nivelHerenciaPadre) {
         this.padreClase = padre;
         setNivelHerencia(nivelHerenciaPadre + 1);
     }
-
+    
     public String getPadreClase() {
         return this.padreClase;
     }
-
+    
     private void setNivelHerencia(int nivelHerenciaPadre) {
         this.nivel = nivelHerenciaPadre;
     }
-
+    
     public int getNivelHerencia() {
         return this.nivel;
     }
@@ -85,21 +89,29 @@ public class Atributos {
     public void addProfundidad(int profundidadPadre) {
         this.nivel = profundidadPadre + 1;
     }
-
+    
     public int getProfundidad() {
         return this.nivel;
     }
-
+    
     public void setAtributoClase(boolean esAtributoDeClase){
         this.atributoDeClase = esAtributoDeClase;
     }
-
+    
     public boolean getAtributoClase(){
         return this.atributoDeClase;
     }
-
+    
     public boolean isConParametro() {
         return this.contieneParametro;
+    }
+    
+    public String getParametroDeFuncion() {
+        return parametroDeFuncion;
+    }
+
+    public void setParametroDeFuncion(String parametroDeFuncion) {
+        this.parametroDeFuncion = parametroDeFuncion;
     }
 
     public void setParametro(boolean usaParametro) {

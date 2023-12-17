@@ -62,9 +62,7 @@ declaracion_clase : encabezado_clase bloque_clase ',' {
                         if (!tablaSimbolos.agregarInterfaz($1.sval,$3.sval + ":main")){
                             errores.add(new Error("No se encuentra la interfaz " + $3.sval, anLex.getLinea())); 
                         } else {
-                            if (!tablaSimbolos.implementaMetodosInterfaz(ambito + ":" + $1.sval.substring(0,$1.sval.indexOf(":")),ambito + ":" + $3.sval)){
-                                errores.add(new Error("La clase '" + $1.sval.substring(0,$1.sval.indexOf(":")) + "' no implementa todos los metodos de la interfaz '" + $3.sval + "'", anLex.getLinea()));
-                            }
+                            tablaSimbolos.implementaMetodosInterfaz(ambito + ":" + $1.sval.substring(0,$1.sval.indexOf(":")),ambito + ":" + $3.sval);
                         }
                         if(($4.sval != null)){
                                 if((!tablaSimbolos.agregarHerencia($1.sval,$4.sval))){
@@ -314,7 +312,10 @@ sentencia_seleccion : condicion_if cuerpo_then END_IF ',' {
                     }
                     | condicion_if cuerpo_then cuerpo_else END_IF ',' {
                         metodosPolaca.get(ambito).add(pila.pop(),"[" + String.valueOf(metodosPolaca.get(ambito).size() + 1) + "]");
-                        metodosPolaca.get(ambito).add("L" + "[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]");
+                        String etiqueta = "L" + "[" + String.valueOf(metodosPolaca.get(ambito).size()) + "]";
+                        if (!metodosPolaca.get(ambito).get(metodosPolaca.get(ambito).size() - 1).equals(etiqueta)) {
+                            metodosPolaca.get(ambito).add(etiqueta);
+                        }
                     }
                     | condicion_if cuerpo_then END_IF ';' {
                         errores.add(new Error("Se esperaba una \',\'", anLex.getLinea()));
@@ -443,6 +444,10 @@ sentencia_expresion : declaracion_variable
                                     metodosPolaca.get(ambito).addAll(tablaSimbolos.getAtributosInstancia(clase, ambito));
                             }
                             metodosPolaca.get(ambito).add("Call " + ambitoMetodo);
+                            if ($1.sval.contains(".")) {
+                                    String clase = $1.sval.substring(0,$1.sval.indexOf(".") + 1);
+                                    metodosPolaca.get(ambito).addAll(tablaSimbolos.setAtributosInstancia(clase, ambito));
+                            }
                         }
                     }
                     | llamado_clase '(' operacion ')' ','  { // Chequear tipo operacion con parametro de funcion
@@ -458,6 +463,7 @@ sentencia_expresion : declaracion_variable
                             metodosPolaca.get(ambito).add(tablaSimbolos.getParametro(ambitoMetodo));
                             metodosPolaca.get(ambito).add("=");
                             metodosPolaca.get(ambito).add("Call " + ambitoMetodo);
+
                         }
                     }
                     | llamado_clase '(' ')' ';'{
@@ -481,9 +487,9 @@ asignacion : llamado_clase '=' operacion ','  {
                 if(direccionNombre.equals("")){
                         errores.add(new Error("No se declaro la variable " + $1.sval + " en el ambito reconocible", anLex.getLinea()));
                 } else {
-                        //tablaSimbolos.agregarSimbolo($1.sval + ambito,new Token());
                         tablaSimbolos.setUso($1.sval,ambito,true);
-                        metodosPolaca.get(ambito).add(direccionNombre);metodosPolaca.get(ambito).add("=");
+                        metodosPolaca.get(ambito).add(direccionNombre);
+                        metodosPolaca.get(ambito).add("=");
                 }
            } //chequear tipos entre llamado de clase y operacion
            | llamado_clase '=' operacion ';'{

@@ -39,14 +39,15 @@ public class GeneradorAssembler {
         "includelib \\masm32\\lib\\user32.lib\n" +
         "includelib \\masm32\\lib\\masm32.lib\n" +
         ".data\n" +
-        "@newline db 10, 0\n" +
+        "@newline DB 10, 0\n" +
         aux2bytes + " DW ? \n" +
         //resultados negativos en restas de enteros sin signo
         "@ERROR_RESULT_NEGATIVO_UINT DB \"ERROR: resultado negativo al restar dos enteros sin signo\", 0\n" +
         //overflow para la suma de enteros
         "@ERROR_OVERFLOW_SUMA_LONG DB \"ERROR: se produjo overflow al sumar dos enteros\", 0\n" +
         //overflow para el producto de punto flotante
-        "@ERROR_OVERFLOW_MUL_DOUBLE DB \"ERROR: se produjo overflow al momento de multiplicar dos datos de punto flotante\", 0\n";
+        "@ERROR_OVERFLOW_MUL_DOUBLE DB \"ERROR: se produjo overflow al momento de multiplicar dos datos de punto flotante\", 0\n" +
+        "@overflow_punto_flotante DT 0.17976931348623157E309\n";
         this.codigo = ".code\n" + "FINIT\n";
         this.aux = 0;
         this.salto = "";
@@ -79,9 +80,9 @@ public class GeneradorAssembler {
             } else if (tipo.equals("LONG")) {//32 bits
                 this.data += simbolo.replaceAll(":","@").replaceAll("\\.","_") + " DD " + "?\n";
             } else if (tipo.equals("DOUBLE")) {//64 bits
-                this.data += simbolo.replaceAll(":","@").replaceAll("\\.","_") + " DQ " + "?\n";
+                this.data += simbolo.replaceAll(":","@").replaceAll("\\.","_") + " DT " + "?\n";
             } else if (tipo.equals("Double")) {//64 bits
-                this.data += "@" + simbolo.replaceAll("\\.","_").replaceAll("-","@") + " DQ " + simbolo + "\n";
+                this.data += "@" + simbolo.replaceAll("\\.","_").replaceAll("-","@") + " DT " + simbolo + "\n";
             }
         }
     }
@@ -472,7 +473,7 @@ public class GeneradorAssembler {
 
     public void restarDouble(String op1, String op2) { //bien
         this.codigo += "FLD " + op1 + "\n"; // introduce una copia de memoria en ST
-        this.codigo += "FSUB "+ op2 +"\n";
+        this.codigo += "FSUB "+ op2 + "\n";
         // genero auxiliar y lo guardo en la tabla de simbolos con su respectivo tipo
         String auxiliar = getAuxiliar();
         tablaSimbolos.agregarSimbolo(auxiliar, new Token(TokenType.DOUBLE)); //guardo auxiliar en tabla de simbolos
@@ -509,16 +510,18 @@ public class GeneradorAssembler {
 
     public void multiplicarDouble(String op1, String op2) { //bien
         this.codigo += "FLD " + op1 + "\n"; // introduce una copia de memoria en ST
-        this.codigo += "FMUL "+ op2 + "\n";
-
-        // control de overflow
+        this.codigo += "FLD " + op2 + "\n"; // introduce una copia de memoria en ST
+        this.codigo += "FMUL\n";
+        
+        this.codigo += "FLD @overflow_punto_flotante\n";
+        this.codigo += "FCOM\n";
+        
         this.codigo += "FSTSW " + aux2bytes + "\n";
         this.codigo += "MOV AX, " + aux2bytes + "\n";
-        this.codigo += "SAHF\n"; //almacena en los 8 bits menos significativos del registro de indicadores, el valor de AH
+        this.codigo += "SAHF\n"; // Establece los flags de acuerdo al resultado de la comparación
 
         String etiquetaSalto = getAuxiliar();
-        this.codigo += "JNO " + etiquetaSalto + "\n"; //Controlar overflow para el producto de punto flotante
-        // this.codigo += "invoke StdOut, addr @ERROR_OVERFLOW_MUL_DOUBLE\n";
+        this.codigo += "JA " + etiquetaSalto + "\n"; // Salta por mayor
         this.codigo += "invoke MessageBox, NULL, addr @ERROR_OVERFLOW_MUL_DOUBLE, addr @ERROR_RESULT_NEGATIVO_UINT, MB_OK\n";
         this.codigo += "invoke ExitProcess, 0\n";
         this.codigo += etiquetaSalto + ":\n";
