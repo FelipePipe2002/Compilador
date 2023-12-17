@@ -47,7 +47,7 @@ public class GeneradorAssembler {
         "@ERROR_OVERFLOW_SUMA_LONG DB \"ERROR: se produjo overflow al sumar dos enteros\", 0\n" +
         //overflow para el producto de punto flotante
         "@ERROR_OVERFLOW_MUL_DOUBLE DB \"ERROR: se produjo overflow al momento de multiplicar dos datos de punto flotante\", 0\n" +
-        "@overflow_punto_flotante DT 0.17976931348623157E309\n";
+        "@overflow_punto_flotante DQ 0.17976931348623157E309\n";
         this.codigo = ".code\n" + "FINIT\n";
         this.aux = 0;
         this.salto = "";
@@ -80,9 +80,9 @@ public class GeneradorAssembler {
             } else if (tipo.equals("LONG")) {//32 bits
                 this.data += simbolo.replaceAll(":","@").replaceAll("\\.","_") + " DD " + "?\n";
             } else if (tipo.equals("DOUBLE")) {//64 bits
-                this.data += simbolo.replaceAll(":","@").replaceAll("\\.","_") + " DT " + "?\n";
+                this.data += simbolo.replaceAll(":","@").replaceAll("\\.","_") + " DQ " + "?\n";
             } else if (tipo.equals("Double")) {//64 bits
-                this.data += "@" + simbolo.replaceAll("\\.","_").replaceAll("-","@") + " DT " + simbolo + "\n";
+                this.data += "@" + simbolo.replaceAll("\\.","_").replaceAll("-","@") + " DQ " + simbolo + "\n";
             }
         }
     }

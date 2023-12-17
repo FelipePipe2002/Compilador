@@ -1,4 +1,30 @@
-{ 
-    DOUBLE c,
-	c = 1.d+2 * 0.1d+20,
+{
+	CLASS persona {
+        UINT edad,
+		UINT mes_nac,
+        VOID actualizar() {
+            edad = edad + 1_ui,
+        },
+    },
+	persona pedro; juan,
+	pedro.edad = 20_ui,
+	juan.edad = 40_ui,
+	pedro.actualizar(),
+	juan.actualizar(),
+	
+	IF (pedro.edad == 21_ui) {
+		PRINT %Edad pedro correcta%,
+		}
+		ELSE {
+		PRINT %Edad pedro incorrecta%,
+		}
+	END_IF,	
+	
+	IF (juan.edad == 41_ui) {
+		PRINT %Edad juan correcta%,
+		}
+		ELSE {
+		PRINT %Edad juan incorrecta%,
+		}
+	END_IF,
 }
