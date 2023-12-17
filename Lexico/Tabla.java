@@ -166,8 +166,15 @@ public class Tabla {
         parametrosMetodosInterfaz = getTiposParametros(nombreInterfaz,metodosInterfaz); //ab:main -> main:ab
         
         for (int i = 0; i < metodosClase.size(); i++) {
-            
-            System.out.println(metodosClase.get(i) + " | " + parametrosMetodos.get(i));
+            String metodoClase = metodosClase.get(i);
+            for (int j = 0; j < metodosInterfaz.size(); j++) {
+                String metodoInterfaz = metodosInterfaz.get(j);
+                if (metodoClase.equals(metodoInterfaz)) {
+                    if (parametrosMetodos.get(i).equals(parametrosMetodosInterfaz.get(j))) {
+                        return true;
+                    }
+                }
+            }
         }
         return metodosClase.containsAll(getMetodos(nombreInterfaz));
     }
