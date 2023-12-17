@@ -157,13 +157,13 @@ public class Tabla {
     public boolean implementaMetodosInterfaz(String ambitoClase, String nombreInterfaz){
         ArrayList<String> metodosClase = new ArrayList<String>();
         System.out.println(ambitoClase);
-        metodosClase = getMetodos(ambitoClase); //ab:main
-        ArrayList<String> parametrosMetodos = new ArrayList<>(); // metodo:ab:main 
+        metodosClase = getMetodos(ambitoClase); 
+        ArrayList<String> parametrosMetodos = new ArrayList<>(); 
         parametrosMetodos = getTiposParametros(ambitoClase,metodosClase);
         ArrayList<String> metodosInterfaz = new ArrayList<String>();
-        metodosInterfaz = getMetodos(nombreInterfaz); //ab:main -> main:ab
+        metodosInterfaz = getMetodos(nombreInterfaz); 
         ArrayList<String> parametrosMetodosInterfaz = new ArrayList<String>();
-        parametrosMetodosInterfaz = getTiposParametros(nombreInterfaz,metodosInterfaz); //ab:main -> main:ab
+        parametrosMetodosInterfaz = getTiposParametros(nombreInterfaz,metodosInterfaz); 
         
         for (int i = 0; i < metodosClase.size(); i++) {
             String metodoClase = metodosClase.get(i);
@@ -176,7 +176,7 @@ public class Tabla {
                 }
             }
         }
-        return metodosClase.containsAll(getMetodos(nombreInterfaz));
+        return false;
     }
 
     public ArrayList<String> getTiposParametros(String ambitoClase,ArrayList<String> metodos){

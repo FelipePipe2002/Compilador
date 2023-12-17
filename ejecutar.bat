@@ -1,5 +1,5 @@
-
-clear
+@echo off
+cls
 cd .\Sintactico\
 .\yacc.exe -J -v .\gramatica.y
 cd ..
